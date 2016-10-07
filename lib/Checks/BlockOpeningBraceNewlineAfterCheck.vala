@@ -37,7 +37,7 @@ public class ValaLint.Checks.BlockOpeningBraceNewlineAfterCheck : Check {
                     if ("({" in line && last_two_char == ");") {
                         return false;
                     } else {
-                        mistake_list.add ({ this, line_index + 1, line.length, _("Expected newline after '{' of a multi-line block")});
+                        mistake_list.add ({ this, line_index, line.length, _("Expected newline after '{' of a multi-line block")});
                         return true;
                     }
                 }
