@@ -38,7 +38,7 @@ public class ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck : Check {
         char[] chars = line.to_utf8 ();
         bool mistake_found = false;
         for (int i = 0; i < chars.length; i++) {
-            if (i >= 1 && chars[i] == '{' && chars[i - 1] != ' '&& chars[i - 1] != '(' && chars[i - 1] != ')') {
+            if (i >= 1 && chars[i] == '{' && chars[i - 1] != ' '&& chars[i - 1] != '(') {
                 mistake_list.add ({ this, line_index, i, _("Expected space before opening brace") });
 
                 mistake_found = true;
