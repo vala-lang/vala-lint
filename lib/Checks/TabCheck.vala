@@ -19,7 +19,7 @@
 
 public class ValaLint.Checks.TabCheck : Check {
     public override string get_title () {
-        return _("tabs");
+        return _("use-of-tabs");
     }
 
     public override string get_description () {
