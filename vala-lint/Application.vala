@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Vala-Lint Developers (https://github.com/MarcusWichelmann/Vala-Lint)
+ * Copyright (c) 2016 elementary LLC. (https://github.com/elementary/Vala-Lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -97,7 +97,7 @@ public class ValaLint.Application : GLib.Application {
                 FileType file_type = file.query_file_type (FileQueryInfoFlags.NONE);
 
                 if (file_type != FileType.REGULAR) {
-                    continue; 
+                    continue;
                 }
 
                 command_line.print ("\x001b[1m" + _("Checking %s ..."), path);
@@ -113,7 +113,7 @@ public class ValaLint.Application : GLib.Application {
                         command_line.print ("  \x001b[93m[%s]\x001b[0m %s:%i:%i %s\n",
                             mistake.check.get_title (),
                             file.get_basename (),
-                            mistake.line_index, 
+                            mistake.line_index,
                             mistake.char_index,
                             mistake.mistake);
                     }
