@@ -25,6 +25,12 @@ sudo make install
 ```
 
 ## Usage
+You can use the command-line tool to scan files or include the library into your own projects to scan single lines
+or whole files easily.
+
+### Command-Line Example
+Scan the Vala-Lint repository itself: `vala-lint Vala-Lint/**/*.vala`
+
 ### Command-Line Parameters
 ```
 Usage:
