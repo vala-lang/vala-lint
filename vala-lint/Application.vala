@@ -100,22 +100,18 @@ public class ValaLint.Application : GLib.Application {
                     continue; 
                 }
 
-                command_line.print ("\x001b[1m" + _("Checking %s ..."), path);
+                command_line.print ("\x001b[1m\x001b[4m" + "%s" + "\x001b[0m\n", path);
 
                 Gee.ArrayList<FormatMistake?> mistakes = linter.run_checks_for_file (file);
 
-                if (mistakes.is_empty) {
-                    command_line.print (" \x001b[92m" + _("OK") + "\x001b[0m\n");
-                } else {
-                    command_line.print (" \x001b[91m" + _("%i ERRORS") + "\x001b[0m\n", mistakes.size);
+                if (!mistakes.is_empty) {
 
                     foreach (FormatMistake mistake in mistakes) {
-                        command_line.print ("  \x001b[93m[%s]\x001b[0m %s:%i:%i %s\n",
-                            mistake.check.get_title (),
-                            file.get_basename (),
+                        command_line.print (" \x001b[0m %i:%i  \x001b[1m%s    \x001b[0m%s\n",
                             mistake.line_index, 
                             mistake.char_index,
-                            mistake.mistake);
+                            mistake.mistake,
+                            mistake.check.get_title ());
                     }
                 }
             }
