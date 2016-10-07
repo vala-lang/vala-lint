@@ -28,8 +28,7 @@ public class ValaLint.Checks.EllipsisCheck : Check {
     }
 
     public override bool check_line (Gee.ArrayList<FormatMistake?> mistake_list, int line_index, string line) {
-
-        if ("..." in line) {
+        if (PatternSpec.match_simple ("*\"*...*\"*", line)) {
             mistake_list.add ({ this, line_index, line.index_of ("..."), _("Expected ellipsis instead of three periods") });
             return true;
         }
