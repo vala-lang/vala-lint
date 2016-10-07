@@ -4,6 +4,7 @@ vala_precompile (LIB_VALA_C
     Check.vala
     FormatMistake.vala
     Checks/EllipsisCheck.vala
+    Checks/TabCheck.vala
     Checks/TrailingWhitespaceCheck.vala
 PACKAGES
     gio-2.0
