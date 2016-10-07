@@ -4,6 +4,7 @@ vala_precompile (LIB_VALA_C
     Check.vala
     FormatMistake.vala
     Checks/TrailingWhitespaceCheck.vala
+    Checks/BlockOpeningBraceNewlineAfterCheck.vala
 PACKAGES
     gio-2.0
     gee-0.8
