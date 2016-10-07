@@ -44,7 +44,7 @@ public class ValaLint.Linter : Object {
     public Gee.ArrayList<FormatMistake?> run_checks_for_stream (DataInputStream stream) throws IOError {
         var mistake_list = new Gee.ArrayList<FormatMistake?> ();
 
-        int line_index = 0;
+        int line_index = 1;
         string line;
 
         while ((line = stream.read_line (null)) != null) {
