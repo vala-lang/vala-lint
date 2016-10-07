@@ -21,7 +21,7 @@
 
 public class ValaLint.Checks.TrailingWhitespaceCheck : Check {
     public override string get_title () {
-        return _("Trailing-Whitespaces");
+        return _("trailing-whitespace");
     }
 
     public override string get_description () {
@@ -32,7 +32,7 @@ public class ValaLint.Checks.TrailingWhitespaceCheck : Check {
         string clean_line = line.chomp ();
 
         if (clean_line != line) {
-            string mistake = _("There are %i trailing whitespaces at the end of the line.").printf (line.length - clean_line.length);
+            string mistake = _("Unexpected whitespace at end of line");
 
             mistake_list.add ({ this, line_index, clean_line.length, mistake });
 
