@@ -103,11 +103,10 @@ public class ValaLint.Application : GLib.Application {
                 Gee.ArrayList<FormatMistake?> mistakes = linter.run_checks_for_file (file);
 
                 if (!mistakes.is_empty) {
-
                     command_line.print ("\x001b[1m\x001b[4m" + "%s" + "\x001b[0m\n", path);
 
                     foreach (FormatMistake mistake in mistakes) {
-                        command_line.print (" \x001b[0m %i:%i  \x001b[1m%s    \x001b[0m%s\n",
+                        command_line.print ("\x001b[0m%5i:%-3i \x001b[1m%-40s   \x001b[0m%s\n",
                             mistake.line_index,
                             mistake.char_index,
                             mistake.mistake,
