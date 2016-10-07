@@ -30,7 +30,7 @@ public class ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck : Check {
 
     public override bool check_line (Gee.ArrayList<FormatMistake?> mistake_list, int line_index, string line) {
         if (line.strip () == "{") {
-            mistake_list.add ({ this, line_index, line.index_of ("{"), _("Braces should not be on their own line") });
+            mistake_list.add ({ this, line_index, line.index_of ("{"), _("Unexpected line break before \"{\"") });
 
             return true;
         }
@@ -38,8 +38,8 @@ public class ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck : Check {
         char[] chars = line.to_utf8 ();
         bool mistake_found = false;
         for (int i = 0; i < chars.length; i++) {
-            if (i >= 1 && chars[i] == '{' && chars[i - 1] != ' '&& chars[i - 1] != '(') {
-                mistake_list.add ({ this, line_index, i, _("Expected space before opening brace") });
+            if (i >= 1 && chars[i] == '{' && chars[i - 1] != ' ' && chars[i - 1] != '(') {
+                mistake_list.add ({ this, line_index, i, _("Expected single space before \"{\"") });
 
                 mistake_found = true;
             }
