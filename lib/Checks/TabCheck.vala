@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 elementary LLC. (https://github.com/elementary/Vala-Lint)
+ * Copyright (c) 2011-2016 elementary LLC. (https://github.com/elementary/Vala-Lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -17,7 +17,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
- public class ValaLint.Checks.TabCheck : Check {
+public class ValaLint.Checks.TabCheck : Check {
     public override string get_title () {
         return _("tabs");
     }
@@ -26,12 +26,13 @@
         return _("Checks for tabs instead of spaces");
     }
 
-    public override bool check_line (Gee.ArrayList<FormatMistake?> mistake_list, int line_index, string line) {
-        if("\t" in line) {
-            mistake_list.add ({ this, line_index, line.index_of("\t"), _("Expected spaces instead of tabs")});
+    public override bool check_line (Gee.ArrayList<FormatMistake? > mistake_list, int line_index, string line) {
+        if ("\t" in line) {
+            mistake_list.add ({ this, line_index, line.index_of ("\t"), _("Expected spaces instead of tabs") });
+
             return true;
         }
 
         return false;
     }
- }
+}
