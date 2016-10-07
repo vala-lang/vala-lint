@@ -1,4 +1,7 @@
 # Vala-Lint
+
+[![Bountysource](https://www.bountysource.com/badge/tracker?tracker_id=45980444)](https://www.bountysource.com/trackers/45980444-elementary-Vala-lint)
+
 Small command line tool and library for checking Vala code files for code-style errors.
 Based on the [elementary Code-Style guidelines](https://elementary.io/en/docs/code/reference#code-style).
 
