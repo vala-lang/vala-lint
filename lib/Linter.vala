@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Vala-Lint Developers (https://github.com/MarcusWichelmann/Vala-Lint)
+ * Copyright (c) 2016 elementary LLC. (https://github.com/elementary/Vala-Lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
