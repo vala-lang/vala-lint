@@ -24,7 +24,7 @@ public class ValaLint.Checks.BlockOpeningBraceNewlineAfterCheck : Check {
     }
 
     public override string get_description () {
-        return _("Checks for newlines after an opening brace");
+        return _("Checks for newlines after an opening brace for code blocks");
     }
 
     public override bool check_line (Gee.ArrayList<FormatMistake?> mistake_list, int line_index, string line) {
