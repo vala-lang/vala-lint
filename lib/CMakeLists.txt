@@ -5,6 +5,7 @@ vala_precompile (LIB_VALA_C
     FormatMistake.vala
     Checks/BlockOpeningBraceSpaceBeforeCheck.vala
     Checks/EllipsisCheck.vala
+    Checks/MissingBracketsCheck.vala
     Checks/TabCheck.vala
     Checks/TrailingWhitespaceCheck.vala
 PACKAGES
