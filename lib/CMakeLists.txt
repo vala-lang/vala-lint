@@ -3,6 +3,7 @@ vala_precompile (LIB_VALA_C
     Linter.vala
     Check.vala
     FormatMistake.vala
+    Checks/BlockOpeningBraceSpaceBeforeCheck.vala
     Checks/EllipsisCheck.vala
     Checks/TabCheck.vala
     Checks/TrailingWhitespaceCheck.vala
