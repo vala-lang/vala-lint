@@ -3,7 +3,7 @@
 [![Bountysource](https://www.bountysource.com/badge/tracker?tracker_id=45980444)](https://www.bountysource.com/trackers/45980444-elementary-Vala-lint)
 
 Small command line tool and library for checking Vala code files for code-style errors.
-Based on the [elementary Code-Style guidelines](https://elementary.io/en/docs/code/reference#code-style).
+Based on the [elementary Code-Style guidelines](https://elementary.io/docs/code/reference#code-style).
 
 ## Installation
 Create a build-directory where you can run the following commands in:
@@ -33,6 +33,8 @@ or whole files easily.
 
 ### Command-Line Example
 Scan the Vala-Lint repository itself: `vala-lint Vala-Lint/*/{,*/}*.vala`
+
+Scan every vala file in the current directory: `vala-lint $(find . -type f -name '*.vala')`
 
 ### Command-Line Parameters
 ```
