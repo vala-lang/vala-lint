@@ -20,9 +20,16 @@
  */
 
 public class ValaLint.Application : GLib.Application {
+    private static bool print_version = false;
+
+    private const OptionEntry[] options = {
+        { "version", 'v', 0, OptionArg.NONE, ref print_version, "Display version number", null },
+        { null }
+    };
+
     private Application () {
-        Object (application_id: "de.marcusw.vala-lint",
-            flags: ApplicationFlags.HANDLES_COMMAND_LINE | ApplicationFlags.HANDLES_OPEN);
+        Object (application_id: "io.elementary.vala-lint",
+            flags: ApplicationFlags.HANDLES_COMMAND_LINE);
     }
 
     public override int command_line (ApplicationCommandLine command_line) {
@@ -35,13 +42,6 @@ public class ValaLint.Application : GLib.Application {
     }
 
     private int handle_command_line (ApplicationCommandLine command_line) {
-        bool print_version = false;
-
-        string[] patterns;
-
-        OptionEntry[] options = new OptionEntry[1];
-        options[0] = { "version", 'v', 0, OptionArg.NONE, ref print_version, _("Display version"), null };
-
         string[] args = command_line.get_arguments ();
         string*[] _args = new string[args.length];
 
@@ -56,8 +56,6 @@ public class ValaLint.Application : GLib.Application {
 
             unowned string[] tmp = _args;
             option_context.parse (ref tmp);
-
-            patterns = tmp;
         } catch (OptionError e) {
             command_line.print (_("Error: %s") + "\n", e.message);
             command_line.print (_("Run '%s --help' to see a full list of available command line options.") + "\n", args[0]);
@@ -66,13 +64,13 @@ public class ValaLint.Application : GLib.Application {
         }
 
         if (print_version) {
-            command_line.print (_("Version: %s") + "\n", Config.VERSION);
+            command_line.print (_("Version: %s") + "\n", 0.1);
 
             return 0;
         }
 
         try {
-            do_checks (command_line, patterns);
+            do_checks (command_line, args[1:args.length]);
         } catch (Error e) {
             command_line.print (_("Error: %s") + "\n", e.message);
         }

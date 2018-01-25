@@ -8,38 +8,22 @@ Based on the [elementary Code-Style guidelines](https://elementary.io/docs/code/
 ## Installation
 Create a build-directory where you can run the following commands in:
 ```
-mkdir build
+meson build --prefix=/usr
 cd build
-```
-
-### Library
-If the library isn't already installed on your system, you need to build it first:
-```
-cmake -DCMAKE_INSTALL_PREFIX=/usr -DLIBRARY_ONLY=ON ..
-make
-sudo make install
-```
-
-### Command-Line Tool
-```
-cmake -DCMAKE_INSTALL_PREFIX=/usr ..
-make
-sudo make install
+ninja test
 ```
 
 ## Usage
-You can use the command-line tool to scan files or include the library into your own projects to scan single lines
-or whole files easily.
+You can use the command-line tool to scan files or include the library into your own projects to scan single lines or whole files easily.
 
 ### Command-Line Example
-Scan the Vala-Lint repository itself: `vala-lint Vala-Lint/*/{,*/}*.vala`
-
-Scan every vala file in the current directory: `vala-lint $(find . -type f -name '*.vala')`
+Scan the vala-lint repository itself: `io.elementary.vala-lint ../**/*.vala`
+Scan every vala file in the current directory: `io.elementary.vala-lint *.vala`
 
 ### Command-Line Parameters
 ```
 Usage:
-  vala-lint [OPTION...] - Vala-Lint
+  io.elementary.vala-lint [OPTION...] - vala-lint
 
 Help Options:
   -h, --help        Show help options
