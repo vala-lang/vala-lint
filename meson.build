@@ -3,7 +3,9 @@ project(
     meson_version : '>= 0.43'
 )
 
-add_global_arguments('-DGETTEXT_PACKAGE="io.elementary.vala-lint"', language:'c')
+add_global_arguments('-DGETTEXT_PACKAGE="@0@"'.format(meson.project_name()), language:'c')
+
+posix_dep = meson.get_compiler('vala').find_library('posix')
 
 libvala = shared_library(
     'vala-linter-1.0',
@@ -27,7 +29,7 @@ executable(
     dependencies: [
         dependency('gio-2.0'),
         dependency('gee-0.8'),
-        meson.get_compiler('vala').find_library('posix')
+        posix_dep
     ],
     link_with : libvala,
     install : true
@@ -39,7 +41,7 @@ unit_test = executable(
     dependencies: [
         dependency('gio-2.0'),
         dependency('gee-0.8'),
-        meson.get_compiler('vala').find_library('posix')
+        posix_dep
     ],
     link_with : libvala,
     install : true
