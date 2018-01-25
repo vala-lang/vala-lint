@@ -17,8 +17,8 @@ ninja test
 You can use the command-line tool to scan files or include the library into your own projects to scan single lines or whole files easily.
 
 ### Command-Line Example
-Scan the vala-lint repository itself: `./io.elementary.vala-lint ../**/*.vala`
-Scan every vala file in the current directory: `./io.elementary.vala-lint *.vala`
+Scan the vala-lint repository itself: `io.elementary.vala-lint ../**/*.vala`
+Scan every vala file in the current directory: `io.elementary.vala-lint *.vala`
 
 ### Command-Line Parameters
 ```
