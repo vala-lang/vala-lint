@@ -1,0 +1,14 @@
+Source: io.elementary.vala-lint
+Section: libs
+Priority: optional
+Maintainer: Daniel Foré <daniel@elementary.io>
+Build-Depends: debhelper (>= 10),
+               libgee-0.8-dev
+               valac
+Standards-Version: 3.9.6
+
+Package: io.elementary.vala-lint
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: A Vala linter
+ Lint Vala code using the elementary code style guideline rules.
