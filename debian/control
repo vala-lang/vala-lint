@@ -3,7 +3,7 @@ Section: libs
 Priority: optional
 Maintainer: Daniel Foré <daniel@elementary.io>
 Build-Depends: debhelper (>= 10),
-               libgee-0.8-dev
+               libgee-0.8-dev,
                valac
 Standards-Version: 3.9.6
 
