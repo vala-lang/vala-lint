@@ -91,14 +91,7 @@ public class ValaLint.Application : GLib.Application {
             }
 
             foreach (string path in matcher.pathv) {
-                File file = File.new_for_path (path);
-                FileType file_type = file.query_file_type (FileQueryInfoFlags.NONE);
-
-                if (file_type != FileType.REGULAR) {
-                    continue;
-                }
-
-                Gee.ArrayList<FormatMistake?> mistakes = linter.run_checks_for_file (file);
+                Gee.ArrayList<FormatMistake?> mistakes = linter.run_checks_for_filename(path);
 
                 if (!mistakes.is_empty) {
                     command_line.print ("\x001b[1m\x001b[4m" + "%s" + "\x001b[0m\n", path);

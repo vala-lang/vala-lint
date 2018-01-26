@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 elementary LLC. (https://github.com/elementary/Vala-Lint)
+ * Copyright (c) 2018 elementary LLC. (https://github.com/elementary/Vala-Lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -15,30 +15,31 @@
  * License along with this program; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301 USA.
- *
- * Authored by: Marcus Wichelmann <marcus.wichelmann@hotmail.de>
  */
 
-public class ValaLint.Checks.TrailingWhitespaceCheck : Check {
+public class ValaLint.Checks.LineLengthCheck : Check {
+    static int MAXIMUM_CHARACTERS = 120;
+
     public override string get_title () {
-        return _("trailing-whitespace");
+        return _("line-length");
     }
 
     public override string get_description () {
-        return _("Checks for whitespaces at the end of lines");
+        return _("Checks for a maxmimum line legnth");
     }
 
     public override void check (Gee.ArrayList<ParseResult? > parse_result, Gee.ArrayList<FormatMistake? > mistake_list) {
+        string input = "";
         foreach (ParseResult r in parse_result) {
-            if (r.type == ParseType.Default) {
-                Utils.add_regex_mistake (this, " \\n", "Unexpected whitespace at end of line", r, mistake_list);
-            }
+            input += r.text;
         }
 
-        // Check for whitespace at last line
-        ParseResult r_last = parse_result.last();
-        if (r_last.type == ParseType.Default) {
-            Utils.add_regex_mistake (this, " $", "Unexpected whitespace at end of last line", r_last, mistake_list);
+        int line_counter = 1;
+        foreach (string line in input.split("\n")) {
+            if (line.length > MAXIMUM_CHARACTERS) {
+                mistake_list.add ({ this, line_counter, MAXIMUM_CHARACTERS, @"Line length exceeds limit of $MAXIMUM_CHARACTERS characters" });
+            }
+            line_counter += 1;
         }
     }
 }

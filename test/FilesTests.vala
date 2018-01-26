@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 elementary LLC. (https://github.com/elementary/Vala-Lint)
+ * Copyright (c) 2018 elementary LLC. (https://github.com/elementary/Vala-Lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -15,13 +15,24 @@
  * License along with this program; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301 USA.
- *
- * Authored by: Marcus Wichelmann <marcus.wichelmann@hotmail.de>
  */
 
-public struct ValaLint.FormatMistake {
-    Check check;
-    int line_index;
-    int char_index;
-    string mistake;
+class UnitTest : GLib.Object {
+
+    public static int main (string[] args) {
+
+        var linter = new ValaLint.Linter ();
+        try {
+            var mistakes = linter.run_checks_for_filename ("../test/files/IconRenderer.vala");
+
+            assert (mistakes.size == 4);
+            assert (mistakes[0].line_index == 128);
+            assert (mistakes[0].check.get_title() == "trailing-whitespace");
+        } catch {
+            error ("Could not read file.");
+        }
+
+
+        return 0;
+    }
 }

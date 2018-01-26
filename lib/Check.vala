@@ -36,13 +36,12 @@ public abstract class ValaLint.Check {
     public abstract string get_description ();
 
     /**
-     * Checks a given line for formatting mistakes.
+     * Checks a given parse result for formatting mistakes.
      *
+     * @param parse_result The parsed string.
      * @param mistake_list The list new mistakes should be added to.
-     * @param line_index The index of the given line.
-     * @param line The line that should be checked.
      *
      * @return Indicates if new mistakes were added to the list.
      */
-    public abstract bool check_line (Gee.ArrayList<FormatMistake?> mistake_list, int line_index, string line);
+    public abstract void check (Gee.ArrayList<ParseResult?> parse_result, Gee.ArrayList<FormatMistake?> mistake_list);
 }
