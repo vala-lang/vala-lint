@@ -3,10 +3,12 @@ project(
     meson_version : '>= 0.43'
 )
 
-add_global_arguments('-DGETTEXT_PACKAGE="io.elementary.vala-lint"', language:'c')
+add_global_arguments('-DGETTEXT_PACKAGE="@0@"'.format(meson.project_name()), language:'c')
+
+default_deps = [dependency('gio-2.0'), dependency('gee-0.8')]
 
 libvala = shared_library(
-    'vala-linter-1.0',
+    'vala-lint-1.0',
     'lib/Check.vala',
     'lib/FormatMistake.vala',
     'lib/Linter.vala',
@@ -19,61 +21,25 @@ libvala = shared_library(
     'lib/Checks/LineLengthCheck.vala',
     'lib/Checks/TabCheck.vala',
     'lib/Checks/TrailingWhitespaceCheck.vala',
-    dependencies : [
-        dependency('gio-2.0'),
-        dependency('gee-0.8'),
-    ],
+    dependencies : default_deps,
     install : true
 )
 
 executable(
     meson.project_name(),
     'src/Application.vala',
-    dependencies: [
-        dependency('gio-2.0'),
-        dependency('gee-0.8'),
+    dependencies : [
+        default_deps,
         meson.get_compiler('vala').find_library('posix')
     ],
     link_with : libvala,
     install : true
 )
 
-checks_unit_tests = executable(
-    'checks-unit-test',
-    'test/ChecksUnitTests.vala',
-    dependencies: [
-        dependency('gio-2.0'),
-        dependency('gee-0.8'),
-        meson.get_compiler('vala').find_library('posix')
-    ],
-    link_with : libvala,
-    install : false
-)
+checks_test = executable('checks-test', 'test/ChecksUnitTests.vala', dependencies : default_deps, link_with : libvala)
+files_test = executable('files-test', 'test/FilesTests.vala', dependencies : default_deps, link_with : libvala)
+parser_test = executable('parser-test', 'test/ParserUnitTests.vala', dependencies : default_deps, link_with : libvala)
 
-files_tests = executable(
-    'files-test',
-    'test/FilesTests.vala',
-    dependencies: [
-        dependency('gio-2.0'),
-        dependency('gee-0.8'),
-        meson.get_compiler('vala').find_library('posix')
-    ],
-    link_with : libvala,
-    install : false
-)
-
-parser_unit_tests = executable(
-    'parser-unit-test',
-    'test/ParserUnitTests.vala',
-    dependencies: [
-        dependency('gio-2.0'),
-        dependency('gee-0.8'),
-        meson.get_compiler('vala').find_library('posix')
-    ],
-    link_with : libvala,
-    install : false
-)
-
-test('checks-unit-tests', checks_unit_tests)
-test('files-tests', files_tests)
-test('parser-unit-tests', parser_unit_tests)
+test('checks-test', checks_test)
+test('files-test', files_test)
+test('parser-test', parser_test)
