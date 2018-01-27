@@ -35,6 +35,7 @@ char c = 'c';
 /* string a = @"asdf"; */""");
         assert (result.size == 16);
         assert (result[0].type == ParseType.Default);
+        assert (result[0].text == "var position = 1.2; ");
         assert (result[0].line_pos == 1);
         assert (result[0].char_pos == 1);
         assert (result[1].type == ParseType.Comment);
