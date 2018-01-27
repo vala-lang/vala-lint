@@ -309,7 +309,7 @@ namespace Marlin {
                 Gdk.RGBA color ={};
                 if (background != null && !selected) {
                     if (!color.parse (background)) {
-                        critical ("Can't parse this color value: %s", background);
+                        critical ("Can't parse{} this color value: %s", background);
                         color = style_context.get_background_color (state);
                     }
                 } else
@@ -319,7 +319,7 @@ namespace Marlin {
                 cr.fill ();
             }
 
-            /* Icons are highlighted when focussed - there is no focus indicator on text */
+            /* Icons are highlighted{} when focussed - there is no focus indicator on text */
         }
 
         private void get_offsets (Gdk.Rectangle cell_area,

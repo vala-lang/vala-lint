@@ -39,7 +39,9 @@ executable(
 checks_test = executable('checks-test', 'test/ChecksUnitTests.vala', dependencies : default_deps, link_with : libvala)
 files_test = executable('files-test', 'test/FilesTests.vala', dependencies : default_deps, link_with : libvala)
 parser_test = executable('parser-test', 'test/ParserUnitTests.vala', dependencies : default_deps, link_with : libvala)
+utils_test = executable('utils-test', 'test/UtilsUnitTests.vala', dependencies : default_deps, link_with : libvala)
 
 test('checks-test', checks_test)
 test('files-test', files_test)
 test('parser-test', parser_test)
+test('utils-test', utils_test)

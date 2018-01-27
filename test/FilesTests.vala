@@ -17,7 +17,7 @@
  * Boston, MA 02110-1301 USA.
  */
 
-class UnitTest : GLib.Object {
+class FileTest : GLib.Object {
 
     public static int main (string[] args) {
 
@@ -25,23 +25,23 @@ class UnitTest : GLib.Object {
 
         var mistakes = linter.run_checks_for_filename ("../test/files/IconRenderer.vala");
         assert (mistakes.size == 4);
-        assert_includes_mistake (mistakes, "trailing-whitespace", 128);
-        assert_includes_mistake (mistakes, "line-length", 176);
+        assert_includes_mistake (mistakes, "trailing-whitespace", 128, 46);
+        assert_includes_mistake (mistakes, "line-length", 176, 120);
         assert_includes_mistake (mistakes, "double-spaces", 231);
         assert_includes_mistake (mistakes, "line-length", 293);
 
         mistakes = linter.run_checks_for_filename ("../test/files/PantheonTerminalWindow.vala");
         assert (mistakes.size == 6);
-        assert_includes_mistake (mistakes, "line-length", 235);
+        assert_includes_mistake (mistakes, "line-length", 235, 120);
         assert_includes_mistake (mistakes, "double-spaces", 479);
         assert_includes_mistake (mistakes, "double-spaces", 647);
         assert_includes_mistake (mistakes, "double-spaces", 1075);
         assert_includes_mistake (mistakes, "block-opening-brace-space-before", 1114);
-        assert_includes_mistake (mistakes, "line-length", 1120);
+        assert_includes_mistake (mistakes, "line-length", 1120, 120);
 
         mistakes = linter.run_checks_for_filename ("../test/files/TextRenderer.vala");
         assert (mistakes.size == 5);
-        assert_includes_mistake (mistakes, "line-length", 83);
+        assert_includes_mistake (mistakes, "line-length", 83, 120);
         assert_includes_mistake (mistakes, "double-spaces", 168);
         assert_includes_mistake (mistakes, "double-spaces", 169);
         assert_includes_mistake (mistakes, "double-spaces", 170);
