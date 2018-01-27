@@ -27,7 +27,7 @@ class UnitTest : GLib.Object {
 
             assert (mistakes.size == 4);
             assert (mistakes[0].line_index == 128);
-            assert (mistakes[0].check.get_title() == "trailing-whitespace");
+            assert (mistakes[0].check.get_title () == "trailing-whitespace");
         } catch {
             error ("Could not read file.");
         }

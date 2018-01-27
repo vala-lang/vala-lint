@@ -37,7 +37,7 @@ public class ValaLint.Checks.LineLengthCheck : Check {
         int line_counter = 1;
         foreach (string line in input.split("\n")) {
             if (line.length > MAXIMUM_CHARACTERS) {
-                mistake_list.add ({ this, line_counter, MAXIMUM_CHARACTERS, @"Line length exceeds limit of $MAXIMUM_CHARACTERS characters" });
+                mistake_list.add ({ this, line_counter, MAXIMUM_CHARACTERS, @"Line exceeds limit of $MAXIMUM_CHARACTERS characters" });
             }
             line_counter += 1;
         }

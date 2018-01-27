@@ -38,8 +38,8 @@ public class ValaLint.Utils : Object {
                 int pos_start, pos_end;
                 match_info.fetch_pos (0, out pos_start, out pos_end);
 
-                int line_pos = ValaLint.Utils.get_lines(parse_result.text[0:pos_start]);
-                int char_pos = ValaLint.Utils.get_char_number(parse_result.text, pos_start);
+                int line_pos = ValaLint.Utils.get_lines (parse_result.text[0:pos_start]);
+                int char_pos = ValaLint.Utils.get_char_number (parse_result.text, pos_start);
 
                 mistake_list.add ({ check, parse_result.line_pos + line_pos, parse_result.char_pos + char_pos, mistake});
                 match_info.next ();

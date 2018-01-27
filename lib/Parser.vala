@@ -101,7 +101,7 @@ public class ValaLint.Parser : Object {
         current_line += ValaLint.Utils.get_lines(text);
     }
 
-    private ParseType get_parse_type(int type_number) {
+    private ParseType get_parse_type (int type_number) {
         switch (type_number) {
             case 0:
             case 1: {
@@ -117,7 +117,7 @@ public class ValaLint.Parser : Object {
         return ParseType.Default;
     }
 
-    private string get_close_regex(int type_number) {
+    private string get_close_regex (int type_number) {
         switch (type_number) {
             case 0: { // Inline comment
                 return "(\n)";

@@ -63,12 +63,12 @@ class UnitTest : GLib.Object {
     }
 
     public static void assert_pass (ValaLint.Check check, string input) {
-        var linter = new ValaLint.Linter.with_check(check);
-        assert (linter.run_checks(input).size == 0);
+        var linter = new ValaLint.Linter.with_check (check);
+        assert (linter.run_checks (input).size == 0);
     }
 
     public static void assert_warning (ValaLint.Check check, string input) {
-        var linter = new ValaLint.Linter.with_check(check);
-        assert (linter.run_checks(input).size > 0);
+        var linter = new ValaLint.Linter.with_check (check);
+        assert (linter.run_checks (input).size > 0);
     }
 }
