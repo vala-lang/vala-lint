@@ -49,7 +49,7 @@ namespace PantheonTerminal {
         public SimpleActionGroup actions { get; construct; }
         public TerminalWidget current_terminal { get; private set; default = null; }
 
-        public GLib.List <TerminalWidget> terminals = new GLib.List <TerminalWidget> ();
+        public List <TerminalWidget> terminals = new List <TerminalWidget> ();
         public Gtk.ActionGroup main_actions;
 
         public const string ACTION_PREFIX = "win.";
@@ -606,9 +606,9 @@ namespace PantheonTerminal {
             // triggered when the size, position or stacking of the window has changed
             // it is delayed 400ms to prevent spamming gsettings
             if (timer_window_state_change > 0)
-                GLib.Source.remove (timer_window_state_change);
+                Source.remove (timer_window_state_change);
 
-            timer_window_state_change = GLib.Timeout.add (400, () => {
+            timer_window_state_change = Timeout.add (400, () => {
                 timer_window_state_change = 0;
                 if (get_window () == null)
                     return false;
@@ -683,7 +683,7 @@ namespace PantheonTerminal {
             PantheonTerminal.saved_state.tabs = {};
 
             int focus = PantheonTerminal.saved_state.focused_tab.clamp (0, tabs.length - 1);
-            Idle.add_full (GLib.Priority.LOW, () => {
+            Idle.add_full (Priority.LOW, () => {
                 focus += notebook.n_tabs;
                 foreach (string loc in tabs) {
                     if (loc == "") {
@@ -787,7 +787,7 @@ namespace PantheonTerminal {
             }
         }
 
-        private Granite.Widgets.Tab create_tab (string label, GLib.Icon? icon, TerminalWidget term) {
+        private Granite.Widgets.Tab create_tab (string label, Icon? icon, TerminalWidget term) {
             var sw = new Gtk.ScrolledWindow (null, term.get_vadjustment ());
             sw.add (term);
             var tab = new Granite.Widgets.Tab (label, icon, sw);
@@ -820,7 +820,7 @@ namespace PantheonTerminal {
             string font_name;
 
             if (settings.font == "") {
-                var settings_sys = new GLib.Settings ("org.gnome.desktop.interface");
+                var settings_sys = new Settings ("org.gnome.desktop.interface");
                 font_name = settings_sys.get_string ("monospace-font-name");
             } else {
                 font_name = settings.font;
@@ -832,7 +832,7 @@ namespace PantheonTerminal {
         protected override bool delete_event (Gdk.EventAny event) {
             action_quit ();
             save_opened_terminals ();
-            var tabs_to_terminate = new GLib.List <TerminalWidget> ();
+            var tabs_to_terminate = new List <TerminalWidget> ();
 
             foreach (var t in terminals) {
                 t = (TerminalWidget) t;

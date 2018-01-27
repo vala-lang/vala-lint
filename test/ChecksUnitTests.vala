@@ -17,7 +17,7 @@
  * Boston, MA 02110-1301 USA.
  */
 
-class ChecksUnitTest : GLib.Object {
+class ChecksUnitTest : Object {
 
     public static int main (string[] args) {
 
@@ -64,6 +64,7 @@ class ChecksUnitTest : GLib.Object {
         var trailing_whitespace_check = new ValaLint.Checks.TrailingWhitespaceCheck ();
         assert_pass (trailing_whitespace_check, "lorem ipsum");
         assert_pass (trailing_whitespace_check, "lorem ipsum // trailing comment: ");
+        assert_warning (trailing_whitespace_check, " ");
         assert_warning (trailing_whitespace_check, "lorem ipsum ", 12);
 
         return 0;

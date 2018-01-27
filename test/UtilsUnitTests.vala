@@ -17,7 +17,7 @@
  * Boston, MA 02110-1301 USA.
  */
 
-class UtilsUnitTest : GLib.Object {
+class UtilsUnitTest : Object {
 
     public static int main (string[] args) {
 
