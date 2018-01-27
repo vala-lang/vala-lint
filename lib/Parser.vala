@@ -19,15 +19,7 @@
 
 public class ValaLint.Parser : Object {
 
-    enum ParseDetailType { // start pattern, close pattern
-        InlineComment, // //, \n
-        MultilineComment, // /*, */
-        VerbatimString, // """, """
-        InterpolatedString, // @", "
-        NormalString, // ", "
-        SingleChar // ', '
-    }
-
+    // For ParseDetailType
     string[] start_patterns = {
         "(\\/\\/)",
         "(\\/\\*)",
@@ -50,7 +42,8 @@ public class ValaLint.Parser : Object {
         ParseType.String,
         ParseType.String,
         ParseType.String,
-        ParseType.String
+        ParseType.String,
+        ParseType.Default
     };
 
     struct MatchTypeInfo {
@@ -71,7 +64,7 @@ public class ValaLint.Parser : Object {
 
         while (info.match_info.matches ()) {
             if (info.start_pos > search_pos) {
-                add_result (input, search_pos, info.start_pos, ParseType.Default, result, ref current_line);
+                add_result (input, search_pos, info.start_pos, ParseDetailType.Code, result, ref current_line);
             }
             search_pos = info.start_pos;
 
@@ -79,9 +72,9 @@ public class ValaLint.Parser : Object {
             match_type (input, {close_patterns[info.type]}, info.end_pos, out info_close);
 
             if (info_close.match_info.matches ()) {
-                add_result (input, search_pos, info_close.end_pos, parse_types[info.type], result, ref current_line);
+                add_result (input, search_pos, info_close.end_pos, info.type, result, ref current_line);
             } else {
-                add_result (input, search_pos, input.length, parse_types[info.type], result, ref current_line);
+                add_result (input, search_pos, input.length, info.type, result, ref current_line);
                 search_pos = input.length;
                 break;
             }
@@ -91,7 +84,7 @@ public class ValaLint.Parser : Object {
         }
 
         if (input.length > search_pos) {
-            add_result (input, search_pos, input.length, ParseType.Default, result, ref current_line);
+            add_result (input, search_pos, input.length, ParseDetailType.Code, result, ref current_line);
         }
         return result;
     }
@@ -133,9 +126,9 @@ public class ValaLint.Parser : Object {
      * @param result The final parsed result array.
      * @param result The current line of the entry in the input string.
      */
-    void add_result (string input, int start_pos, int end_pos, ParseType type, Gee.ArrayList<ParseResult?> result, ref int current_line) {
+    void add_result (string input, int start_pos, int end_pos, ParseDetailType detail_type, Gee.ArrayList<ParseResult?> result, ref int current_line) {
         string text = input[start_pos:end_pos];
-        result.add ({ text, type, current_line + 1, Utils.get_char_index_in_line (input, start_pos) + 1 });
+        result.add ({ text, parse_types[detail_type], detail_type, current_line + 1, Utils.get_char_index_in_line (input, start_pos) + 1 });
         current_line += Utils.get_line_count (text);
     }
 }

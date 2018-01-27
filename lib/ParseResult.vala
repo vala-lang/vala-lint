@@ -23,9 +23,20 @@ public enum ParseType {
     String
 }
 
+public enum ParseDetailType { // start pattern, close pattern
+    InlineComment, // //, \n
+    MultilineComment, // /*, */
+    VerbatimString, // """, """
+    InterpolatedString, // @", "
+    NormalString, // ", "
+    SingleChar, // ', '
+    Code
+}
+
 public struct ParseResult {
     string text;
     ParseType type;
+    ParseDetailType detail_type;
     int line_pos;
     int char_pos;
 }
