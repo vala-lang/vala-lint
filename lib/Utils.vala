@@ -35,29 +35,4 @@ public class ValaLint.Utils : Object {
     public static int get_char_index_in_line (string input, int pos) {
         return pos - input[0:pos].last_index_of_char ('\n') - 1;
     }
-
-    public static void add_regex_mistake (Check check, string pattern, string mistake, ParseResult parse_result, Gee.ArrayList<FormatMistake? > mistakes, int char_offset = 0) {
-
-        MatchInfo match_info;
-        try {
-            var regex = new Regex (pattern);
-            regex.match (parse_result.text, 0, out match_info);
-            while (match_info.matches () ) {
-                int pos_start, pos_end;
-                match_info.fetch_pos (0, out pos_start, out pos_end);
-
-                int line_count = get_line_count (parse_result.text[0:pos_start]);
-                int line_pos = parse_result.line_pos + line_count;
-                int char_pos = char_offset + get_char_index_in_line (parse_result.text, pos_start);
-                if (line_count == 0) {
-                    char_pos += parse_result.char_pos;
-                }
-
-                mistakes.add ({ check, line_pos, char_pos, mistake});
-                match_info.next ();
-            }
-        } catch {
-            error ("%s is not a valid Regex", pattern);
-        }
-    }
 }

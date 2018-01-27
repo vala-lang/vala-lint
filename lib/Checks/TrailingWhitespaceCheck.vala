@@ -21,24 +21,24 @@
 
 public class ValaLint.Checks.TrailingWhitespaceCheck : Check {
     public override string get_title () {
-        return _("trailing-whitespace");
+        return "trailing-whitespace";
     }
 
     public override string get_description () {
-        return _("Checks for whitespaces at the end of lines");
+        return "Checks for whitespaces at the end of lines";
     }
 
     public override void check (Gee.ArrayList<ParseResult? > parse_result, Gee.ArrayList<FormatMistake? > mistake_list) {
         foreach (ParseResult r in parse_result) {
             if (r.type == ParseType.Default) {
-                Utils.add_regex_mistake (this, " \\n", "Unexpected whitespace at end of line", r, mistake_list);
+                add_regex_mistake (this, " \\n", "Unexpected whitespace at end of line", r, mistake_list);
             }
         }
 
         // Check for whitespace at last line
         ParseResult r_last = parse_result.last ();
         if (r_last.type == ParseType.Default) {
-            Utils.add_regex_mistake (this, " $", "Unexpected whitespace at end of last line", r_last, mistake_list);
+            add_regex_mistake (this, " $", "Unexpected whitespace at end of last line", r_last, mistake_list);
         }
     }
 }

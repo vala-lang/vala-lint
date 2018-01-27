@@ -19,17 +19,17 @@
 
 public class ValaLint.Checks.TabCheck : Check {
     public override string get_title () {
-        return _("use-of-tabs");
+        return "use-of-tabs";
     }
 
     public override string get_description () {
-        return _("Checks for tabs instead of spaces");
+        return "Checks for tabs instead of spaces";
     }
 
     public override void check (Gee.ArrayList<ParseResult? > parse_result, Gee.ArrayList<FormatMistake? > mistake_list) {
         foreach (ParseResult r in parse_result) {
             if (r.type == ParseType.Default) {
-                Utils.add_regex_mistake (this, "\\t", "Expected spaces instead of tabs", r, mistake_list);
+                add_regex_mistake (this, "\\t", "Expected spaces instead of tabs", r, mistake_list);
             }
         }
     }

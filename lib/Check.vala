@@ -40,8 +40,41 @@ public abstract class ValaLint.Check {
      *
      * @param parse_result The parsed string.
      * @param mistake_list The list new mistakes should be added to.
-     *
-     * @return Indicates if new mistakes were added to the list.
      */
     public abstract void check (Gee.ArrayList<ParseResult?> parse_result, Gee.ArrayList<FormatMistake?> mistake_list);
+
+    /**
+     * Adds a mistake based on a regex pattern.
+     *
+     * @param check The used check.
+     * @param pattern The regex pattern.
+     * @param mistake The mistake description.
+     * @param parse_result The current parse result element.
+     * @param mistakes The mistakes list.
+     * @param char_offset The offset between the mistake char position and the regex pattern start.
+     */
+    public static void add_regex_mistake (Check check, string pattern, string mistake, ParseResult parse_result, Gee.ArrayList<FormatMistake? > mistakes, int char_offset = 0) {
+
+        MatchInfo match_info;
+        try {
+            var regex = new Regex (pattern);
+            regex.match (parse_result.text, 0, out match_info);
+            while (match_info.matches () ) {
+                int pos_start, pos_end;
+                match_info.fetch_pos (0, out pos_start, out pos_end);
+
+                int line_count = Utils.get_line_count (parse_result.text[0:pos_start]);
+                int line_pos = parse_result.line_pos + line_count;
+                int char_pos = char_offset + Utils.get_char_index_in_line (parse_result.text, pos_start);
+                if (line_count == 0) {
+                    char_pos += parse_result.char_pos;
+                }
+
+                mistakes.add ({ check, line_pos, char_pos, mistake});
+                match_info.next ();
+            }
+        } catch {
+            error ("%s is not a valid Regex", pattern);
+        }
+    }
 }

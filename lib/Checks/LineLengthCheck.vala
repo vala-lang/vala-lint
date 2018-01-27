@@ -21,11 +21,11 @@ public class ValaLint.Checks.LineLengthCheck : Check {
     static int MAXIMUM_CHARACTERS = 120;
 
     public override string get_title () {
-        return _("line-length");
+        return "line-length";
     }
 
     public override string get_description () {
-        return _("Checks for a maxmimum line legnth");
+        return "Checks for a maxmimum line legnth";
     }
 
     public override void check (Gee.ArrayList<ParseResult? > parse_result, Gee.ArrayList<FormatMistake? > mistake_list) {

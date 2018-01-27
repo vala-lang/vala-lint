@@ -19,17 +19,17 @@
 
 public class ValaLint.Checks.SpaceBeforeBracketCheck : Check {
     public override string get_title () {
-        return _("space-before-bracket");
+        return "space-before-bracket";
     }
 
     public override string get_description () {
-        return _("Checks for a space before brackets");
+        return "Checks for a space before brackets";
     }
 
     public override void check (Gee.ArrayList<ParseResult? > parse_result, Gee.ArrayList<FormatMistake? > mistake_list) {
         foreach (ParseResult r in parse_result) {
             if (r.type == ParseType.Default) {
-                Utils.add_regex_mistake (this, "[^_\\s{\\[\\(\\)!]\\(", "Expected space before bracket", r, mistake_list, 1);
+                add_regex_mistake (this, "[^_\\s{\\[\\(\\)!]\\(", "Expected space before bracket", r, mistake_list, 1);
             }
         }
     }
