@@ -28,6 +28,7 @@ public class ValaLint.Linter : Object {
         enabled_checks.add (new Checks.DoubleSpacesCheck ());
         enabled_checks.add (new Checks.EllipsisCheck ());
         enabled_checks.add (new Checks.LineLengthCheck ());
+        enabled_checks.add (new Checks.SpaceBeforeBracketCheck ());
         enabled_checks.add (new Checks.TabCheck ());
         enabled_checks.add (new Checks.TrailingWhitespaceCheck ());
     }

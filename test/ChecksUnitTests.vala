@@ -48,6 +48,13 @@ class ChecksUnitTest : GLib.Object {
         assert_warning (line_length_check, "/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua consectetur */ aliqua.", 120);
         assert_warning (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", 120);
 
+        var space_before_bracket_check = new ValaLint.Checks.SpaceBeforeBracketCheck ();
+        assert_pass (space_before_bracket_check, "void test ()");
+        assert_pass (space_before_bracket_check, "var test = 2 * (3 + 1);");
+        assert_pass (space_before_bracket_check, "a = !(true && false);");
+        assert_warning (space_before_bracket_check, "void test()", 10);
+        assert_warning (space_before_bracket_check, "void = 2*(2+2)", 10);
+
         var tab_check = new ValaLint.Checks.TabCheck ();
         assert_pass (tab_check, "lorem ipsum");
         assert_pass (tab_check, "string a = \"lorem	ipsum\"");

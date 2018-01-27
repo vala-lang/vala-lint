@@ -682,7 +682,7 @@ namespace PantheonTerminal {
 
             PantheonTerminal.saved_state.tabs = {};
 
-            int focus = PantheonTerminal.saved_state.focused_tab.clamp(0, tabs.length - 1);
+            int focus = PantheonTerminal.saved_state.focused_tab.clamp (0, tabs.length - 1);
             Idle.add_full (GLib.Priority.LOW, () => {
                 focus += notebook.n_tabs;
                 foreach (string loc in tabs) {
@@ -763,7 +763,7 @@ namespace PantheonTerminal {
             app.minimum_width = minimum_width;
             app.minimum_height = minimum_height;
 
-            Gdk.Geometry hints = Gdk.Geometry();
+            Gdk.Geometry hints = Gdk.Geometry ();
             hints.width_inc = (int) t.get_char_width ();
             hints.height_inc = (int) t.get_char_height ();
             set_geometry_hints (this, hints, Gdk.WindowHints.RESIZE_INC);
@@ -870,8 +870,8 @@ namespace PantheonTerminal {
                 if (intext == null) {
                     return;
                 }
-                if (!intext.validate()) {
-                    warning("Dropping invalid UTF-8 paste");
+                if (!intext.validate ()) {
+                    warning ("Dropping invalid UTF-8 paste");
                     return;
                 }
                 var text = intext.strip();

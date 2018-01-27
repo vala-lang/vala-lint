@@ -31,10 +31,11 @@ class FileTest : GLib.Object {
         assert_includes_mistake (mistakes, "line-length", 293);
 
         mistakes = linter.run_checks_for_filename ("../test/files/PantheonTerminalWindow.vala");
-        assert (mistakes.size == 6);
+        assert (mistakes.size == 7);
         assert_includes_mistake (mistakes, "line-length", 235, 120);
         assert_includes_mistake (mistakes, "double-spaces", 479);
         assert_includes_mistake (mistakes, "double-spaces", 647);
+        assert_includes_mistake (mistakes, "space-before-bracket", 877);
         assert_includes_mistake (mistakes, "double-spaces", 1075);
         assert_includes_mistake (mistakes, "block-opening-brace-space-before", 1114);
         assert_includes_mistake (mistakes, "line-length", 1120, 120);

@@ -19,6 +19,7 @@ libvala = shared_library(
     'lib/Checks/DoubleSpacesCheck.vala',
     'lib/Checks/EllipsisCheck.vala',
     'lib/Checks/LineLengthCheck.vala',
+    'lib/Checks/SpaceBeforeBracketCheck.vala',
     'lib/Checks/TabCheck.vala',
     'lib/Checks/TrailingWhitespaceCheck.vala',
     dependencies : default_deps,
