@@ -18,30 +18,38 @@
  */
 
 public class ValaLint.Utils : Object {
-
-    public static int get_lines (string input) {
+    /**
+     * Method to get the line count of a string.
+     *
+     * @return The number of lines in the input string.
+     */
+    public static int get_line_count (string input) {
         return input.split ("\n").length - 1;
     }
 
-    public static int get_char_number (string input, int pos) {
+    /**
+     * Method to get the char position in the current line of the input string.
+     *
+     * @return The char index.
+     */
+    public static int get_char_index_in_line (string input, int pos) {
         return pos - input[0:pos].last_index_of_char ('\n') - 1;
     }
 
-    public static void add_regex_mistake (Check check, string pattern, string mistake, ParseResult parse_result, Gee.ArrayList<FormatMistake? > mistake_list) {
+    public static void add_regex_mistake (Check check, string pattern, string mistake, ParseResult parse_result, Gee.ArrayList<FormatMistake? > mistakes) {
 
         MatchInfo match_info;
         try {
             var regex = new Regex (pattern);
-
             regex.match (parse_result.text, 0, out match_info);
             while (match_info.matches () ) {
                 int pos_start, pos_end;
                 match_info.fetch_pos (0, out pos_start, out pos_end);
 
-                int line_pos = ValaLint.Utils.get_lines (parse_result.text[0:pos_start]);
-                int char_pos = ValaLint.Utils.get_char_number (parse_result.text, pos_start);
+                int line_pos = parse_result.line_pos + get_line_count (parse_result.text[0:pos_start]);
+                int char_pos = parse_result.char_pos + get_char_index_in_line (parse_result.text, pos_start);
 
-                mistake_list.add ({ check, parse_result.line_pos + line_pos, parse_result.char_pos + char_pos, mistake});
+                mistakes.add ({ check, line_pos, char_pos, mistake});
                 match_info.next ();
             }
         } catch {

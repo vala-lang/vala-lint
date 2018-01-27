@@ -134,13 +134,8 @@ public class ValaLint.Parser : Object {
      * @param result The current line of the entry in the input string.
      */
     void add_result (string input, int start_pos, int end_pos, ParseType type, Gee.ArrayList<ParseResult?> result, ref int current_line) {
-        var text = input[start_pos:end_pos];
-        result.add (ParseResult () {
-            text = text,
-            type = type,
-            line_pos = current_line + 1,
-            char_pos = ValaLint.Utils.get_char_number (input, start_pos) + 1
-        });
-        current_line += ValaLint.Utils.get_lines (text);
+        string text = input[start_pos:end_pos];
+        result.add ({ text, type, current_line + 1, Utils.get_char_index_in_line (input, start_pos) + 1 });
+        current_line += Utils.get_line_count (text);
     }
 }
