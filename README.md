@@ -5,13 +5,24 @@
 Small command line tool and library for checking Vala code files for code-style errors.
 Based on the [elementary Code-Style guidelines](https://elementary.io/docs/code/reference#code-style).
 
-## Installation
-Create a build-directory where you can run the following commands in:
-```
-meson build --prefix=/usr
-cd build
-ninja test
-```
+## Building, Testing, and Installation
+You'll need the following dependencies:
+
+    meson
+    gio-2.0
+    gee-0.8
+    valac
+    
+Run meson build to configure the build environment. Change to the build directory and run ninja test to build and run automated tests
+
+    meson build --prefix=/usr
+    cd build
+    ninja test
+    
+To install, use ninja install, then execute with `io.elementary.vala-lint`
+
+    sudo ninja install
+    io.elementary.vala-lint
 
 ## Usage
 You can use the command-line tool to scan files or include the library into your own projects to scan single lines or whole files easily.
