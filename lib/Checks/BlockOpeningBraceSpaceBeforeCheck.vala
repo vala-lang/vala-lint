@@ -31,8 +31,8 @@ public class ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck : Check {
     public override void check (Gee.ArrayList<ParseResult? > parse_result, Gee.ArrayList<FormatMistake? > mistake_list) {
         foreach (ParseResult r in parse_result) {
             if (r.type == ParseType.Default) {
-                Utils.add_regex_mistake (this, "[\\w)=]\\n\\s*{", "Unexpected line break before \"{\"", r, mistake_list);
-                Utils.add_regex_mistake (this, "[\\w)=]{", "Expected whitespace before \"{\"", r, mistake_list);
+                Utils.add_regex_mistake (this, "[\\w)=]\\n\\s*{", "Unexpected line break before \"{\"", r, mistake_list, 1);
+                Utils.add_regex_mistake (this, "[\\w)=]{", "Expected whitespace before \"{\"", r, mistake_list, 1);
             }
         }
     }

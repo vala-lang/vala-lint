@@ -29,7 +29,7 @@ public class ValaLint.Checks.DoubleSpacesCheck : Check {
     public override void check (Gee.ArrayList<ParseResult? > parse_result, Gee.ArrayList<FormatMistake? > mistake_list) {
         foreach (ParseResult r in parse_result) {
             if (r.type == ParseType.Default) {
-                Utils.add_regex_mistake (this, "\\S  ", "Unexpected double spaces", r, mistake_list);
+                Utils.add_regex_mistake (this, "\\S  ", "Unexpected double spaces", r, mistake_list, 1);
 
                 // Mistake for first
                 if (r.char_pos > 1) {

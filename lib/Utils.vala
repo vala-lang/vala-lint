@@ -36,7 +36,7 @@ public class ValaLint.Utils : Object {
         return pos - input[0:pos].last_index_of_char ('\n') - 1;
     }
 
-    public static void add_regex_mistake (Check check, string pattern, string mistake, ParseResult parse_result, Gee.ArrayList<FormatMistake? > mistakes) {
+    public static void add_regex_mistake (Check check, string pattern, string mistake, ParseResult parse_result, Gee.ArrayList<FormatMistake? > mistakes, int char_offset = 0) {
 
         MatchInfo match_info;
         try {
@@ -48,7 +48,7 @@ public class ValaLint.Utils : Object {
 
                 int line_count = get_line_count (parse_result.text[0:pos_start]);
                 int line_pos = parse_result.line_pos + line_count;
-                int char_pos = get_char_index_in_line (parse_result.text, pos_start);
+                int char_pos = char_offset + get_char_index_in_line (parse_result.text, pos_start);
                 if (line_count == 0) {
                     char_pos += parse_result.char_pos;
                 }
