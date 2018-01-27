@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 elementary LLC. (https://github.com/elementary/Vala-Lint)
+ * Copyright (c) 2018 elementary LLC. (https://github.com/elementary/Vala-Lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -20,14 +20,14 @@
  */
 
 public class ValaLint.Application : GLib.Application {
-    private static bool print_version = false;
+    static bool print_version = false;
 
-    private const OptionEntry[] options = {
+    const OptionEntry[] options = {
         { "version", 'v', 0, OptionArg.NONE, ref print_version, "Display version number", null },
         { null }
     };
 
-    private Application () {
+    Application () {
         Object (application_id: "io.elementary.vala-lint",
             flags: ApplicationFlags.HANDLES_COMMAND_LINE);
     }
@@ -41,7 +41,7 @@ public class ValaLint.Application : GLib.Application {
         return res;
     }
 
-    private int handle_command_line (ApplicationCommandLine command_line) {
+    int handle_command_line (ApplicationCommandLine command_line) {
         string[] args = command_line.get_arguments ();
         string*[] _args = new string[args.length];
 
@@ -57,14 +57,14 @@ public class ValaLint.Application : GLib.Application {
             unowned string[] tmp = _args;
             option_context.parse (ref tmp);
         } catch (OptionError e) {
-            command_line.print (_("Error: %s") + "\n", e.message);
-            command_line.print (_("Run '%s --help' to see a full list of available command line options.") + "\n", args[0]);
+            command_line.print ("Error: %s\n", e.message);
+            command_line.print ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
 
             return 0;
         }
 
         if (print_version) {
-            command_line.print (_("Version: %s") + "\n", 0.1);
+            command_line.print ("Version: %s\n", "0.1");
 
             return 0;
         }
@@ -72,29 +72,28 @@ public class ValaLint.Application : GLib.Application {
         try {
             do_checks (command_line, args[1:args.length]);
         } catch (Error e) {
-            command_line.print (_("Error: %s") + "\n", e.message);
+            command_line.print ("Error: %s\n", e.message);
         }
 
         return 0;
     }
 
-    private void do_checks (ApplicationCommandLine command_line, string[] patterns) throws Error, IOError {
+    void do_checks (ApplicationCommandLine command_line, string[] patterns) throws Error, IOError {
         var linter = new Linter ();
 
         foreach (string pattern in patterns) {
             var matcher = Posix.Glob ();
 
             if (matcher.glob (pattern) != 0) {
-                command_line.print (_("Invalid pattern: %s") + "\n", pattern);
-
+                command_line.print ("Found no file with pattern: %s\n", pattern);
                 return;
             }
 
             foreach (string path in matcher.pathv) {
-                Gee.ArrayList<FormatMistake?> mistakes = linter.run_checks_for_filename(path);
+                Gee.ArrayList<FormatMistake?> mistakes = linter.run_checks_for_filename (path);
 
                 if (!mistakes.is_empty) {
-                    command_line.print ("\x001b[1m\x001b[4m" + "%s" + "\x001b[0m\n", path);
+                    command_line.print ("\n\x001b[1m\x001b[4m" + "%s" + "\x001b[0m\n", path);
 
                     foreach (FormatMistake mistake in mistakes) {
                         command_line.print ("\x001b[0m%5i:%-3i \x001b[1m%-40s   \x001b[0m%s\n",
@@ -106,6 +105,8 @@ public class ValaLint.Application : GLib.Application {
                 }
             }
         }
+
+        command_line.print ("\n");
     }
 
     public static int main (string[] args) {
