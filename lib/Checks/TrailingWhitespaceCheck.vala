@@ -36,7 +36,7 @@ public class ValaLint.Checks.TrailingWhitespaceCheck : Check {
         }
 
         // Check for whitespace at last line
-        ParseResult r_last = parse_result.last();
+        ParseResult r_last = parse_result.last ();
         if (r_last.type == ParseType.Default) {
             Utils.add_regex_mistake (this, " $", "Unexpected whitespace at end of last line", r_last, mistake_list);
         }

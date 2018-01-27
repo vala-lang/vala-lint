@@ -43,8 +43,8 @@ public class ValaLint.Linter : Object {
     }
 
     public Gee.ArrayList<FormatMistake?> run_checks (string input) {
-        var parser = new ValaLint.Parser();
-        Gee.ArrayList<ParseResult?> parse_result = parser.parse(input);
+        var parser = new ValaLint.Parser ();
+        Gee.ArrayList<ParseResult?> parse_result = parser.parse (input);
 
         var mistake_list = new Gee.ArrayList<FormatMistake?> ();
 
@@ -52,7 +52,7 @@ public class ValaLint.Linter : Object {
             check.check (parse_result, mistake_list);
         }
 
-        mistake_list.sort((a, b) => {
+        mistake_list.sort ((a, b) => {
             if (a.line_index == b.line_index) {
                 return a.char_index - b.char_index;
             }
