@@ -21,30 +21,19 @@
 
 public class ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck : Check {
     public override string get_title () {
-        return _("block-opening-brace-space-before");
+        return "block-opening-brace-space-before";
     }
 
     public override string get_description () {
-        return _("Checks for correct use of opening braces");
+        return "Checks for correct use of opening braces";
     }
 
-    public override bool check_line (Gee.ArrayList<FormatMistake?> mistake_list, int line_index, string line) {
-        if (line.strip () == "{") {
-            mistake_list.add ({ this, line_index, line.index_of ("{"), _("Unexpected line break before \"{\"") });
-
-            return true;
-        }
-
-        char[] chars = line.to_utf8 ();
-        bool mistake_found = false;
-        for (int i = 0; i < chars.length; i++) {
-            if (i >= 1 && chars[i] == '{' && chars[i - 1] != ' ' && chars[i - 1] != '(') {
-                mistake_list.add ({ this, line_index, i, _("Expected single space before \"{\"") });
-
-                mistake_found = true;
+    public override void check (Gee.ArrayList<ParseResult? > parse_result, Gee.ArrayList<FormatMistake? > mistake_list) {
+        foreach (ParseResult r in parse_result) {
+            if (r.type == ParseType.Default) {
+                add_regex_mistake (this, "[\\w)=]\\n\\s*{", "Unexpected line break before \"{\"", r, mistake_list, 1);
+                add_regex_mistake (this, "[\\w)=]{", "Expected whitespace before \"{\"", r, mistake_list, 1);
             }
         }
-
-        return mistake_found;
     }
 }

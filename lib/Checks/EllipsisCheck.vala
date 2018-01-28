@@ -19,19 +19,18 @@
 
 public class ValaLint.Checks.EllipsisCheck : Check {
     public override string get_title () {
-        return _("ellipsis");
+        return "ellipsis";
     }
 
     public override string get_description () {
-        return _("Checks for ellipsis character instead of three periods");
+        return "Checks for ellipsis character instead of three periods";
     }
 
-    public override bool check_line (Gee.ArrayList<FormatMistake?> mistake_list, int line_index, string line) {
-        if (PatternSpec.match_simple ("*\"*...*\"*", line)) {
-            mistake_list.add ({ this, line_index, line.index_of ("..."), _("Expected ellipsis instead of three periods") });
-            return true;
+    public override void check (Gee.ArrayList<ParseResult?> parse_result, Gee.ArrayList<FormatMistake? > mistake_list) {
+        foreach (ParseResult r in parse_result) {
+            if (r.type == ParseType.String) {
+                add_regex_mistake (this, "\\.\\.\\.", "Expected ellipsis instead of three periods", r, mistake_list);
+            }
         }
-
-        return false;
     }
 }

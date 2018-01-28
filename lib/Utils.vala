@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 elementary LLC. (https://github.com/elementary/Vala-Lint)
+ * Copyright (c) 2018 elementary LLC. (https://github.com/elementary/Vala-Lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -17,20 +17,22 @@
  * Boston, MA 02110-1301 USA.
  */
 
-public class ValaLint.Checks.TabCheck : Check {
-    public override string get_title () {
-        return "use-of-tabs";
+public class ValaLint.Utils : Object {
+    /**
+     * Method to get the line count of a string.
+     *
+     * @return The number of lines in the input string.
+     */
+    public static int get_line_count (string input) {
+        return input.split ("\n").length - 1;
     }
 
-    public override string get_description () {
-        return "Checks for tabs instead of spaces";
-    }
-
-    public override void check (Gee.ArrayList<ParseResult? > parse_result, Gee.ArrayList<FormatMistake? > mistake_list) {
-        foreach (ParseResult r in parse_result) {
-            if (r.type == ParseType.Default) {
-                add_regex_mistake (this, "\\t", "Expected spaces instead of tabs", r, mistake_list);
-            }
-        }
+    /**
+     * Method to get the char position in the current line of the input string.
+     *
+     * @return The char index.
+     */
+    public static int get_char_index_in_line (string input, int pos) {
+        return pos - input[0:pos].last_index_of_char ('\n') - 1;
     }
 }

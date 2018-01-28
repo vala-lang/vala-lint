@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 elementary LLC. (https://github.com/elementary/Vala-Lint)
+ * Copyright (c) 2018 elementary LLC. (https://github.com/elementary/Vala-Lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -17,20 +17,26 @@
  * Boston, MA 02110-1301 USA.
  */
 
-public class ValaLint.Checks.TabCheck : Check {
-    public override string get_title () {
-        return "use-of-tabs";
-    }
+public enum ParseType {
+    Default,
+    Comment,
+    String
+}
 
-    public override string get_description () {
-        return "Checks for tabs instead of spaces";
-    }
+public enum ParseDetailType { // start pattern, close pattern
+    InlineComment, // //, \n
+    MultilineComment, // /*, */
+    VerbatimString, // """, """
+    InterpolatedString, // @", "
+    NormalString, // ", "
+    SingleChar, // ', '
+    Code
+}
 
-    public override void check (Gee.ArrayList<ParseResult? > parse_result, Gee.ArrayList<FormatMistake? > mistake_list) {
-        foreach (ParseResult r in parse_result) {
-            if (r.type == ParseType.Default) {
-                add_regex_mistake (this, "\\t", "Expected spaces instead of tabs", r, mistake_list);
-            }
-        }
-    }
+public struct ParseResult {
+    string text;
+    ParseType type;
+    ParseDetailType detail_type;
+    int line_pos;
+    int char_pos;
 }

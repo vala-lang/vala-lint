@@ -17,19 +17,24 @@
  * Boston, MA 02110-1301 USA.
  */
 
-public class ValaLint.Checks.TabCheck : Check {
+public class ValaLint.Checks.DoubleSpacesCheck : Check {
     public override string get_title () {
-        return "use-of-tabs";
+        return "double-spaces";
     }
 
     public override string get_description () {
-        return "Checks for tabs instead of spaces";
+        return "Checks for double spaces";
     }
 
     public override void check (Gee.ArrayList<ParseResult? > parse_result, Gee.ArrayList<FormatMistake? > mistake_list) {
         foreach (ParseResult r in parse_result) {
             if (r.type == ParseType.Default) {
-                add_regex_mistake (this, "\\t", "Expected spaces instead of tabs", r, mistake_list);
+                add_regex_mistake (this, "\\S  ", "Unexpected double spaces", r, mistake_list, 1);
+
+                // Check for mistakes at the beginning of strings
+                if (r.char_pos > 1) {
+                    add_regex_mistake (this, "^  ", "Unexpected double spaces", r, mistake_list);
+                }
             }
         }
     }

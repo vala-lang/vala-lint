@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 elementary LLC. (https://github.com/elementary/Vala-Lint)
+ * Copyright (c) 2018 elementary LLC. (https://github.com/elementary/Vala-Lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -17,19 +17,20 @@
  * Boston, MA 02110-1301 USA.
  */
 
-public class ValaLint.Checks.TabCheck : Check {
+public class ValaLint.Checks.AlwaysUseBracesCheck : Check {
     public override string get_title () {
-        return "use-of-tabs";
+        return "always-use-braces";
     }
 
     public override string get_description () {
-        return "Checks for tabs instead of spaces";
+        return "Checks for braces";
     }
 
     public override void check (Gee.ArrayList<ParseResult? > parse_result, Gee.ArrayList<FormatMistake? > mistake_list) {
         foreach (ParseResult r in parse_result) {
             if (r.type == ParseType.Default) {
-                add_regex_mistake (this, "\\t", "Expected spaces instead of tabs", r, mistake_list);
+                add_regex_mistake (this, "\\)\\s*\\n", "Expected brace in this line", r, mistake_list, 1);
+                add_regex_mistake (this, "else\\s*\\n", "Expected brace in this line", r, mistake_list, 4);
             }
         }
     }

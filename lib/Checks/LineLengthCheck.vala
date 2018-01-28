@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 elementary LLC. (https://github.com/elementary/Vala-Lint)
+ * Copyright (c) 2018 elementary LLC. (https://github.com/elementary/Vala-Lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -17,20 +17,29 @@
  * Boston, MA 02110-1301 USA.
  */
 
-public class ValaLint.Checks.TabCheck : Check {
+public class ValaLint.Checks.LineLengthCheck : Check {
+    static int MAXIMUM_CHARACTERS = 120;
+
     public override string get_title () {
-        return "use-of-tabs";
+        return "line-length";
     }
 
     public override string get_description () {
-        return "Checks for tabs instead of spaces";
+        return "Checks for a maxmimum line legnth";
     }
 
     public override void check (Gee.ArrayList<ParseResult? > parse_result, Gee.ArrayList<FormatMistake? > mistake_list) {
+        string input = "";
         foreach (ParseResult r in parse_result) {
-            if (r.type == ParseType.Default) {
-                add_regex_mistake (this, "\\t", "Expected spaces instead of tabs", r, mistake_list);
+            input += r.text;
+        }
+
+        int line_counter = 1;
+        foreach (string line in input.split ("\n")) {
+            if (line.length > MAXIMUM_CHARACTERS) {
+                mistake_list.add ({ this, line_counter, MAXIMUM_CHARACTERS, @"Line exceeds limit of $MAXIMUM_CHARACTERS characters" });
             }
+            line_counter += 1;
         }
     }
 }
