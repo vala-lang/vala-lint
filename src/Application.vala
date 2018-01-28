@@ -102,11 +102,11 @@ public class ValaLint.Application : GLib.Application {
                             mistake.mistake,
                             mistake.check.get_title ());
                     }
+
+                    command_line.print ("\n");
                 }
             }
         }
-
-        command_line.print ("\n");
     }
 
     public static int main (string[] args) {
