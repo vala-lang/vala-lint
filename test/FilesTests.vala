@@ -31,22 +31,24 @@ class FileTest : Object {
         assert_includes_mistake (mistakes, "line-length", 293);
 
         mistakes = linter.run_checks_for_filename ("../test/files/PantheonTerminalWindow.vala");
-        assert (mistakes.size == 7);
-        assert_includes_mistake (mistakes, "line-length", 235, 120);
-        assert_includes_mistake (mistakes, "double-spaces", 479);
-        assert_includes_mistake (mistakes, "double-spaces", 647);
-        assert_includes_mistake (mistakes, "space-before-bracket", 877);
-        assert_includes_mistake (mistakes, "double-spaces", 1075);
-        assert_includes_mistake (mistakes, "block-opening-brace-space-before", 1114);
-        assert_includes_mistake (mistakes, "line-length", 1120, 120);
+        assert (mistakes.size == 8);
+        assert_includes_mistake (mistakes, "line-length", 236, 120);
+        assert_includes_mistake (mistakes, "double-spaces", 481);
+        assert_includes_mistake (mistakes, "always-use-braces", 600);
+        assert_includes_mistake (mistakes, "double-spaces", 652);
+        assert_includes_mistake (mistakes, "space-before-bracket", 882);
+        assert_includes_mistake (mistakes, "double-spaces", 1082);
+        assert_includes_mistake (mistakes, "block-opening-brace-space-before", 1121);
+        assert_includes_mistake (mistakes, "line-length", 1127, 120);
 
         mistakes = linter.run_checks_for_filename ("../test/files/TextRenderer.vala");
-        assert (mistakes.size == 5);
+        assert (mistakes.size == 7);
         assert_includes_mistake (mistakes, "line-length", 83, 120);
-        assert_includes_mistake (mistakes, "double-spaces", 168);
+        assert_includes_mistake (mistakes, "always-use-braces", 98);
         assert_includes_mistake (mistakes, "double-spaces", 169);
         assert_includes_mistake (mistakes, "double-spaces", 170);
-        assert_includes_mistake (mistakes, "block-opening-brace-space-before", 309);
+        assert_includes_mistake (mistakes, "double-spaces", 171);
+        assert_includes_mistake (mistakes, "block-opening-brace-space-before", 313);
 
         return 0;
     }

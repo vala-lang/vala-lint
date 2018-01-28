@@ -15,6 +15,7 @@ libvala = shared_library(
     'lib/Parser.vala',
     'lib/ParseResult.vala',
     'lib/Utils.vala',
+    'lib/Checks/AlwaysUseBracesCheck.vala',
     'lib/Checks/BlockOpeningBraceSpaceBeforeCheck.vala',
     'lib/Checks/DoubleSpacesCheck.vala',
     'lib/Checks/EllipsisCheck.vala',

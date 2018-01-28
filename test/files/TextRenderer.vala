@@ -97,11 +97,12 @@ namespace Marlin {
 
             if ((flags & Gtk.CellRendererState.SELECTED) == Gtk.CellRendererState.SELECTED)
                 state |= Gtk.StateFlags.SELECTED;
-            else if ((flags & Gtk.CellRendererState.PRELIT) == Gtk.CellRendererState.PRELIT)
+            else if ((flags & Gtk.CellRendererState.PRELIT) == Gtk.CellRendererState.PRELIT) {
                 state = Gtk.StateFlags.PRELIGHT;
-            else
+            } else {
                 state = widget.get_sensitive () ? Gtk.StateFlags.NORMAL : Gtk.StateFlags.INSENSITIVE;
-
+            }
+            
             set_up_layout (text, cell_area.width);
 
             var style_context = widget.get_parent ().get_style_context ();
@@ -170,8 +171,9 @@ namespace Marlin {
                                                            Gdk.Rectangle  cell_area,
                                                            Gtk.CellRendererState flags) {
 
-            if (!visible || mode != Gtk.CellRendererMode.EDITABLE)
+            if (!visible || mode != Gtk.CellRendererMode.EDITABLE) {
                 return null;
+            }
 
             float xalign, yalign;
             get_alignment (out xalign, out yalign);
@@ -206,12 +208,14 @@ namespace Marlin {
             Pango.FontMetrics metrics;
             Pango.Context context;
 
-            if (_widget == widget)
+            if (_widget == widget) {
                 return;
+            }
 
             /* disconnect from the previously set widget */
-            if (widget != null)
+            if (widget != null) {
                 disconnect_widget_signals ();
+            }
 
             widget = _widget;
 
@@ -312,8 +316,9 @@ namespace Marlin {
                         critical ("Can't parse{} this color value: %s", background);
                         color = style_context.get_background_color (state);
                     }
-                } else
+                } else {
                     color = style_context.get_background_color (state);
+                }
 
                 Gdk.cairo_set_source_rgba (cr, color);
                 cr.fill ();

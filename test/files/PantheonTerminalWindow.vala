@@ -221,8 +221,9 @@ namespace PantheonTerminal {
             Gdk.Keymap keymap = Gdk.Keymap.get_default ();
             if (keymap.get_entries_for_keyval (keyval, out keys)) {
                 foreach (var key in keys) {
-                    if (code == key.keycode)
+                    if (code == key.keycode) {
                         return true;
+                    }
                 }
             }
 
@@ -396,8 +397,9 @@ namespace PantheonTerminal {
                         if (((e.state & Gdk.ModifierType.MOD1_MASK) != 0) &&
                             settings.alt_changes_tab) {
                             var i = e.keyval - 49;
-                            if (i > notebook.n_tabs - 1)
+                            if (i > notebook.n_tabs - 1) {
                                 return false;
+                            }
                             notebook.current = notebook.get_tab_by_index ((int) i);
                             return true;
                         }
@@ -581,10 +583,11 @@ namespace PantheonTerminal {
         }
 
         private void on_new_tab_requested () {
-            if (settings.follow_last_tab)
+            if (settings.follow_last_tab) {
                 new_tab (current_terminal.get_shell_location ());
-            else
+            } else {
                 new_tab (Environment.get_home_dir ());
+            }
         }
 
         private void update_context_menu () {
@@ -605,13 +608,15 @@ namespace PantheonTerminal {
         private bool on_window_state_change (Gdk.EventConfigure event) {
             // triggered when the size, position or stacking of the window has changed
             // it is delayed 400ms to prevent spamming gsettings
-            if (timer_window_state_change > 0)
+            if (timer_window_state_change > 0) {
                 Source.remove (timer_window_state_change);
+            }
 
             timer_window_state_change = Timeout.add (400, () => {
                 timer_window_state_change = 0;
-                if (get_window () == null)
+                if (get_window () == null) {
                     return false;
+                }
 
                 /* Save window state */
                 if ((get_window ().get_state () & Gdk.WindowState.MAXIMIZED) != 0) {
@@ -897,11 +902,12 @@ namespace PantheonTerminal {
         }
 
         void action_copy () {
-            if (current_terminal.uri != null && ! current_terminal.get_has_selection ())
+            if (current_terminal.uri != null && ! current_terminal.get_has_selection ()) }
                 clipboard.set_text (current_terminal.uri,
                                     current_terminal.uri.length);
-            else
+            } else {
                 current_terminal.copy_clipboard ();
+            }
         }
 
         void action_paste () {
@@ -937,10 +943,11 @@ namespace PantheonTerminal {
         }
 
         void action_new_tab () {
-            if (settings.follow_last_tab)
+            if (settings.follow_last_tab) {
                 new_tab (current_terminal.get_shell_location ());
-            else
+            } else {
                 new_tab (Environment.get_home_dir ());
+            }
         }
 
         void action_zoom_in_font () {
