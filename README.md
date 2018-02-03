@@ -29,7 +29,7 @@ You can use the command-line tool to scan files or include the library into your
 
 ### Command-Line Example
 Scan the vala-lint repository itself: `io.elementary.vala-lint ../**/*.vala`
-Scan every vala file in the current directory: `io.elementary.vala-lint *.vala`
+Scan every vala file in the current directory: `io.elementary.vala-lint $(find . -type f -name "*.vala")`
 
 ### Command-Line Parameters
 ```
