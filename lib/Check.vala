@@ -62,9 +62,10 @@ public abstract class ValaLint.Check {
                 int pos_start, pos_end;
                 match_info.fetch_pos (0, out pos_start, out pos_end);
 
-                int line_count = Utils.get_line_count (parse_result.text[0:pos_start]);
+                int pos_mistake = pos_start + char_offset;
+                int line_count = Utils.get_line_count (parse_result.text[0:pos_mistake]);
                 int line_pos = parse_result.line_pos + line_count;
-                int char_pos = char_offset + Utils.get_char_index_in_line (parse_result.text, pos_start);
+                int char_pos = Utils.get_char_index_in_line (parse_result.text, pos_mistake);
                 if (line_count == 0) {
                     char_pos += parse_result.char_pos;
                 }
