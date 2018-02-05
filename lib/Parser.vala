@@ -112,7 +112,7 @@ public class ValaLint.Parser : Object {
                 }
             }
         } catch {
-            error ("Regex error in parser: %s", entire_pattern);
+            error (_("Regex error in parser: %s"), entire_pattern);
         }
     }
 
