@@ -56,7 +56,7 @@ public abstract class ValaLint.Check {
 
         MatchInfo match_info;
         try {
-            var regex = new Regex (pattern);
+            var regex = new Regex (pattern, RegexCompileFlags.MULTILINE);
             regex.match (parse_result.text, 0, out match_info);
             while (match_info.matches () ) {
                 int pos_start, pos_end;
