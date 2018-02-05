@@ -59,18 +59,14 @@ public class ValaLint.Parser : Object {
         int search_pos = 0;
         int current_line = 0;
 
-        MatchTypeInfo info;
-        match_type (input, start_patterns, search_pos, out info);
-
+        MatchTypeInfo info = match_type (input, start_patterns, search_pos);
         while (info.match_info.matches ()) {
             if (info.start_pos > search_pos) {
                 add_result (input, search_pos, info.start_pos, ParseDetailType.Code, result, ref current_line);
             }
             search_pos = info.start_pos;
 
-            MatchTypeInfo info_close;
-            match_type (input, {close_patterns[info.type]}, info.end_pos, out info_close);
-
+            MatchTypeInfo info_close = match_type (input, {close_patterns[info.type]}, info.end_pos);
             if (info_close.match_info.matches ()) {
                 add_result (input, search_pos, info_close.end_pos, info.type, result, ref current_line);
             } else {
@@ -80,7 +76,7 @@ public class ValaLint.Parser : Object {
             }
 
             search_pos = info_close.end_pos;
-            match_type (input, start_patterns, info_close.end_pos, out info);
+            info = match_type (input, start_patterns, info_close.end_pos);
         }
 
         if (input.length > search_pos) {
@@ -97,8 +93,9 @@ public class ValaLint.Parser : Object {
      * @param start_search_pos The start position for searching in the input string.
      * @param info The output, including which pattern was matched and the exact position.
      */
-    void match_type (string input, string[] patterns, int start_search_pos, out MatchTypeInfo info) {
+    MatchTypeInfo match_type (string input, string[] patterns, int start_search_pos) {
         string entire_pattern = string.joinv ("|", patterns); // Join regex patterns
+        var info = MatchTypeInfo ();
 
         try {
             var regex = new Regex (entire_pattern);
@@ -107,13 +104,14 @@ public class ValaLint.Parser : Object {
                 for (int i = 0; i < info.match_info.get_match_count (); i++) {
                     if (info.match_info.fetch (i + 1).length > 0) {
                         info.type = (ParseDetailType)i;
-                        return;
+                        return info;;
                     }
                 }
             }
         } catch {
             error (_("Regex error in parser: %s"), entire_pattern);
         }
+        return info;
     }
 
     /**
