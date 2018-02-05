@@ -28,7 +28,7 @@ public class ValaLint.Checks.TabCheck : Check {
 
     public override void check (Gee.ArrayList<ParseResult? > parse_result, Gee.ArrayList<FormatMistake? > mistake_list) {
         foreach (ParseResult r in parse_result) {
-            if (r.type == ParseType.Default) {
+            if (r.type == ParseType.Default || r.type == ParseType.Comment) {
                 add_regex_mistake (this, """\t""", _("Expected spaces instead of tabs"), r, mistake_list);
             }
         }
