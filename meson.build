@@ -3,7 +3,11 @@ project(
     meson_version : '>= 0.43'
 )
 
-add_global_arguments('-DGETTEXT_PACKAGE="io.elementary.vala-lint"', language:'c')
+add_global_arguments('-DGETTEXT_PACKAGE="@0@"'.format(meson.project_name()), language:'c')
+
+gee_dep = dependency('gee-0.8')
+gio_dep = dependency('gio-2.0')
+posix_dep = meson.get_compiler('vala').find_library('posix')
 
 libvala = shared_library(
     'vala-linter-1.0',
@@ -15,8 +19,8 @@ libvala = shared_library(
     'lib/Checks/TabCheck.vala',
     'lib/Checks/TrailingWhitespaceCheck.vala',
     dependencies : [
-        dependency('gio-2.0'),
-        dependency('gee-0.8'),
+        gio_dep,
+        gee_dep,
     ],
     install : true
 )
@@ -25,9 +29,9 @@ executable(
     meson.project_name(),
     'src/Application.vala',
     dependencies: [
-        dependency('gio-2.0'),
-        dependency('gee-0.8'),
-        meson.get_compiler('vala').find_library('posix')
+        gio_dep,
+        gee_dep,
+        posix_dep
     ],
     link_with : libvala,
     install : true
@@ -37,9 +41,9 @@ unit_test = executable(
     'unit-test',
     'test/UnitTest.vala',
     dependencies: [
-        dependency('gio-2.0'),
-        dependency('gee-0.8'),
-        meson.get_compiler('vala').find_library('posix')
+        gio_dep,
+        gee_dep,
+        posix_dep
     ],
     link_with : libvala,
     install : true
