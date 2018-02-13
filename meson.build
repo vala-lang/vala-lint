@@ -37,15 +37,24 @@ executable(
     install : true
 )
 
+files_test = executable(
+    'files-test',
+    'test/FilesTests.vala',
+    dependencies: [
+        gio_dep,
+        gee_dep
+    ],
+    link_with : libvala
+)
 unit_test = executable(
     'unit-test',
     'test/UnitTest.vala',
     dependencies: [
         gio_dep,
-        gee_dep,
-        posix_dep
+        gee_dep
     ],
-    link_with : libvala,
-    install : true
+    link_with : libvala
 )
-test('vala lint unit test', unit_test)
+
+test('files test', files_test)
+test('check unit test', unit_test)
