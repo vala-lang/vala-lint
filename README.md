@@ -12,33 +12,25 @@ You'll need the following dependencies:
     gio-2.0
     gee-0.8
     valac
-    
+
 Run meson build to configure the build environment. Change to the build directory and run ninja test to build and run automated tests
 
     meson build --prefix=/usr
     cd build
     ninja test
-    
+
 To install, use ninja install, then execute with `io.elementary.vala-lint`
 
     sudo ninja install
     io.elementary.vala-lint
 
 ## Usage
-You can use the command-line tool to scan files or include the library into your own projects to scan single lines or whole files easily.
+You can use the command-line tool to scan files or include the library into your own projects to scan single lines or whole files easily. By default, the command-line tool uses [globs](https://en.wikipedia.org/wiki/Glob_%28programming%29) to match files. For example, by
 
-### Command-Line Example
-Scan the vala-lint repository itself: `io.elementary.vala-lint ../**/*.vala`
-Scan every vala file in the current directory: `io.elementary.vala-lint $(find . -type f -name "*.vala")`
+    io.elementary.vala-lint *.vala
 
-### Command-Line Parameters
-```
-Usage:
-  io.elementary.vala-lint [OPTION...] - vala-lint
+you can lint every file in the current directory. Using the directory `d`-flag, you can lint every Vala file in a given directory and all subdirectories by
 
-Help Options:
-  -h, --help        Show help options
+    io.elementary.vala-lint -d ../my-project
 
-Application Options:
-  -v, --version     Display version
-```
+For all options, type `io.elementary.vala-lint -h`.
