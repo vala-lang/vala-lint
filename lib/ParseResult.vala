@@ -36,7 +36,6 @@ public enum ParseDetailType { // start pattern, close pattern
 public struct ParseResult {
     string text;
     ParseType type;
-    ParseDetailType detail_type;
     int line_pos;
     int char_pos;
 }
