@@ -84,7 +84,7 @@ public class ValaLint.Application : GLib.Application {
                 check_globs (command_line, args[1:args.length]);
             }
         } catch (Error e) {
-            command_line.print (_("Error: %s\n") + "\n", e.message);
+            command_line.print (_("Error: %s") + "\n", e.message);
         }
 
         return 0;
