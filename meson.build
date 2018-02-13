@@ -57,4 +57,4 @@ unit_test = executable(
 )
 
 test('files test', files_test)
-test('check unit test', unit_test)
+test('checks unit test', unit_test)
