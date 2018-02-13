@@ -79,7 +79,7 @@ public abstract class ValaLint.Check {
                 match_info.next ();
             }
         } catch {
-            error (_("%s is not a valid Regex"), pattern);
+            critical ("%s is not a valid Regex", pattern);
         }
     }
 }

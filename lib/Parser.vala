@@ -104,12 +104,12 @@ public class ValaLint.Parser : Object {
                 for (int i = 0; i < info.match_info.get_match_count (); i++) {
                     if (info.match_info.fetch (i + 1).length > 0) {
                         info.type = (ParseDetailType)i;
-                        return info;;
+                        return info;
                     }
                 }
             }
         } catch {
-            error (_("Regex error in parser: %s"), entire_pattern);
+            error ("Regex error in parser: %s", entire_pattern);
         }
         return info;
     }
