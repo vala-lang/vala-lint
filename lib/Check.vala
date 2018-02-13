@@ -45,14 +45,13 @@ public abstract class ValaLint.Check {
     /**
      * Adds a mistake based on a regex pattern.
      *
-     * @param check The used check.
      * @param pattern The regex pattern.
      * @param mistake The mistake description.
      * @param parse_result The current parse result element.
      * @param mistakes The mistakes list.
      * @param char_offset The offset between the mistake char position and the regex pattern start.
      */
-    public static void add_regex_mistake (Check check, string pattern, string mistake, ParseResult parse_result, Gee.ArrayList<FormatMistake? > mistakes, int char_offset = 0, bool single_mistake_in_line = false) {
+    public void add_regex_mistake (string pattern, string mistake, ParseResult parse_result, Gee.ArrayList<FormatMistake?> mistakes, int char_offset = 0, bool single_mistake_in_line = false) {
 
         MatchInfo match_info;
         try {
@@ -72,8 +71,8 @@ public abstract class ValaLint.Check {
 
                 /* If single_mistake_in_line is true, add only one mistake of the same check per line */
                 if (!single_mistake_in_line ||
-                    (mistakes.is_empty || mistakes.last ().check != check || mistakes.last ().line_index < line_pos)) {
-                    mistakes.add ({ check, line_pos, char_pos, mistake});
+                    (mistakes.is_empty || mistakes.last ().check != this || mistakes.last ().line_index < line_pos)) {
+                    mistakes.add ({ this, line_pos, char_pos, mistake });
                 }
 
 
