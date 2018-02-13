@@ -37,12 +37,12 @@ class UnitTest : GLib.Object {
         return 0;
     }
 
-    public static void assert_pass(ValaLint.Check check, string line) {
+    public static void assert_pass (ValaLint.Check check, string line) {
         var mistake_list = new Gee.ArrayList<ValaLint.FormatMistake?> ();
         assert (!check.check_line (mistake_list, 0, line));
     }
 
-    public static void assert_warning(ValaLint.Check check, string line) {
+    public static void assert_warning (ValaLint.Check check, string line) {
         var mistake_list = new Gee.ArrayList<ValaLint.FormatMistake?> ();
         assert (check.check_line (mistake_list, 0, line));
     }
