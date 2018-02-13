@@ -20,6 +20,12 @@
  */
 
 public abstract class ValaLint.Check {
+
+    /**
+     * Property whether the check should allow multiple mistakes in a single line.
+     */
+    protected bool single_mistake_in_line = false;
+
     /**
      * Method to get a short but descriptive title of the check.
      *
@@ -40,7 +46,7 @@ public abstract class ValaLint.Check {
      * @param parse_result The parsed string.
      * @param mistake_list The list new mistakes should be added to.
      */
-    public abstract void check (Gee.ArrayList<ParseResult?> parse_result, Gee.ArrayList<FormatMistake?> mistake_list);
+    public abstract void check (Gee.ArrayList<ParseResult?> parse_result, ref Gee.ArrayList<FormatMistake?> mistake_list);
 
     /**
      * Adds a mistake based on a regex pattern.
@@ -51,7 +57,7 @@ public abstract class ValaLint.Check {
      * @param mistakes The mistakes list.
      * @param char_offset The offset between the mistake char position and the regex pattern start.
      */
-    public void add_regex_mistake (string pattern, string mistake, ParseResult parse_result, Gee.ArrayList<FormatMistake?> mistakes, int char_offset = 0, bool single_mistake_in_line = false) {
+    protected void add_regex_mistake (string pattern, string mistake, ParseResult parse_result, ref Gee.ArrayList<FormatMistake?> mistakes, int char_offset = 0) {
 
         MatchInfo match_info;
         try {

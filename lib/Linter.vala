@@ -47,7 +47,7 @@ public class ValaLint.Linter : Object {
         var mistake_list = new Gee.ArrayList<FormatMistake?> ();
 
         foreach (Check check in enabled_checks) {
-            check.check (parse_result, mistake_list);
+            check.check (parse_result, ref mistake_list);
         }
 
         mistake_list.sort ((a, b) => {

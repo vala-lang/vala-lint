@@ -18,6 +18,10 @@
  */
 
 public class ValaLint.Checks.TabCheck : Check {
+    public TabCheck () {
+        single_mistake_in_line = true;
+    }
+
     public override string get_title () {
         return _("use-of-tabs");
     }
@@ -26,10 +30,10 @@ public class ValaLint.Checks.TabCheck : Check {
         return _("Checks for tabs instead of spaces");
     }
 
-    public override void check (Gee.ArrayList<ParseResult? > parse_result, Gee.ArrayList<FormatMistake? > mistake_list) {
+    public override void check (Gee.ArrayList<ParseResult? > parse_result, ref Gee.ArrayList<FormatMistake? > mistake_list) {
         foreach (ParseResult r in parse_result) {
             if (r.type == ParseType.Default || r.type == ParseType.Comment) {
-                add_regex_mistake ("""\t""", _("Expected spaces instead of tabs"), r, mistake_list, 0, true);
+                add_regex_mistake ("""\t""", _("Expected spaces instead of tabs"), r, ref mistake_list, 0);
             }
         }
     }

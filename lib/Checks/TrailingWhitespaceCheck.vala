@@ -28,17 +28,17 @@ public class ValaLint.Checks.TrailingWhitespaceCheck : Check {
         return _("Checks for whitespaces at the end of lines");
     }
 
-    public override void check (Gee.ArrayList<ParseResult? > parse_result, Gee.ArrayList<FormatMistake? > mistake_list) {
+    public override void check (Gee.ArrayList<ParseResult? > parse_result, ref Gee.ArrayList<FormatMistake? > mistake_list) {
         foreach (ParseResult r in parse_result) {
             if (r.type == ParseType.Default) {
-                add_regex_mistake ("""\h\n""", _("Unexpected whitespace at end of line"), r, mistake_list);
+                add_regex_mistake ("""\h\n""", _("Unexpected whitespace at end of line"), r, ref mistake_list);
             }
         }
 
         // Check for whitespace at last line
         ParseResult r_last = parse_result.last ();
         if (r_last.type == ParseType.Default) {
-            add_regex_mistake ("""\h$""", _("Unexpected whitespace at end of last line"), r_last, mistake_list);
+            add_regex_mistake ("""\h$""", _("Unexpected whitespace at end of last line"), r_last, ref mistake_list);
         }
     }
 }
