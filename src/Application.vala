@@ -65,7 +65,7 @@ public class ValaLint.Application : GLib.Application {
             command_line.print (_("Error: %s") + "\n", e.message);
             command_line.print (_("Run '%s --help' to see a full list of available command line options.") + "\n", args[0]);
 
-            return 0;
+            return 1;
         }
 
         if (print_version) {
@@ -77,27 +77,29 @@ public class ValaLint.Application : GLib.Application {
         linter = new Linter ();
         this.application_command_line = command_line;
 
+        var valid = true;
         try {
             if (lint_directory != null) {
-                check_directory (File.new_for_path (lint_directory));
+                valid = check_directory (File.new_for_path (lint_directory));
             } else {
-                check_globs (command_line, args[1:args.length]);
+                valid = check_globs (command_line, args[1:args.length]);
             }
         } catch (Error e) {
             command_line.print (_("Error: %s") + "\n", e.message);
+            return 1;
         }
-
-        return 0;
+        return valid ? 0 : 1;
     }
 
-    void check_globs (ApplicationCommandLine command_line, string[] patterns) throws Error, IOError {
+    bool check_globs (ApplicationCommandLine command_line, string[] patterns) throws Error, IOError {
+        var all_valid = true;
         foreach (string pattern in patterns) {
             var matcher = Posix.Glob ();
 
             if (matcher.glob (pattern) != 0) {
                 command_line.print (_("Invalid pattern: %s") + "\n", pattern);
 
-                return;
+                return false;
             }
 
             foreach (string path in matcher.pathv) {
@@ -108,32 +110,38 @@ public class ValaLint.Application : GLib.Application {
                     continue;
                 }
 
-                check_file (file);
+                var valid = check_file (file);
+                if (!valid) all_valid = false;
             }
         }
+        return all_valid;
     }
 
-    void check_directory (File dir) throws Error, IOError {
+    bool check_directory (File dir) throws Error, IOError {
         FileEnumerator enumerator = dir.enumerate_children (FileAttribute.STANDARD_NAME, 0, null);
         var info = enumerator.next_file (null);
+        var all_valid = true;
         while (info != null) {
             string child_name = info.get_name ();
             File child_file = dir.resolve_relative_path (child_name);
+            var valid = true;
             if (info.get_file_type () == FileType.DIRECTORY) {
                 if (!info.get_is_hidden ()) {
-                    check_directory (child_file);
+                    valid = check_directory (child_file);
                 }
             } else if (info.get_file_type () == FileType.REGULAR) {
                 /* Check only .vala files */
                 if (child_name.length > 5 && child_name.has_suffix (".vala")) {
-                    check_file (child_file);
+                    valid = check_file (child_file);
                 }
             }
+            if (!valid) all_valid = false;
             info = enumerator.next_file (null);
         }
+        return all_valid;
     }
 
-    void check_file (File file) throws Error, IOError {
+    bool check_file (File file) throws Error, IOError {
         Gee.ArrayList<FormatMistake?> mistakes = linter.run_checks_for_file (file);
 
         if (!mistakes.is_empty) {
@@ -147,6 +155,7 @@ public class ValaLint.Application : GLib.Application {
                     mistake.check.get_title ());
             }
         }
+        return mistakes.is_empty;
     }
 
     public static int main (string[] args) {
