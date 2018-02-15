@@ -20,8 +20,8 @@
  */
 
 public struct ValaLint.FormatMistake {
-    public Check check;
-    public int line_index;
-    public int char_index;
-    public string mistake;
+    Check check;
+    int line_index;
+    int char_index;
+    string mistake;
 }
