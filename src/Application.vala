@@ -21,9 +21,14 @@
 
 public class ValaLint.Application : GLib.Application {
     private static bool print_version = false;
+    private static string lint_directory;
+
+    private Linter linter;
+    private ApplicationCommandLine application_command_line;
 
     private const OptionEntry[] options = {
         { "version", 'v', 0, OptionArg.NONE, ref print_version, "Display version number", null },
+        { "directory", 'd', 0, OptionArg.STRING, ref lint_directory, "Lint all Vala files in the given directory." },
         { null }
     };
 
@@ -69,8 +74,15 @@ public class ValaLint.Application : GLib.Application {
             return 0;
         }
 
+        linter = new Linter ();
+        this.application_command_line = command_line;
+
         try {
-            do_checks (command_line, args[1:args.length]);
+            if (lint_directory != null) {
+                check_directory (File.new_for_path (lint_directory));
+            } else {
+                check_globs (command_line, args[1:args.length]);
+            }
         } catch (Error e) {
             command_line.print (_("Error: %s") + "\n", e.message);
         }
@@ -78,9 +90,7 @@ public class ValaLint.Application : GLib.Application {
         return 0;
     }
 
-    private void do_checks (ApplicationCommandLine command_line, string[] patterns) throws Error, IOError {
-        var linter = new Linter ();
-
+    void check_globs (ApplicationCommandLine command_line, string[] patterns) throws Error, IOError {
         foreach (string pattern in patterns) {
             var matcher = Posix.Glob ();
 
@@ -98,19 +108,43 @@ public class ValaLint.Application : GLib.Application {
                     continue;
                 }
 
-                Gee.ArrayList<FormatMistake?> mistakes = linter.run_checks_for_file (file);
+                check_file (file);
+            }
+        }
+    }
 
-                if (!mistakes.is_empty) {
-                    command_line.print ("\x001b[1m\x001b[4m" + "%s" + "\x001b[0m\n", path);
-
-                    foreach (FormatMistake mistake in mistakes) {
-                        command_line.print ("\x001b[0m%5i:%-3i \x001b[1m%-40s   \x001b[0m%s\n",
-                            mistake.line_index,
-                            mistake.char_index,
-                            mistake.mistake,
-                            mistake.check.get_title ());
-                    }
+    void check_directory (File dir) throws Error, IOError {
+        FileEnumerator enumerator = dir.enumerate_children (FileAttribute.STANDARD_NAME, 0, null);
+        var info = enumerator.next_file (null);
+        while (info != null) {
+            string child_name = info.get_name ();
+            File child_file = dir.resolve_relative_path (child_name);
+            if (info.get_file_type () == FileType.DIRECTORY) {
+                if (!info.get_is_hidden ()) {
+                    check_directory (child_file);
                 }
+            } else if (info.get_file_type () == FileType.REGULAR) {
+                /* Check only .vala files */
+                if (child_name.length > 5 && child_name.has_suffix (".vala")) {
+                    check_file (child_file);
+                }
+            }
+            info = enumerator.next_file (null);
+        }
+    }
+
+    void check_file (File file) throws Error, IOError {
+        Gee.ArrayList<FormatMistake?> mistakes = linter.run_checks_for_file (file);
+
+        if (!mistakes.is_empty) {
+            application_command_line.print ("\x001b[1m\x001b[4m" + "%s" + "\x001b[0m\n", file.get_path ());
+
+            foreach (FormatMistake mistake in mistakes) {
+                application_command_line.print ("\x001b[0m%5i:%-3i \x001b[1m%-40s   \x001b[0m%s\n",
+                    mistake.line_index,
+                    mistake.char_index,
+                    mistake.mistake,
+                    mistake.check.get_title ());
             }
         }
     }
