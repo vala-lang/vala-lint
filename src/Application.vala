@@ -117,14 +117,15 @@ public class ValaLint.Application : GLib.Application {
         FileEnumerator enumerator = dir.enumerate_children (FileAttribute.STANDARD_NAME, 0, null);
         var info = enumerator.next_file (null);
         while (info != null) {
-            File child_file = dir.resolve_relative_path (info.get_name ());
+            string child_name = info.get_name ();
+            File child_file = dir.resolve_relative_path (child_name);
             if (info.get_file_type () == FileType.DIRECTORY) {
                 if (!info.get_is_hidden ()) {
                     check_directory (child_file);
                 }
-            } else if (info.get_file_type () == FileType.REGULAR){
+            } else if (info.get_file_type () == FileType.REGULAR) {
                 /* Check only .vala files */
-                if (info.get_name ().length > 5 && info.get_name ().substring (-5) == ".vala") {
+                if (child_name.length > 5 && child_name.has_suffix (".vala")) {
                     check_file (child_file);
                 }
             }
