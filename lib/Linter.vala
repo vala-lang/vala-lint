@@ -60,8 +60,8 @@ public class ValaLint.Linter : Object {
         return mistake_list;
     }
 
-    public Gee.ArrayList<FormatMistake?> run_checks_for_filename (string filename) throws Error, IOError {
-        var channel = new IOChannel.file (filename, "r");
+    public Gee.ArrayList<FormatMistake?> run_checks_for_file (File file) throws Error, IOError {
+        var channel = new IOChannel.file (file.get_path (), "r");
         string text;
         size_t length;
         channel.read_to_end (out text, out length);
