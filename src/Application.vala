@@ -108,29 +108,6 @@ public class ValaLint.Application : GLib.Application {
         return 0;
     }
 
-    Gee.ArrayList<File> get_files_from_directory (File dir) throws Error, IOError {
-        var files = new Gee.ArrayList<File> ();
-        FileEnumerator enumerator = dir.enumerate_children (FileAttribute.STANDARD_NAME, 0, null);
-        var info = enumerator.next_file (null);
-        while (info != null) {
-            string child_name = info.get_name ();
-            File child_file = dir.resolve_relative_path (child_name);
-            if (info.get_file_type () == FileType.DIRECTORY) {
-                if (!info.get_is_hidden ()) {
-                    var sub_files = get_files_from_directory (child_file);
-                    files.add_all (sub_files);
-                }
-            } else if (info.get_file_type () == FileType.REGULAR) {
-                /* Check only .vala files */
-                if (child_name.length > 5 && child_name.has_suffix (".vala")) {
-                    files.add (child_file);
-                }
-            }
-            info = enumerator.next_file (null);
-        }
-        return files;
-    }
-
     Gee.ArrayList<File> get_files_from_globs (ApplicationCommandLine command_line, string[] patterns) throws Error, IOError {
         var files = new Gee.ArrayList<File> ();
         foreach (string pattern in patterns) {
@@ -155,15 +132,36 @@ public class ValaLint.Application : GLib.Application {
         return files;
     }
 
+    Gee.ArrayList<File> get_files_from_directory (File dir) throws Error, IOError {
+        var files = new Gee.ArrayList<File> ();
+        FileEnumerator enumerator = dir.enumerate_children (FileAttribute.STANDARD_NAME, 0, null);
+        var info = enumerator.next_file (null);
+        while (info != null) {
+            string child_name = info.get_name ();
+            File child_file = dir.resolve_relative_path (child_name);
+            if (info.get_file_type () == FileType.DIRECTORY) {
+                if (!info.get_is_hidden ()) {
+                    var sub_files = get_files_from_directory (child_file);
+                    files.add_all (sub_files);
+                }
+            } else if (info.get_file_type () == FileType.REGULAR) {
+                /* Check only .vala files */
+                if (child_name.length > 5 && child_name.has_suffix (".vala")) {
+                    files.add (child_file);
+                }
+            }
+            info = enumerator.next_file (null);
+        }
+        return files;
+    }
+
     void print_mistakes (Gee.ArrayList<FileData?> file_data_list) {
         foreach (FileData file_data in file_data_list) {
-            var path = file_data.file.get_path ();
-            var mistakes = file_data.mistakes;
-
-            if (!mistakes.is_empty) {
+            if (!file_data.mistakes.is_empty) {
+                var path = file_data.file.get_path ();
                 application_command_line.print ("\x001b[1m\x001b[4m" + "%s" + "\x001b[0m\n", path);
 
-                foreach (FormatMistake mistake in mistakes) {
+                foreach (FormatMistake mistake in file_data.mistakes) {
                     application_command_line.print ("\x001b[0m%5i:%-3i \x001b[1m%-40s   \x001b[0m%s\n",
                         mistake.line_index,
                         mistake.char_index,
