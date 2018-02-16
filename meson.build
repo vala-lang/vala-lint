@@ -13,7 +13,6 @@ libvala = shared_library(
     'vala-linter-1.0',
     'lib/Check.vala',
     'lib/FormatMistake.vala',
-    'lib/FileData.vala',
     'lib/Linter.vala',
     'lib/Checks/BlockOpeningBraceSpaceBeforeCheck.vala',
     'lib/Checks/EllipsisCheck.vala',
@@ -29,6 +28,7 @@ libvala = shared_library(
 executable(
     meson.project_name(),
     'src/Application.vala',
+    'src/FileData.vala',
     dependencies: [
         gio_dep,
         gee_dep,

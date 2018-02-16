@@ -20,6 +20,6 @@
  */
 
 public struct ValaLint.FileData {
-    public File file;
-    public Gee.ArrayList<FormatMistake?>  mistakes;
+    File file;
+    Gee.ArrayList<FormatMistake?>  mistakes;
 }
