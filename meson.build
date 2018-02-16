@@ -13,6 +13,7 @@ libvala = shared_library(
     'vala-linter-1.0',
     'lib/Check.vala',
     'lib/FormatMistake.vala',
+    'lib/FileData.vala',
     'lib/Linter.vala',
     'lib/Checks/BlockOpeningBraceSpaceBeforeCheck.vala',
     'lib/Checks/EllipsisCheck.vala',
