@@ -1,5 +1,6 @@
 app_files = files (
-    'Application.vala'
+    'Application.vala',
+    'FileData.vala'
 )
 
 executable(
