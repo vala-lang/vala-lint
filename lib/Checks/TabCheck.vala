@@ -19,15 +19,11 @@
 
 public class ValaLint.Checks.TabCheck : Check {
     public TabCheck () {
-        single_mistake_in_line = true;
-    }
-
-    public override string get_title () {
-        return _("use-of-tabs");
-    }
-
-    public override string get_description () {
-        return _("Checks for tabs instead of spaces");
+        Object (
+            single_mistake_in_line: true,
+            title: _("use-of-tabs"),
+            description: _("Checks for tabs instead of spaces")
+        );
     }
 
     public override void check (Gee.ArrayList<ParseResult? > parse_result, ref Gee.ArrayList<FormatMistake? > mistake_list) {
