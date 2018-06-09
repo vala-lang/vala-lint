@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2018 elementary LLC. (https://github.com/elementary/Vala-Lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -17,20 +17,25 @@
  * Boston, MA 02110-1301 USA.
  */
 
-public class ValaLint.Checks.EllipsisCheck : Check {
-    public override string get_title () {
-        return _("ellipsis");
-    }
+public enum ParseType {
+    Default,
+    Comment,
+    String
+}
 
-    public override string get_description () {
-        return _("Checks for ellipsis character instead of three periods");
-    }
+public enum ParseDetailType { // start pattern, close pattern
+    InlineComment, // //, \n
+    MultilineComment, // /*, */
+    VerbatimString, // """, """
+    InterpolatedString, // @", "
+    NormalString, // ", "
+    SingleChar, // ', '
+    Code
+}
 
-    public override void check (Gee.ArrayList<ParseResult?> parse_result, ref Gee.ArrayList<FormatMistake? > mistake_list) {
-        foreach (ParseResult r in parse_result) {
-            if (r.type == ParseType.String) {
-                add_regex_mistake ("""\.\.\.""", _("Expected ellipsis instead of three periods"), r, ref mistake_list);
-            }
-        }
-    }
+public struct ParseResult {
+    string text;
+    ParseType type;
+    int line_pos;
+    int char_pos;
 }
