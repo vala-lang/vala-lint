@@ -166,7 +166,7 @@ public class ValaLint.Application : GLib.Application {
                         mistake.line_index,
                         mistake.char_index,
                         mistake.mistake,
-                        mistake.check.get_title ());
+                        mistake.check.title);
                 }
             }
         }

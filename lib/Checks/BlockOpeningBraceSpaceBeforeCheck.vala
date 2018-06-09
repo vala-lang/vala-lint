@@ -20,12 +20,11 @@
  */
 
 public class ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck : Check {
-    public override string get_title () {
-        return _("block-opening-brace-space-before");
-    }
-
-    public override string get_description () {
-        return _("Checks for correct use of opening braces");
+    public BlockOpeningBraceSpaceBeforeCheck () {
+        Object (
+            title: _("block-opening-brace-space-before"),
+            description: _("Checks for correct use of opening braces")
+        );
     }
 
     public override void check (Gee.ArrayList<ParseResult? > parse_result, ref Gee.ArrayList<FormatMistake? > mistake_list) {
