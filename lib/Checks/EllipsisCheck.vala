@@ -18,12 +18,11 @@
  */
 
 public class ValaLint.Checks.EllipsisCheck : Check {
-    public override string get_title () {
-        return _("ellipsis");
-    }
-
-    public override string get_description () {
-        return _("Checks for ellipsis character instead of three periods");
+    public EllipsisCheck () {
+        Object (
+            title: _("ellipsis"),
+            description: _("Checks for ellipsis character instead of three periods")
+        );
     }
 
     public override void check (Gee.ArrayList<ParseResult?> parse_result, ref Gee.ArrayList<FormatMistake? > mistake_list) {

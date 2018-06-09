@@ -20,12 +20,11 @@
  */
 
 public class ValaLint.Checks.TrailingWhitespaceCheck : Check {
-    public override string get_title () {
-        return _("trailing-whitespace");
-    }
-
-    public override string get_description () {
-        return _("Checks for whitespaces at the end of lines");
+    public TrailingWhitespaceCheck () {
+        Object (
+            title: _("trailing-whitespace"),
+            description:_("Checks for whitespaces at the end of lines")
+        );
     }
 
     public override void check (Gee.ArrayList<ParseResult? > parse_result, ref Gee.ArrayList<FormatMistake? > mistake_list) {
