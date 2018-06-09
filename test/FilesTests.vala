@@ -20,23 +20,31 @@
 class FileTest : Object {
 
     public static int main (string[] args) {
-
         var linter = new ValaLint.Linter ();
 
-        var mistakes = linter.run_checks_for_file (File.new_for_path ("../test/files/IconRenderer.vala"));
+        var mistakes = lint_test_file (linter, "IconRenderer.vala");
         assert (mistakes.size == 0);
 
-        mistakes = linter.run_checks_for_file (File.new_for_path ("../test/files/PantheonTerminalWindow.vala"));
+        mistakes = lint_test_file (linter, "PantheonTerminalWindow.vala");
         assert (mistakes.size == 1);
-        assert_includes (mistakes, "block-opening-brace-space-before", 1122);
+        assert_includes (mistakes, "block-opening-brace-space-before", 1121);
 
-        mistakes = linter.run_checks_for_file (File.new_for_path ("../test/files/TextRenderer.vala"));
+        mistakes = lint_test_file (linter, "TextRenderer.vala");
         assert (mistakes.size == 3);
         assert_includes (mistakes, "block-opening-brace-space-before", 313);
-        assert_includes (mistakes, "block-opening-brace-space-before", 316);
-        assert_includes (mistakes, "block-opening-brace-space-before", 327);
+        assert_includes (mistakes, "block-opening-brace-space-before", 315);
+        assert_includes (mistakes, "block-opening-brace-space-before", 334);
 
         return 0;
+    }
+
+    private static Gee.ArrayList<ValaLint.FormatMistake?> lint_test_file (ValaLint.Linter linter, string filename) {
+        var file = File.new_for_path ("../test/files/" + filename);
+        try {
+            return linter.run_checks_for_file (file);
+        } catch (Error e) {
+            error ("Could not find test file %s.", filename);
+        }
     }
 
     private static void assert_includes (Gee.ArrayList<ValaLint.FormatMistake?> mistakes,
@@ -50,6 +58,6 @@ class FileTest : Object {
                 }
             }
         }
-        assert (false);
+        error ("Could not find mistake: %s in line: %d.", title, line_pos);
     }
 }

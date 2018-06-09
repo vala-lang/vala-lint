@@ -312,7 +312,7 @@ namespace Marlin {
 
                 Gdk.RGBA color ={};
                 if (background != null && !selected) {
-                    if (!color.parse (background)) {
+                    if (!color.parse (background)){
                         critical ("Can't parse{} this color value: %s", background);
                         color = style_context.get_background_color (state);
                     }
@@ -331,7 +331,7 @@ namespace Marlin {
                                   int width,
                                   int height,
                                   out int x_offset,
-                                  out int y_offset) {
+                                  out int y_offset){
 
             if (widget.get_direction () == Gtk.TextDirection.RTL) {
                 x_offset = (int)((1.0f - xalign) * (cell_area.width - width));
