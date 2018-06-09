@@ -21,6 +21,12 @@ class UnitTest : GLib.Object {
 
     public static int main (string[] args) {
 
+        var double_spaces_check = new ValaLint.Checks.DoubleSpacesCheck ();
+        assert_pass (double_spaces_check, "/*    *//*");
+        assert_pass (double_spaces_check, "   lorem ipsum");
+        assert_warning (double_spaces_check, "int test  = 2;", 9);
+        assert_warning (double_spaces_check, "int test = {  };", 13);
+
         var ellipsis_check = new ValaLint.Checks.EllipsisCheck ();
         assert_pass (ellipsis_check, "lorem ipsum");
         assert_pass (ellipsis_check, "lorem ipsum...");
