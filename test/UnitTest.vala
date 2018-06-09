@@ -34,6 +34,11 @@ class UnitTest : GLib.Object {
         assert_pass (trailing_whitespace_check, "lorem ipsum");
         assert_warning (trailing_whitespace_check, "lorem ipsum ");
 
+        var block_parenthesis_check = new ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck ();
+        assert_pass (block_parenthesis_check, "test () {");
+        assert_warning (block_parenthesis_check, "test (){");
+        assert_warning (block_parenthesis_check, "test ()\n{");
+        assert_warning (block_parenthesis_check, "test ()   {");
         return 0;
     }
 
@@ -50,7 +55,7 @@ class UnitTest : GLib.Object {
         var parsed_result = parser.parse (input);
         var mistakes = new Gee.ArrayList<ValaLint.FormatMistake?> ();
         check.check (parsed_result, ref mistakes);
-        assert (mistakes.size == 1);
+        assert (mistakes.size > 0);
         if (char_pos > -1) {
             assert (mistakes[0].char_index == char_pos);
         }
