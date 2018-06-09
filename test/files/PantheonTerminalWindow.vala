@@ -20,7 +20,7 @@
 namespace PantheonTerminal {
 
     public class PantheonTerminalWindow : Gtk.Window {
-        private Pango.FontDescription term_font;
+    	private Pango.FontDescription term_font;
         private Granite.Widgets.DynamicNotebook notebook;
         private Gtk.Clipboard clipboard;
         private Gtk.Clipboard primary_selection;
@@ -86,8 +86,9 @@ namespace PantheonTerminal {
                 <menuitem name="Search" action="Search"/>
                 <menuitem name="Show in File Browser" action="Show in File Browser"/>
             </popup>
-            </ui>
+            </ui>...
         """;
+        // ...
 
         public PantheonTerminalWindow (PantheonTerminalApp app, bool recreate_tabs = true) {
             Object (
