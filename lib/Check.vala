@@ -19,26 +19,22 @@
  * Authored by: Marcus Wichelmann <marcus.wichelmann@hotmail.de>
  */
 
-public abstract class ValaLint.Check {
+public abstract class ValaLint.Check : Object {
 
     /**
      * Property whether the check should allow multiple mistakes in a single line.
      */
-    protected bool single_mistake_in_line = false;
+    public bool single_mistake_in_line { get; construct; default = false; }
 
     /**
-     * Method to get a short but descriptive title of the check.
-     *
-     * @return The title of the check.
+     * Short but descriptive title of the check.
      */
-    public abstract string get_title ();
+    public string title { get; construct; }
 
     /**
-     * Method to get a short description of what this class checks for.
-     *
-     * @return The description of the check.
+     * A short description of what this class checks for.
      */
-    public abstract string get_description ();
+    public string description { get; construct; }
 
     /**
      * Checks a given parse result for formatting mistakes.
