@@ -30,38 +30,41 @@ public class ValaLint.Linter : Object {
         enabled_checks.add (new Checks.TrailingWhitespaceCheck ());
     }
 
+    public Linter.with_check (Check check) {
+        enabled_checks = new Gee.ArrayList<Check> ();
+        enabled_checks.add (check);
+    }
+
+
     public Linter.with_checks (Gee.ArrayList<Check> checks) {
         enabled_checks = checks;
     }
 
-    public Gee.ArrayList<FormatMistake?> run_checks_for_line (int line_index, string line) {
+    public Gee.ArrayList<FormatMistake?> run_checks (string input) {
+        var parser = new ValaLint.Parser ();
+        Gee.ArrayList<ParseResult?> parse_result = parser.parse (input);
+
         var mistake_list = new Gee.ArrayList<FormatMistake?> ();
 
         foreach (Check check in enabled_checks) {
-            check.check_line (mistake_list, line_index, line);
+            check.check (parse_result, ref mistake_list);
         }
 
-        return mistake_list;
-    }
-
-    public Gee.ArrayList<FormatMistake?> run_checks_for_stream (DataInputStream stream) throws IOError {
-        var mistake_list = new Gee.ArrayList<FormatMistake?> ();
-
-        int line_index = 1;
-        string line;
-
-        while ((line = stream.read_line (null)) != null) {
-            foreach (Check check in enabled_checks) {
-                check.check_line (mistake_list, line_index, line);
+        mistake_list.sort ((a, b) => {
+            if (a.line_index == b.line_index) {
+                return a.char_index - b.char_index;
             }
-
-            line_index++;
-        }
+            return a.line_index - b.line_index;
+        });
 
         return mistake_list;
     }
 
     public Gee.ArrayList<FormatMistake?> run_checks_for_file (File file) throws Error, IOError {
-        return run_checks_for_stream (new DataInputStream (file.read ()));
+        var channel = new IOChannel.file (file.get_path (), "r");
+        string text;
+        size_t length;
+        channel.read_to_end (out text, out length);
+        return run_checks (text);
     }
 }

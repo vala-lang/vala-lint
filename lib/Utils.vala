@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2018 elementary LLC. (https://github.com/elementary/Vala-Lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -17,20 +17,22 @@
  * Boston, MA 02110-1301 USA.
  */
 
-public class ValaLint.Checks.EllipsisCheck : Check {
-    public override string get_title () {
-        return _("ellipsis");
+public class ValaLint.Utils : Object {
+    /**
+     * Method to get the line count of a string.
+     *
+     * @return The number of lines in the input string.
+     */
+    public static int get_line_count (string input) {
+        return input.split ("\n").length - 1;
     }
 
-    public override string get_description () {
-        return _("Checks for ellipsis character instead of three periods");
-    }
-
-    public override void check (Gee.ArrayList<ParseResult?> parse_result, ref Gee.ArrayList<FormatMistake? > mistake_list) {
-        foreach (ParseResult r in parse_result) {
-            if (r.type == ParseType.String) {
-                add_regex_mistake ("""\.\.\.""", _("Expected ellipsis instead of three periods"), r, ref mistake_list);
-            }
-        }
+    /**
+     * Method to get the char position in the current line of the input string.
+     *
+     * @return The char index.
+     */
+    public static int get_char_index_in_line (string input, int pos) {
+        return pos - input[0:pos].last_index_of_char ('\n') - 1;
     }
 }

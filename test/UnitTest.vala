@@ -37,13 +37,22 @@ class UnitTest : GLib.Object {
         return 0;
     }
 
-    public static void assert_pass (ValaLint.Check check, string line) {
-        var mistake_list = new Gee.ArrayList<ValaLint.FormatMistake?> ();
-        assert (!check.check_line (mistake_list, 0, line));
+    private static void assert_pass (ValaLint.Check check, string input) {
+        var parser = new ValaLint.Parser ();
+        var parsed_result = parser.parse (input);
+        var mistakes = new Gee.ArrayList<ValaLint.FormatMistake?> ();
+        check.check (parsed_result, ref mistakes);
+        assert (mistakes.size == 0);
     }
 
-    public static void assert_warning (ValaLint.Check check, string line) {
-        var mistake_list = new Gee.ArrayList<ValaLint.FormatMistake?> ();
-        assert (check.check_line (mistake_list, 0, line));
+    private static void assert_warning (ValaLint.Check check, string input, int char_pos = -1) {
+        var parser = new ValaLint.Parser ();
+        var parsed_result = parser.parse (input);
+        var mistakes = new Gee.ArrayList<ValaLint.FormatMistake?> ();
+        check.check (parsed_result, ref mistakes);
+        assert (mistakes.size == 1);
+        if (char_pos > -1) {
+            assert (mistakes[0].char_index == char_pos);
+        }
     }
 }
