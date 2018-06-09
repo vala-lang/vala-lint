@@ -23,13 +23,11 @@ public class ValaLint.Checks.EllipsisCheck : Check {
             title: _("ellipsis"),
             description: _("Checks for ellipsis character instead of three periods")
         );
-    }
 
-    public override void check (Gee.ArrayList<ParseResult?> parse_result, ref Gee.ArrayList<FormatMistake? > mistake_list) {
-        foreach (ParseResult r in parse_result) {
-            if (r.type == ParseType.String) {
-                add_regex_mistake ("""\.\.\.""", _("Expected ellipsis instead of three periods"), r, ref mistake_list);
-            }
-        }
+        add_regex_check (
+            ParseType.String,
+            """\.\.\.""",
+            _("Expected ellipsis instead of three periods")
+        );
     }
 }

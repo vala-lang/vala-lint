@@ -25,14 +25,19 @@ public class ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck : Check {
             title: _("block-opening-brace-space-before"),
             description: _("Checks for correct use of opening braces")
         );
-    }
 
-    public override void check (Gee.ArrayList<ParseResult? > parse_result, ref Gee.ArrayList<FormatMistake? > mistake_list) {
-        foreach (ParseResult r in parse_result) {
-            if (r.type == ParseType.Default) {
-                add_regex_mistake ("""[\w)=]\n\s*{""", _("Unexpected line break before \"{\""), r, ref mistake_list, 1);
-                add_regex_mistake ("""[\w)=]{""", _("Expected whitespace before \"{\""), r, ref mistake_list, 1);
-            }
-        }
+        add_regex_check (
+            ParseType.Default,
+            """[\w)=]\n\s*{""",
+            _("Unexpected line break before \"{\""),
+            1
+        );
+
+        add_regex_check (
+            ParseType.Default,
+            """[\w)=]{""",
+            _("Expected whitespace before \"{\""),
+            1
+        );
     }
 }

@@ -17,6 +17,7 @@
  * Boston, MA 02110-1301 USA.
  */
 
+[Flags]
 public enum ParseType {
     Default,
     Comment,
