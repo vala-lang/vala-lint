@@ -54,7 +54,7 @@ class FileTest : Object {
                                             int line_pos,
                                             int char_pos = -1) {
         foreach (var m in mistakes) {
-            if (m.check.get_title () == title && m.line_index == line_pos) {
+            if (m.check.title == title && m.line_index == line_pos) {
                 if (char_pos == -1 || (char_pos > -1 && m.char_index == char_pos)) {
                     return;
                 }
