@@ -20,6 +20,10 @@
  */
 
 public class ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck : Check {
+    public BlockOpeningBraceSpaceBeforeCheck () {
+        single_mistake_in_line = true;
+    }
+
     public override string get_title () {
         return _("block-opening-brace-space-before");
     }
