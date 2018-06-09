@@ -33,6 +33,8 @@ public class ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck : Check {
             if (r.type == ParseType.Default) {
                 add_regex_mistake ("""[\w)=]\n\s*{""", _("Unexpected line break before \"{\""), r, ref mistake_list, 1);
                 add_regex_mistake ("""[\w)=]{""", _("Expected whitespace before \"{\""), r, ref mistake_list, 1);
+                // Check for a tab character or more than one whitespace character before the open parenthesis
+                add_regex_mistake ("""[\w)=](?:\t|\s{2,}){""", _("Expected single space before \"{\"}"), r, ref mistake_list, 1);
             }
         }
     }
