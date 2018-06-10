@@ -21,6 +21,11 @@ class UnitTest : GLib.Object {
 
     public static int main (string[] args) {
 
+        var always_use_brace_check = new ValaLint.Checks.AlwaysUseBracesCheck ();
+        assert_pass (always_use_brace_check, "if (a == \"{\") { return 2; }");
+        assert_warning (always_use_brace_check, "while (a == 3) \n a = 2;");
+        assert_warning (always_use_brace_check, "else \n a = 2;");
+
         var ellipsis_check = new ValaLint.Checks.EllipsisCheck ();
         assert_pass (ellipsis_check, "lorem ipsum");
         assert_pass (ellipsis_check, "lorem ipsum...");
