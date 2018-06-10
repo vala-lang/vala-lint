@@ -26,6 +26,11 @@ class UnitTest : GLib.Object {
         assert_pass (ellipsis_check, "lorem ipsum...");
         assert_warning (ellipsis_check, "lorem ipsum\"...\"");
 
+        var line_length_check = new ValaLint.Checks.LineLengthCheck ();
+        assert_pass (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua.");
+        assert_warning (line_length_check, "/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua consectetur */ aliqua.", 120);
+        assert_warning (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", 120);
+
         var tab_check = new ValaLint.Checks.TabCheck ();
         assert_pass (tab_check, "lorem ipsum");
         assert_warning (tab_check, "lorem	ipsum");
