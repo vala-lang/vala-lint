@@ -41,6 +41,7 @@ public class ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck : Check {
             1
         );
 
+        // Check for a tab character or more than one whitespace character before the open parenthesis
         add_regex_check (
             ParseType.Default,
             """[\w)=](?:\t|\s{2,}){""",
