@@ -11,8 +11,8 @@ posix_dep = meson.get_compiler('vala').find_library('posix')
 
 if dependency('libvala-0.40', required: false).found()
     libvala_dep = dependency('libvala-0.40')
-elif dependency('libvala-0.36', required: false).found()
-    libvala_dep = dependency('libvala-0.36')
+elif dependency('libvala-0.36-0', required: false).found()
+    libvala_dep = dependency('libvala-0.36-0')
 endif
 
 subdir('lib')
