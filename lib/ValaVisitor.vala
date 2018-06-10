@@ -24,7 +24,6 @@ class ValaLint.Visitor : CodeVisitor {
 
     public Gee.ArrayList<Check> checks { get; set; }
 
-    // public Checks.EllipsisCheck ellipsis_check;
     public Checks.NamingAllCapsCheck naming_all_caps_check;
     public Checks.NamingCamelCaseCheck naming_camel_case_check;
     public Checks.NamingUnderscoreCheck naming_underscore_check;

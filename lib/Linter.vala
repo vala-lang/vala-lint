@@ -82,18 +82,6 @@ public class ValaLint.Linter : Object {
             check.check (parse_result, ref mistake_list);
         }
 
-        /* var channel = new IOChannel.file (file.get_path (), "r");
-        string text;
-        size_t length;
-        channel.read_to_end (out text, out length);
-
-        var parser = new ValaLint.Parser ();
-        Gee.ArrayList<ParseResult?> parse_result = parser.parse (text);
-
-        foreach (Check check in global_checks) {
-            check.check (parse_result, ref mistake_list);
-        } */
-
         mistake_list.sort ((a, b) => {
             if (a.line_index == b.line_index) {
                 return a.char_index - b.char_index;
