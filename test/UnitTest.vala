@@ -26,6 +26,29 @@ class UnitTest : GLib.Object {
         assert_pass (ellipsis_check, "lorem ipsum...");
         assert_warning (ellipsis_check, "lorem ipsum\"...\"");
 
+        var naming_all_caps_check = new ValaLint.Checks.NamingAllCapsCheck ();
+        assert_pass (naming_all_caps_check, "LOREM");
+        assert_pass (naming_all_caps_check, "LOREM_IPSUM");
+        assert_warning (naming_all_caps_check, "lOREM");
+        assert_warning (naming_all_caps_check, "LOREm");
+        assert_warning (naming_all_caps_check, "LOREM-IPSUM");
+
+        var naming_camel_case_check = new ValaLint.Checks.NamingCamelCaseCheck ();
+        assert_pass (naming_camel_case_check, "Lorem");
+        assert_pass (naming_camel_case_check, "LoremIpsum");
+        assert_pass (naming_camel_case_check, "HTTPConnection");
+        assert_warning (naming_camel_case_check, "lorem");
+        assert_warning (naming_camel_case_check, "loremIpsum");
+        assert_warning (naming_camel_case_check, "lorem_ipsum");
+        assert_warning (naming_camel_case_check, "lorem-ipsum");
+
+        var naming_underscore_check = new ValaLint.Checks.NamingUnderscoreCheck ();
+        assert_pass (naming_underscore_check, "lorem");
+        assert_pass (naming_underscore_check, "lorem_ipsum");
+        assert_warning (naming_underscore_check, "Lorem");
+        assert_warning (naming_underscore_check, "Lorem_Ipsum");
+        assert_warning (naming_underscore_check, "lorem_IPsum");
+
         var tab_check = new ValaLint.Checks.TabCheck ();
         assert_pass (tab_check, "lorem ipsum");
         assert_warning (tab_check, "lorem	ipsum");

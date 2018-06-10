@@ -20,35 +20,79 @@
  */
 
 public class ValaLint.Linter : Object {
-    public Gee.ArrayList<Check> enabled_checks { get; set; }
+
+    /* Checks which work on the result of our own ValaLint.Parser. */
+    public Gee.ArrayList<Check> global_checks { get; set; }
+
+    /* Checks which work on the abstract syntax tree of the offical Vala.Parser */
+    ValaLint.Visitor visitor;
 
     public Linter () {
-        enabled_checks = new Gee.ArrayList<Check> ();
-        enabled_checks.add (new Checks.BlockOpeningBraceSpaceBeforeCheck ());
-        enabled_checks.add (new Checks.EllipsisCheck ());
-        enabled_checks.add (new Checks.TabCheck ());
-        enabled_checks.add (new Checks.TrailingWhitespaceCheck ());
+        global_checks = new Gee.ArrayList<Check> ();
+        global_checks.add (new Checks.BlockOpeningBraceSpaceBeforeCheck ());
+        global_checks.add (new Checks.EllipsisCheck ());
+        global_checks.add (new Checks.TabCheck ());
+        global_checks.add (new Checks.TrailingWhitespaceCheck ());
+
+        visitor = new ValaLint.Visitor ();
+        visitor.naming_all_caps_check = new Checks.NamingAllCapsCheck ();
+        visitor.naming_camel_case_check = new Checks.NamingCamelCaseCheck ();
+        visitor.naming_underscore_check = new Checks.NamingUnderscoreCheck ();
+        visitor.checks = new Gee.ArrayList<Check> ();
+        visitor.checks.add (visitor.naming_all_caps_check);
+        visitor.checks.add (visitor.naming_camel_case_check);
+        visitor.checks.add (visitor.naming_underscore_check);
     }
 
     public Linter.with_check (Check check) {
-        enabled_checks = new Gee.ArrayList<Check> ();
-        enabled_checks.add (check);
+        global_checks = new Gee.ArrayList<Check> ();
+        global_checks.add (check);
     }
-
 
     public Linter.with_checks (Gee.ArrayList<Check> checks) {
-        enabled_checks = checks;
+        global_checks = checks;
     }
 
-    public Gee.ArrayList<FormatMistake?> run_checks (string input) {
-        var parser = new ValaLint.Parser ();
-        Gee.ArrayList<ParseResult?> parse_result = parser.parse (input);
-
+    public Gee.ArrayList<FormatMistake?> run_checks_for_file (File file) throws Error, IOError {
         var mistake_list = new Gee.ArrayList<FormatMistake?> ();
 
-        foreach (Check check in enabled_checks) {
+        var context = new Vala.CodeContext ();
+        Vala.CodeContext.push (context);
+
+        var filename = file.get_path ();
+        var reporter = new Reporter (mistake_list);
+        context.report = reporter;
+        context.add_source_filename (filename, false, true);
+
+        /* This parser builds the abstract syntax tree (AST) */
+        var parser_ast = new Vala.Parser ();
+        parser_ast.parse (context);
+
+        visitor.set_mistake_list (mistake_list);
+        context.get_source_files ()[0].accept (visitor);
+
+        string content;
+        FileUtils.get_contents (filename, out content); // Get file content
+
+        /* Our parser checks only strings, comments and other code */
+        var parser_code = new ValaLint.Parser ();
+        Gee.ArrayList<ParseResult?> parse_result = parser_code.parse (content);
+
+        foreach (Check check in global_checks) {
             check.check (parse_result, ref mistake_list);
         }
+
+        /* var channel = new IOChannel.file (file.get_path (), "r");
+        string text;
+        size_t length;
+        channel.read_to_end (out text, out length);
+
+        var parser = new ValaLint.Parser ();
+        Gee.ArrayList<ParseResult?> parse_result = parser.parse (text);
+
+        foreach (Check check in global_checks) {
+            check.check (parse_result, ref mistake_list);
+        } */
 
         mistake_list.sort ((a, b) => {
             if (a.line_index == b.line_index) {
@@ -58,13 +102,5 @@ public class ValaLint.Linter : Object {
         });
 
         return mistake_list;
-    }
-
-    public Gee.ArrayList<FormatMistake?> run_checks_for_file (File file) throws Error, IOError {
-        var channel = new IOChannel.file (file.get_path (), "r");
-        string text;
-        size_t length;
-        channel.read_to_end (out text, out length);
-        return run_checks (text);
     }
 }

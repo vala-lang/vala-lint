@@ -5,15 +5,21 @@ vala_linter_files = files(
     'Parser.vala',
     'ParseResult.vala',
     'Utils.vala',
+    'ValaReporter.vala',
+    'ValaVisitor.vala',
     'Checks/BlockOpeningBraceSpaceBeforeCheck.vala',
     'Checks/EllipsisCheck.vala',
+    'Checks/NamingAllCapsCheck.vala',
+    'Checks/NamingCamelCaseCheck.vala',
+    'Checks/NamingUnderscoreCheck.vala',
     'Checks/TabCheck.vala',
     'Checks/TrailingWhitespaceCheck.vala',
 )
 
 vala_linter_deps = [
     gee_dep,
-    gio_dep
+    gio_dep,
+    libvala_dep,
 ]
 
 vala_linter_library = shared_library(
