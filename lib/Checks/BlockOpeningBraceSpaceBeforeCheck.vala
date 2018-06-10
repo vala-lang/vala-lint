@@ -23,7 +23,8 @@ public class ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck : Check {
     public BlockOpeningBraceSpaceBeforeCheck () {
         Object (
             title: _("block-opening-brace-space-before"),
-            description: _("Checks for correct use of opening braces")
+            description: _("Checks for correct use of opening braces"),
+            single_mistake_in_line: true
         );
 
         add_regex_check (
@@ -37,6 +38,13 @@ public class ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck : Check {
             ParseType.Default,
             """[\w)=]{""",
             _("Expected whitespace before \"{\""),
+            1
+        );
+
+        add_regex_check (
+            ParseType.Default,
+            """[\w)=](?:\t|\s{2,}){""",
+            _("Expected single space before \"{\""),
             1
         );
     }
