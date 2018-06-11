@@ -21,7 +21,8 @@
 
 public class ValaLint.Application : GLib.Application {
     private static bool print_version = false;
-    private static string lint_directory;
+    private static string? lint_directory = null;
+    private static File? lint_directory_file = null;
 
     private ApplicationCommandLine application_command_line;
 
@@ -77,7 +78,8 @@ public class ValaLint.Application : GLib.Application {
         var files = new Gee.ArrayList<File> ();
         try {
             if (lint_directory != null) {
-                files = get_files_from_directory (File.new_for_path (lint_directory));
+                lint_directory_file = File.new_for_path (lint_directory);
+                files = get_files_from_directory (lint_directory_file);
             } else {
                 files = get_files_from_globs (command_line, args[1:args.length]);
             }
@@ -158,7 +160,13 @@ public class ValaLint.Application : GLib.Application {
     void print_mistakes (Gee.ArrayList<FileData?> file_data_list) {
         foreach (FileData file_data in file_data_list) {
             if (!file_data.mistakes.is_empty) {
-                var path = file_data.file.get_path ();
+                string path = "";
+                if (lint_directory_file != null) {
+                    path = lint_directory_file.get_relative_path (file_data.file);
+                } else {
+                    path = file_data.file.get_path ();
+                }
+
                 application_command_line.print ("\x001b[1m\x001b[4m" + "%s" + "\x001b[0m\n", path);
 
                 foreach (FormatMistake mistake in file_data.mistakes) {
