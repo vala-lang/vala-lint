@@ -289,7 +289,7 @@ class ValaLint.Visitor : CodeVisitor {
 
     public override void visit_element_access (ElementAccess expr) {
         expr.accept_children (this);
-	}
+    }
 
     public override void visit_slice_expression (SliceExpression expr) {
         expr.accept_children (this);
@@ -297,31 +297,31 @@ class ValaLint.Visitor : CodeVisitor {
 
     public override void visit_base_access (BaseAccess expr) {
         expr.accept_children (this);
-	}
+    }
 
     public override void visit_postfix_expression (PostfixExpression expr) {
         expr.accept_children (this);
-	}
+    }
 
     public override void visit_object_creation_expression (ObjectCreationExpression expr) {
         expr.accept_children (this);
-	}
+    }
 
     public override void visit_sizeof_expression (SizeofExpression expr) {
         expr.accept_children (this);
-	}
+    }
 
     public override void visit_typeof_expression (TypeofExpression expr) {
         expr.accept_children (this);
-	}
+    }
 
     public override void visit_unary_expression (UnaryExpression expr) {
         expr.accept_children (this);
-	}
+    }
 
     public override void visit_cast_expression (CastExpression expr) {
         expr.accept_children (this);
-	}
+    }
 
     public override void visit_named_argument (NamedArgument expr) {
         expr.accept_children (this);
@@ -329,27 +329,27 @@ class ValaLint.Visitor : CodeVisitor {
 
     public override void visit_pointer_indirection (PointerIndirection expr) {
         expr.accept_children (this);
-	}
+    }
 
     public override void visit_addressof_expression (AddressofExpression expr) {
         expr.accept_children (this);
-	}
+    }
 
     public override void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
         expr.accept_children (this);
-	}
+    }
 
     public override void visit_binary_expression (BinaryExpression expr) {
         expr.accept_children (this);
-	}
+    }
 
     public override void visit_type_check (TypeCheck expr) {
         expr.accept_children (this);
-	}
+    }
 
     public override void visit_conditional_expression (ConditionalExpression expr) {
         expr.accept_children (this);
-	}
+    }
 
     public override void visit_lambda_expression (LambdaExpression expr) {
         expr.accept_children (this);
