@@ -26,6 +26,7 @@ public class ValaLint.Linter : Object {
         enabled_checks = new Gee.ArrayList<Check> ();
         enabled_checks.add (new Checks.BlockOpeningBraceSpaceBeforeCheck ());
         enabled_checks.add (new Checks.EllipsisCheck ());
+        enabled_checks.add (new Checks.LineLengthCheck ());
         enabled_checks.add (new Checks.TabCheck ());
         enabled_checks.add (new Checks.TrailingWhitespaceCheck ());
     }
