@@ -363,7 +363,7 @@ class ValaLint.Visitor : CodeVisitor {
         expr.accept_children (this);
     }
 
-    private static Gee.ArrayList<ParseResult?> string_parsed (string text, SourceReference source_ref, ParseType type = ParseType.Default) {
+    private static Gee.ArrayList<ParseResult?> string_parsed (string text, SourceReference source_ref, ParseType type = ParseType.DEFAULT) {
         var parsed = new Gee.ArrayList<ParseResult?> ();
         ParseResult result = { text, type, source_ref.begin.line, source_ref.begin.column };
         parsed.add (result);
