@@ -36,6 +36,7 @@ class UnitTest : GLib.Object {
         assert_pass (space_before_paren_check, "void test ()");
         assert_pass (space_before_paren_check, "var test = 2 * (3 + 1);");
         assert_pass (space_before_paren_check, "a = !(true && false);");
+        assert_pass (space_before_paren_check, "actions &= ~(Gdk.DragAction.COPY | Gdk.DragAction.LINK)");
         assert_warning (space_before_paren_check, "void test()", 10);
         assert_warning (space_before_paren_check, "void = 2*(2+2)", 10);
 
