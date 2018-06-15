@@ -7,6 +7,7 @@ vala_linter_files = files(
     'Utils.vala',
     'Checks/BlockOpeningBraceSpaceBeforeCheck.vala',
     'Checks/EllipsisCheck.vala',
+    'Checks/SpaceBeforeParenCheck.vala',
     'Checks/TabCheck.vala',
     'Checks/TrailingWhitespaceCheck.vala',
 )
