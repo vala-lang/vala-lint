@@ -50,8 +50,12 @@ public class ValaLint.Application : GLib.Application {
         string[] args = command_line.get_arguments ();
         string*[] _args = new string[args.length];
 
-        for (int i = 0; i < args.length; i++) {
-            _args[i] = args[i];
+        if (args.length == 1) {
+            _args = { args[0], "-d", "." };
+        } else {
+            for (int i = 0; i < args.length; i++) {
+                _args[i] = args[i];
+            }
         }
 
         try {
