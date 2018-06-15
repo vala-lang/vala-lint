@@ -21,6 +21,12 @@ class UnitTest : GLib.Object {
 
     public static int main (string[] args) {
 
+        var block_parenthesis_check = new ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck ();
+        assert_pass (block_parenthesis_check, "test () {");
+        assert_warning (block_parenthesis_check, "test (){");
+        assert_warning (block_parenthesis_check, "test ()\n{");
+        assert_warning (block_parenthesis_check, "test ()   {");
+
         var ellipsis_check = new ValaLint.Checks.EllipsisCheck ();
         assert_pass (ellipsis_check, "lorem ipsum");
         assert_pass (ellipsis_check, "lorem ipsum...");
@@ -33,6 +39,14 @@ class UnitTest : GLib.Object {
         assert_warning (line_length_check, "/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua consectetur */ aliqua.", 120);
         assert_warning (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", 120);
 
+        var space_before_paren_check = new ValaLint.Checks.SpaceBeforeParenCheck ();
+        assert_pass (space_before_paren_check, "void test ()");
+        assert_pass (space_before_paren_check, "var test = 2 * (3 + 1);");
+        assert_pass (space_before_paren_check, "a = !(true && false);");
+        assert_pass (space_before_paren_check, "actions &= ~(Gdk.DragAction.COPY | Gdk.DragAction.LINK)");
+        assert_warning (space_before_paren_check, "void test()", 10);
+        assert_warning (space_before_paren_check, "void = 2*(2+2)", 10);
+
         var tab_check = new ValaLint.Checks.TabCheck ();
         assert_pass (tab_check, "lorem ipsum");
         assert_warning (tab_check, "lorem	ipsum");
@@ -41,11 +55,6 @@ class UnitTest : GLib.Object {
         assert_pass (trailing_whitespace_check, "lorem ipsum");
         assert_warning (trailing_whitespace_check, "lorem ipsum ");
 
-        var block_parenthesis_check = new ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck ();
-        assert_pass (block_parenthesis_check, "test () {");
-        assert_warning (block_parenthesis_check, "test (){");
-        assert_warning (block_parenthesis_check, "test ()\n{");
-        assert_warning (block_parenthesis_check, "test ()   {");
         return 0;
     }
 
