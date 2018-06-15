@@ -12,6 +12,7 @@ vala_linter_files = files(
     'Checks/NamingAllCapsCheck.vala',
     'Checks/NamingCamelCaseCheck.vala',
     'Checks/NamingUnderscoreCheck.vala',
+    'Checks/SpaceBeforeParenCheck.vala',
     'Checks/TabCheck.vala',
     'Checks/TrailingWhitespaceCheck.vala',
 )
