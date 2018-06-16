@@ -24,13 +24,11 @@ public class ValaLint.Checks.TabCheck : Check {
             title: _("use-of-tabs"),
             description: _("Checks for tabs instead of spaces")
         );
-    }
 
-    public override void check (Gee.ArrayList<ParseResult? > parse_result, ref Gee.ArrayList<FormatMistake? > mistake_list) {
-        foreach (ParseResult r in parse_result) {
-            if (r.type == ParseType.Default || r.type == ParseType.Comment) {
-                add_regex_mistake ("""\t""", _("Expected spaces instead of tabs"), r, ref mistake_list, 0);
-            }
-        }
+        add_regex_check (
+            ParseType.Default | ParseType.Comment,
+            """\t""",
+            _("Expected spaces instead of tabs")
+        );
     }
 }
