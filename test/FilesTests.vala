@@ -26,9 +26,10 @@ class FileTest : Object {
         assert (mistakes.size == 0);
 
         mistakes = lint_test_file (linter, "PantheonTerminalWindow.vala");
-        assert (mistakes.size == 3);
+        assert (mistakes.size == 4);
         assert_includes (mistakes, "use-of-tabs", 23);
         assert_includes (mistakes, "ellipsis", 89);
+        assert_includes (mistakes, "space-before-paren", 883);
         assert_includes (mistakes, "block-opening-brace-space-before", 1122);
 
         mistakes = lint_test_file (linter, "TextRenderer.vala");
