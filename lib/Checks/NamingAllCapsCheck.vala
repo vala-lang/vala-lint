@@ -27,7 +27,7 @@ public class ValaLint.Checks.NamingAllCapsCheck : Check {
 
     public override void check (Gee.ArrayList<ParseResult?> parse_result, ref Gee.ArrayList<FormatMistake?> mistake_list) {
         foreach (ParseResult r in parse_result) {
-            add_regex_mistake ("""[a-z-]""", "Use ALL_CAPS_CONVENTION", r, ref mistake_list, 0, true);
+            add_regex_mistake ("""[a-z-]""", _("Expected variable name in ALL_CAPS_CONVENTION"), r, ref mistake_list, 0, true);
         }
     }
 }
