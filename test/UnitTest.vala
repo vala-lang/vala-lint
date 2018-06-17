@@ -31,7 +31,7 @@ class UnitTest : GLib.Object {
         assert_pass (double_spaces_check, "/*    *//*");
         assert_pass (double_spaces_check, "   lorem ipsum");
         assert_pass (double_spaces_check, "int test = 2;    // asdf");
-        // assert_pass (double_spaces_check, "int test = 2;    /* asdf  */");
+        assert_pass (double_spaces_check, "int test = 2;    /* asdf  */");
         assert_warning (double_spaces_check, "int test  = 2;", 9);
         assert_warning (double_spaces_check, "int test = {  };", 13);
 
