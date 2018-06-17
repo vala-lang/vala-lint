@@ -30,6 +30,8 @@ class UnitTest : GLib.Object {
         var double_spaces_check = new ValaLint.Checks.DoubleSpacesCheck ();
         assert_pass (double_spaces_check, "/*    *//*");
         assert_pass (double_spaces_check, "   lorem ipsum");
+        assert_pass (double_spaces_check, "int test = 2;    // asdf");
+        // assert_pass (double_spaces_check, "int test = 2;    /* asdf  */");
         assert_warning (double_spaces_check, "int test  = 2;", 9);
         assert_warning (double_spaces_check, "int test = {  };", 13);
 
@@ -62,7 +64,9 @@ class UnitTest : GLib.Object {
         var parsed_result = parser.parse (input);
         var mistakes = new Gee.ArrayList<ValaLint.FormatMistake?> ();
         check.check (parsed_result, ref mistakes);
-        assert (mistakes.size == 0);
+        if (mistakes.size != 0) {
+            error ("%s: %s at char %d", input, mistakes[0].mistake, mistakes[0].char_index);
+        }
     }
 
     private static void assert_warning (ValaLint.Check check, string input, int char_pos = -1) {

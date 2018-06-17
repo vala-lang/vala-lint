@@ -28,11 +28,11 @@ public class ValaLint.Checks.DoubleSpacesCheck : Check {
     public override void check (Gee.ArrayList<ParseResult?> parse_result, ref Gee.ArrayList<FormatMistake?> mistake_list) {
         foreach (ParseResult r in parse_result) {
             if (r.type == ParseType.Default) {
-                add_regex_mistake ("""\S  """, "Unexpected double spaces", r, ref mistake_list, 1);
+                add_regex_mistake ("""\S {2,}(?!\/\/| )""", "Unexpected double spaces", r, ref mistake_list, 1);
 
                 // Check for problems at the beginning of strings
                 if (r.char_pos > 1) {
-                    add_regex_mistake ("""^  """, "Unexpected double spaces", r, ref mistake_list);
+                    add_regex_mistake ("""^ {2,}(?!(\/\/|\/\*| ))""", "Unexpected double spaces", r, ref mistake_list);
                 }
             }
         }
