@@ -37,13 +37,13 @@ public class ValaLint.Parser : Object {
         """((?<!\\)(\\\\)*')"""
     };
     ParseType[] parse_types = {
-        ParseType.Comment,
-        ParseType.Comment,
-        ParseType.String,
-        ParseType.String,
-        ParseType.String,
-        ParseType.String,
-        ParseType.Default
+        ParseType.COMMENT,
+        ParseType.COMMENT,
+        ParseType.STRING,
+        ParseType.STRING,
+        ParseType.STRING,
+        ParseType.STRING,
+        ParseType.DEFAULT
     };
 
     struct MatchTypeInfo {
@@ -62,7 +62,7 @@ public class ValaLint.Parser : Object {
         MatchTypeInfo info = match_type (input, start_patterns, search_pos);
         while (info.match_info.matches ()) {
             if (info.start_pos > search_pos) {
-                add_result (input, search_pos, info.start_pos, ParseDetailType.Code, result, ref current_line);
+                add_result (input, search_pos, info.start_pos, ParseDetailType.CODE, result, ref current_line);
             }
             search_pos = info.start_pos;
 
@@ -80,7 +80,7 @@ public class ValaLint.Parser : Object {
         }
 
         if (input.length > search_pos) {
-            add_result (input, search_pos, input.length, ParseDetailType.Code, result, ref current_line);
+            add_result (input, search_pos, input.length, ParseDetailType.CODE, result, ref current_line);
         }
         return result;
     }

@@ -26,7 +26,7 @@ public class ValaLint.Application : GLib.Application {
 
     private ApplicationCommandLine application_command_line;
 
-    private const OptionEntry[] options = {
+    private const OptionEntry[] OPTIONS = {
         { "version", 'v', 0, OptionArg.NONE, ref print_version, "Display version number", null },
         { "directory", 'd', 0, OptionArg.STRING, ref lint_directory, "Lint all Vala files in the given directory." },
         { null }
@@ -61,7 +61,7 @@ public class ValaLint.Application : GLib.Application {
         try {
             var option_context = new OptionContext ("- Vala-Lint");
             option_context.set_help_enabled (true);
-            option_context.add_main_entries (options, null);
+            option_context.add_main_entries (OPTIONS, null);
 
             unowned string[] tmp = _args;
             option_context.parse (ref tmp);
