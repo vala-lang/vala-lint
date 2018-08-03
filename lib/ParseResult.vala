@@ -18,19 +18,19 @@
  */
 
 public enum ParseType {
-    Default,
-    Comment,
-    String
+    DEFAULT,
+    COMMENT,
+    STRING
 }
 
 public enum ParseDetailType { // start pattern, close pattern
-    InlineComment, // //, \n
-    MultilineComment, // /*, */
-    VerbatimString, // """, """
-    InterpolatedString, // @", "
-    NormalString, // ", "
-    SingleChar, // ', '
-    Code
+    INLINE_COMMENT, // //, \n
+    MULTILINE_COMMENT, // /*, */
+    VERBATIM_STRING, // """, """
+    INTERPOLATED_STRING, // @", "
+    NORMAL_STRING, // ", "
+    SINGLE_CHAR, // ', '
+    CODE
 }
 
 public struct ParseResult {
