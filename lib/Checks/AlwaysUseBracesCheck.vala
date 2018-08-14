@@ -27,7 +27,7 @@ public class ValaLint.Checks.AlwaysUseBracesCheck : Check {
 
     public override void check (Gee.ArrayList<ParseResult?> parse_result, ref Gee.ArrayList<FormatMistake?> mistake_list) {
         foreach (ParseResult r in parse_result) {
-            if (r.type == ParseType.Default) {
+            if (r.type == ParseType.DEFAULT) {
                 add_regex_mistake ("""\)\s*\n""", _("Expected an opening brace"), r, ref mistake_list, 1);
                 add_regex_mistake ("""else\s*\n""", _("Expected an opening brace"), r, ref mistake_list, 4);
                 add_regex_mistake ("""\n\s*else""", _("Expected a closing brace"), r, ref mistake_list, -4);
