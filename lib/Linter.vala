@@ -30,6 +30,7 @@ public class ValaLint.Linter : Object {
     public Linter () {
         global_checks = new Gee.ArrayList<Check> ();
         global_checks.add (new Checks.BlockOpeningBraceSpaceBeforeCheck ());
+        global_checks.add (new Checks.DoubleSpacesCheck ());
         global_checks.add (new Checks.EllipsisCheck ());
         global_checks.add (new Checks.SpaceBeforeParenCheck ());
         global_checks.add (new Checks.TabCheck ());
