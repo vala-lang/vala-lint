@@ -5,6 +5,7 @@ vala_linter_files = files(
     'Parser.vala',
     'ParseResult.vala',
     'Utils.vala',
+    'Checks/AlwaysUseBracesCheck.vala',
     'Checks/BlockOpeningBraceSpaceBeforeCheck.vala',
     'Checks/DoubleSpacesCheck.vala',
     'Checks/EllipsisCheck.vala',

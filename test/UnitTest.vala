@@ -21,6 +21,11 @@ class UnitTest : GLib.Object {
 
     public static int main (string[] args) {
 
+        var always_use_brace_check = new ValaLint.Checks.AlwaysUseBracesCheck ();
+        assert_pass (always_use_brace_check, "if (a == \"{\") { return 2; }");
+        assert_warning (always_use_brace_check, "while (a == 3) \n a = 2;");
+        assert_warning (always_use_brace_check, "else \n a = 2;");
+
         var block_parenthesis_check = new ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck ();
         assert_pass (block_parenthesis_check, "test () {");
         assert_warning (block_parenthesis_check, "test (){");
