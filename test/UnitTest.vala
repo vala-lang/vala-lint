@@ -40,6 +40,13 @@ class UnitTest : GLib.Object {
         assert_pass (ellipsis_check, "lorem ipsum...");
         assert_warning (ellipsis_check, "lorem ipsum\"...\"");
 
+        var line_length_check = new ValaLint.Checks.LineLengthCheck ();
+        assert_pass (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua.");
+        // This is 70 characters but 140 bytes, it should still pass.
+        assert_pass (line_length_check, "éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé");
+        assert_warning (line_length_check, "/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua consectetur */ aliqua.", 120);
+        assert_warning (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", 120);
+
         var space_before_paren_check = new ValaLint.Checks.SpaceBeforeParenCheck ();
         assert_pass (space_before_paren_check, "void test ()");
         assert_pass (space_before_paren_check, "var test = 2 * (3 + 1);");
