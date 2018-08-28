@@ -29,22 +29,22 @@ public class ValaLint.Linter : Object {
 
     public Linter () {
         global_checks = new Gee.ArrayList<Check> ();
-        global_checks.add (new Checks.BlockOpeningBraceSpaceBeforeCheck ());
-        global_checks.add (new Checks.DoubleSpacesCheck ());
-        global_checks.add (new Checks.EllipsisCheck ());
-        global_checks.add (new Checks.LineLengthCheck ());
-        global_checks.add (new Checks.SpaceBeforeParenCheck ());
-        global_checks.add (new Checks.TabCheck ());
-        global_checks.add (new Checks.TrailingWhitespaceCheck ());
+        // global_checks.add (new Checks.BlockOpeningBraceSpaceBeforeCheck ());
+        // global_checks.add (new Checks.DoubleSpacesCheck ());
+        // global_checks.add (new Checks.EllipsisCheck ());
+        // global_checks.add (new Checks.LineLengthCheck ());
+        // global_checks.add (new Checks.SpaceBeforeParenCheck ());
+        // global_checks.add (new Checks.TabCheck ());
+        // global_checks.add (new Checks.TrailingWhitespaceCheck ());
 
         visitor = new ValaLint.Visitor ();
         visitor.naming_all_caps_check = new Checks.NamingAllCapsCheck ();
         visitor.naming_camel_case_check = new Checks.NamingCamelCaseCheck ();
         visitor.naming_underscore_check = new Checks.NamingUnderscoreCheck ();
         visitor.checks = new Gee.ArrayList<Check> ();
-        visitor.checks.add (visitor.naming_all_caps_check);
-        visitor.checks.add (visitor.naming_camel_case_check);
-        visitor.checks.add (visitor.naming_underscore_check);
+        // visitor.checks.add (visitor.naming_all_caps_check);
+        // visitor.checks.add (visitor.naming_camel_case_check);
+        // visitor.checks.add (visitor.naming_underscore_check);
     }
 
     public Linter.with_check (Check check) {
@@ -72,7 +72,9 @@ public class ValaLint.Linter : Object {
         parser_ast.parse (context);
 
         visitor.set_mistake_list (mistake_list);
-        context.get_source_files ()[0].accept (visitor);
+        foreach (var vala_source_file in context.get_source_files ()) {
+            vala_source_file.accept (visitor);
+        }
 
         string content;
         FileUtils.get_contents (filename, out content); // Get file content
