@@ -32,6 +32,7 @@ public class ValaLint.Linter : Object {
         global_checks.add (new Checks.BlockOpeningBraceSpaceBeforeCheck ());
         global_checks.add (new Checks.DoubleSpacesCheck ());
         global_checks.add (new Checks.EllipsisCheck ());
+        global_checks.add (new Checks.LineLengthCheck ());
         global_checks.add (new Checks.SpaceBeforeParenCheck ());
         global_checks.add (new Checks.TabCheck ());
         global_checks.add (new Checks.TrailingWhitespaceCheck ());

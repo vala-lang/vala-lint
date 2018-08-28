@@ -10,6 +10,7 @@ vala_linter_files = files(
     'Checks/BlockOpeningBraceSpaceBeforeCheck.vala',
     'Checks/DoubleSpacesCheck.vala',
     'Checks/EllipsisCheck.vala',
+    'Checks/LineLengthCheck.vala',
     'Checks/NamingAllCapsCheck.vala',
     'Checks/NamingCamelCaseCheck.vala',
     'Checks/NamingUnderscoreCheck.vala',
