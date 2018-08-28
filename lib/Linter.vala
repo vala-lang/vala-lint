@@ -60,39 +60,40 @@ public class ValaLint.Linter : Object {
         var mistake_list = new Gee.ArrayList<FormatMistake?> ();
 
         var context = new Vala.CodeContext ();
-        Vala.CodeContext.push (context);
-
         var filename = file.get_path ();
-        var reporter = new Reporter (mistake_list);
-        context.report = reporter;
-        context.add_source_filename (filename, false, true);
 
-        /* This parser builds the abstract syntax tree (AST) */
-        var parser_ast = new Vala.Parser ();
-        parser_ast.parse (context);
+        // Checks if file is supported by Vala compiler
+        if (context.add_source_filename (filename)) {
+            var reporter = new Reporter (mistake_list);
+            context.report = reporter;
 
-        visitor.set_mistake_list (mistake_list);
-        foreach (var vala_source_file in context.get_source_files ()) {
-            vala_source_file.accept (visitor);
-        }
+            /* This parser builds the abstract syntax tree (AST) */
+            var parser_ast = new Vala.Parser ();
+            parser_ast.parse (context);
 
-        string content;
-        FileUtils.get_contents (filename, out content); // Get file content
-
-        /* Our parser checks only strings, comments and other code */
-        var parser_code = new ValaLint.Parser ();
-        Gee.ArrayList<ParseResult?> parse_result = parser_code.parse (content);
-
-        foreach (Check check in global_checks) {
-            check.check (parse_result, ref mistake_list);
-        }
-
-        mistake_list.sort ((a, b) => {
-            if (a.line_index == b.line_index) {
-                return a.char_index - b.char_index;
+            visitor.set_mistake_list (mistake_list);
+            foreach (var vala_source_file in context.get_source_files ()) {
+                vala_source_file.accept (visitor);
             }
-            return a.line_index - b.line_index;
-        });
+
+            string content;
+            FileUtils.get_contents (filename, out content); // Get file content
+
+            /* Our parser checks only strings, comments and other code */
+            var parser_code = new ValaLint.Parser ();
+            Gee.ArrayList<ParseResult?> parse_result = parser_code.parse (content);
+
+            foreach (Check check in global_checks) {
+                check.check (parse_result, ref mistake_list);
+            }
+
+            mistake_list.sort ((a, b) => {
+                if (a.line_index == b.line_index) {
+                    return a.char_index - b.char_index;
+                }
+                return a.line_index - b.line_index;
+            });
+        }
 
         return mistake_list;
     }

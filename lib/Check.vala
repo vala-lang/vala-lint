@@ -77,10 +77,10 @@ public abstract class ValaLint.Check : Object {
                     mistakes.add ({ this, line_pos, char_pos, mistake });
                 }
 
-                match_info.next ();
                 if (return_after_mistake) {
-                    return;
+                    break;
                 }
+                match_info.next ();
             }
         } catch {
             critical ("%s is not a valid Regex", pattern);
