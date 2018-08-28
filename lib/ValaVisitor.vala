@@ -38,6 +38,8 @@ class ValaLint.Visitor : CodeVisitor {
 
     public override void visit_namespace (Namespace ns) {
         naming_camel_case_check.check (string_parsed (ns.name, ns.source_reference), ref mistake_list);
+
+        /* Dont visit namespaces, as double visiting can occur. */
         // ns.accept_children (this);
     }
 
