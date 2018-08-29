@@ -60,13 +60,15 @@ public class ValaLint.Linter : Object {
         var mistake_list = new Gee.ArrayList<FormatMistake?> ();
 
         var context = new Vala.CodeContext ();
+        var reporter = new Reporter (mistake_list);
+
+        context.report = reporter;
+        Vala.CodeContext.push (context);
+
         var filename = file.get_path ();
 
         // Checks if file is supported by Vala compiler
         if (context.add_source_filename (filename)) {
-            var reporter = new Reporter (mistake_list);
-            context.report = reporter;
-
             /* This parser builds the abstract syntax tree (AST) */
             var parser_ast = new Vala.Parser ();
             parser_ast.parse (context);
