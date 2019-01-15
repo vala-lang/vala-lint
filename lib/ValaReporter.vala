@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 elementary LLC. (https://github.com/elementary/Vala-Lint)
+ * Copyright (c) 2018 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -17,22 +17,19 @@
  * Boston, MA 02110-1301 USA.
  */
 
-public class ValaLint.Utils : Object {
-    /**
-     * Method to get the line count of a string.
-     *
-     * @return The number of lines in the input string.
-     */
-    public static int get_line_count (string input) {
-        return int.max (input.split ("\n").length - 1, 0);
+class ValaLint.Reporter : Vala.Report {
+    Gee.ArrayList<FormatMistake?> mistake_list;
+
+    /* If we want, the Vala Reporter class could add its own warnings to our mistake_list */
+    public Reporter (Gee.ArrayList<FormatMistake?> mistake_list) {
+        this.mistake_list = mistake_list;
     }
 
-    /**
-     * Method to get the char position in the current line of the input string.
-     *
-     * @return The char index.
-     */
-    public static int get_char_index_in_line (string input, int pos) {
-        return pos - input[0:pos].last_index_of_char ('\n') - 1;
-    }
+    public override void note (Vala.SourceReference? reference, string message) { }
+
+    public override void depr (Vala.SourceReference? reference, string message) { }
+
+    public override void warn (Vala.SourceReference? reference, string message) { }
+
+    public override void err (Vala.SourceReference? reference, string message) { }
 }

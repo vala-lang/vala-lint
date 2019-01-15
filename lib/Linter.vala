@@ -20,54 +20,83 @@
  */
 
 public class ValaLint.Linter : Object {
-    public Gee.ArrayList<Check> enabled_checks { get; set; }
+
+    /* Checks which work on the result of our own ValaLint.Parser. */
+    public Gee.ArrayList<Check> global_checks { get; set; }
+
+    /* Checks which work on the abstract syntax tree of the offical Vala.Parser */
+    ValaLint.Visitor visitor;
 
     public Linter () {
-        enabled_checks = new Gee.ArrayList<Check> ();
-        enabled_checks.add (new Checks.BlockOpeningBraceSpaceBeforeCheck ());
-        enabled_checks.add (new Checks.DoubleSpacesCheck ());
-        enabled_checks.add (new Checks.EllipsisCheck ());
-        enabled_checks.add (new Checks.LineLengthCheck ());
-        enabled_checks.add (new Checks.SpaceBeforeParenCheck ());
-        enabled_checks.add (new Checks.TabCheck ());
-        enabled_checks.add (new Checks.TrailingWhitespaceCheck ());
+        global_checks = new Gee.ArrayList<Check> ();
+        global_checks.add (new Checks.BlockOpeningBraceSpaceBeforeCheck ());
+        global_checks.add (new Checks.DoubleSpacesCheck ());
+        global_checks.add (new Checks.EllipsisCheck ());
+        global_checks.add (new Checks.LineLengthCheck ());
+        global_checks.add (new Checks.SpaceBeforeParenCheck ());
+        global_checks.add (new Checks.TabCheck ());
+        global_checks.add (new Checks.TrailingWhitespaceCheck ());
+
+        visitor = new ValaLint.Visitor ();
+        visitor.naming_all_caps_check = new Checks.NamingAllCapsCheck ();
+        visitor.naming_camel_case_check = new Checks.NamingCamelCaseCheck ();
+        visitor.naming_underscore_check = new Checks.NamingUnderscoreCheck ();
+        visitor.checks = new Gee.ArrayList<Check> ();
+        visitor.checks.add (visitor.naming_all_caps_check);
+        visitor.checks.add (visitor.naming_camel_case_check);
+        visitor.checks.add (visitor.naming_underscore_check);
     }
 
     public Linter.with_check (Check check) {
-        enabled_checks = new Gee.ArrayList<Check> ();
-        enabled_checks.add (check);
+        global_checks = new Gee.ArrayList<Check> ();
+        global_checks.add (check);
     }
-
 
     public Linter.with_checks (Gee.ArrayList<Check> checks) {
-        enabled_checks = checks;
-    }
-
-    public Gee.ArrayList<FormatMistake?> run_checks (string input) {
-        var parser = new ValaLint.Parser ();
-        Gee.ArrayList<ParseResult?> parse_result = parser.parse (input);
-
-        var mistake_list = new Gee.ArrayList<FormatMistake?> ();
-
-        foreach (Check check in enabled_checks) {
-            check.check (parse_result, ref mistake_list);
-        }
-
-        mistake_list.sort ((a, b) => {
-            if (a.line_index == b.line_index) {
-                return a.char_index - b.char_index;
-            }
-            return a.line_index - b.line_index;
-        });
-
-        return mistake_list;
+        global_checks = checks;
     }
 
     public Gee.ArrayList<FormatMistake?> run_checks_for_file (File file) throws Error, IOError {
-        var channel = new IOChannel.file (file.get_path (), "r");
-        string text;
-        size_t length;
-        channel.read_to_end (out text, out length);
-        return run_checks (text);
+        var mistake_list = new Gee.ArrayList<FormatMistake?> ();
+
+        var context = new Vala.CodeContext ();
+        var reporter = new Reporter (mistake_list);
+
+        context.report = reporter;
+        Vala.CodeContext.push (context);
+
+        var filename = file.get_path ();
+
+        // Checks if file is supported by Vala compiler
+        if (context.add_source_filename (filename)) {
+            /* This parser builds the abstract syntax tree (AST) */
+            var parser_ast = new Vala.Parser ();
+            parser_ast.parse (context);
+
+            visitor.set_mistake_list (mistake_list);
+            foreach (var vala_source_file in context.get_source_files ()) {
+                vala_source_file.accept (visitor);
+            }
+
+            string content;
+            FileUtils.get_contents (filename, out content); // Get file content
+
+            /* Our parser checks only strings, comments and other code */
+            var parser_code = new ValaLint.Parser ();
+            Gee.ArrayList<ParseResult?> parse_result = parser_code.parse (content);
+
+            foreach (Check check in global_checks) {
+                check.check (parse_result, ref mistake_list);
+            }
+
+            mistake_list.sort ((a, b) => {
+                if (a.line_index == b.line_index) {
+                    return a.char_index - b.char_index;
+                }
+                return a.line_index - b.line_index;
+            });
+        }
+
+        return mistake_list;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 elementary LLC. (https://github.com/elementary/Vala-Lint)
+ * Copyright (c) 2018 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -17,22 +17,17 @@
  * Boston, MA 02110-1301 USA.
  */
 
-public class ValaLint.Utils : Object {
-    /**
-     * Method to get the line count of a string.
-     *
-     * @return The number of lines in the input string.
-     */
-    public static int get_line_count (string input) {
-        return int.max (input.split ("\n").length - 1, 0);
+public class ValaLint.Checks.NamingCamelCaseCheck : Check {
+    public NamingCamelCaseCheck () {
+        Object (
+            title: _("naming-convention"),
+            description: _("Checks for the camel case naming convention")
+        );
     }
 
-    /**
-     * Method to get the char position in the current line of the input string.
-     *
-     * @return The char index.
-     */
-    public static int get_char_index_in_line (string input, int pos) {
-        return pos - input[0:pos].last_index_of_char ('\n') - 1;
+    public override void check (Gee.ArrayList<ParseResult?> parse_result, ref Gee.ArrayList<FormatMistake?> mistake_list) {
+        foreach (ParseResult r in parse_result) {
+            add_regex_mistake ("""(^[a-z]|_)""", _("Expected variable name in CamelCaseConvention"), r, ref mistake_list, 0, true);
+        }
     }
 }
