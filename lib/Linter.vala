@@ -22,13 +22,13 @@
 public class ValaLint.Linter : Object {
 
     /* Checks which work on the result of our own ValaLint.Parser. */
-    public Gee.ArrayList<Check> global_checks { get; set; }
+    public Vala.ArrayList<Check> global_checks { get; set; }
 
     /* Checks which work on the abstract syntax tree of the offical Vala.Parser */
     ValaLint.Visitor visitor;
 
     public Linter () {
-        global_checks = new Gee.ArrayList<Check> ();
+        global_checks = new Vala.ArrayList<Check> ();
         global_checks.add (new Checks.BlockOpeningBraceSpaceBeforeCheck ());
         global_checks.add (new Checks.DoubleSpacesCheck ());
         global_checks.add (new Checks.EllipsisCheck ());
@@ -41,23 +41,23 @@ public class ValaLint.Linter : Object {
         visitor.naming_all_caps_check = new Checks.NamingAllCapsCheck ();
         visitor.naming_camel_case_check = new Checks.NamingCamelCaseCheck ();
         visitor.naming_underscore_check = new Checks.NamingUnderscoreCheck ();
-        visitor.checks = new Gee.ArrayList<Check> ();
+        visitor.checks = new Vala.ArrayList<Check> ();
         visitor.checks.add (visitor.naming_all_caps_check);
         visitor.checks.add (visitor.naming_camel_case_check);
         visitor.checks.add (visitor.naming_underscore_check);
     }
 
     public Linter.with_check (Check check) {
-        global_checks = new Gee.ArrayList<Check> ();
+        global_checks = new Vala.ArrayList<Check> ();
         global_checks.add (check);
     }
 
-    public Linter.with_checks (Gee.ArrayList<Check> checks) {
+    public Linter.with_checks (Vala.ArrayList<Check> checks) {
         global_checks = checks;
     }
 
-    public Gee.ArrayList<FormatMistake?> run_checks_for_file (File file) throws Error, IOError {
-        var mistake_list = new Gee.ArrayList<FormatMistake?> ();
+    public Vala.ArrayList<FormatMistake?> run_checks_for_file (File file) throws Error, IOError {
+        var mistake_list = new Vala.ArrayList<FormatMistake?> ();
 
         var context = new Vala.CodeContext ();
         var reporter = new Reporter (mistake_list);
@@ -83,7 +83,7 @@ public class ValaLint.Linter : Object {
 
             /* Our parser checks only strings, comments and other code */
             var parser_code = new ValaLint.Parser ();
-            Gee.ArrayList<ParseResult?> parse_result = parser_code.parse (content);
+            Vala.ArrayList<ParseResult?> parse_result = parser_code.parse (content);
 
             foreach (Check check in global_checks) {
                 check.check (parse_result, ref mistake_list);

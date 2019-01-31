@@ -92,7 +92,7 @@ class UnitTest : GLib.Object {
     private static void assert_pass (ValaLint.Check check, string input) {
         var parser = new ValaLint.Parser ();
         var parsed_result = parser.parse (input);
-        var mistakes = new Gee.ArrayList<ValaLint.FormatMistake?> ();
+        var mistakes = new Vala.ArrayList<ValaLint.FormatMistake?> ();
         check.check (parsed_result, ref mistakes);
         if (mistakes.size != 0) {
             error ("%s: %s at char %d", input, mistakes[0].mistake, mistakes[0].char_index);
@@ -102,7 +102,7 @@ class UnitTest : GLib.Object {
     private static void assert_warning (ValaLint.Check check, string input, int char_pos = -1) {
         var parser = new ValaLint.Parser ();
         var parsed_result = parser.parse (input);
-        var mistakes = new Gee.ArrayList<ValaLint.FormatMistake?> ();
+        var mistakes = new Vala.ArrayList<ValaLint.FormatMistake?> ();
         check.check (parsed_result, ref mistakes);
         assert (mistakes.size > 0);
         if (char_pos > -1) {

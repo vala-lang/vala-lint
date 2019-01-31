@@ -10,7 +10,6 @@ You'll need the following dependencies:
 
     meson
     gio-2.0
-    gee-0.8
     valac
 
 Run meson build to configure the build environment. Change to the build directory and run ninja test to build and run automated tests
