@@ -27,7 +27,7 @@ public class ValaLint.Checks.LineLengthCheck : Check {
         );
     }
 
-    public override void check (Gee.ArrayList<ParseResult?> parse_result, ref Gee.ArrayList<FormatMistake?> mistake_list) {
+    public override void check (Vala.ArrayList<ParseResult?> parse_result, ref Vala.ArrayList<FormatMistake?> mistake_list) {
         string input = "";
         foreach (ParseResult r in parse_result) {
             input += r.text;

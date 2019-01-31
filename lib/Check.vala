@@ -42,7 +42,7 @@ public abstract class ValaLint.Check : Object {
      * @param parse_result The parsed string.
      * @param mistake_list The list new mistakes should be added to.
      */
-    public abstract void check (Gee.ArrayList<ParseResult?> parse_result, ref Gee.ArrayList<FormatMistake?> mistake_list);
+    public abstract void check (Vala.ArrayList<ParseResult?> parse_result, ref Vala.ArrayList<FormatMistake?> mistake_list);
 
     /**
      * Adds a mistake based on a regex pattern.
@@ -53,7 +53,7 @@ public abstract class ValaLint.Check : Object {
      * @param mistakes The mistakes list.
      * @param char_offset The offset between the mistake char position and the regex pattern start.
      */
-    protected void add_regex_mistake (string pattern, string mistake, ParseResult parse_result, ref Gee.ArrayList<FormatMistake?> mistakes, int char_offset = 0, bool return_after_mistake = false) {
+    protected void add_regex_mistake (string pattern, string mistake, ParseResult parse_result, ref Vala.ArrayList<FormatMistake?> mistakes, int char_offset = 0, bool return_after_mistake = false) {
 
         MatchInfo match_info;
         try {

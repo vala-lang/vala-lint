@@ -79,7 +79,7 @@ public class ValaLint.Application : GLib.Application {
         this.application_command_line = command_line;
 
         /* 1. Get list of files */
-        var files = new Gee.ArrayList<File> ();
+        var files = new Vala.ArrayList<File> ();
         try {
             if (lint_directory != null) {
                 lint_directory_file = File.new_for_path (lint_directory);
@@ -93,10 +93,10 @@ public class ValaLint.Application : GLib.Application {
 
         /* 2. Check files */
         var linter = new Linter ();
-        var file_data_list = new Gee.ArrayList<FileData?> ();
+        var file_data_list = new Vala.ArrayList<FileData?> ();
         foreach (File file in files) {
             try {
-                Gee.ArrayList<FormatMistake?> mistakes = linter.run_checks_for_file (file);
+                Vala.ArrayList<FormatMistake?> mistakes = linter.run_checks_for_file (file);
                 file_data_list.add ({ file, mistakes });
             } catch (Error e) {
                 critical ("Error: %s while linting file %s\n", e.message, file.get_path ());
@@ -114,8 +114,8 @@ public class ValaLint.Application : GLib.Application {
         return 0;
     }
 
-    Gee.ArrayList<File> get_files_from_globs (ApplicationCommandLine command_line, string[] patterns) throws Error, IOError {
-        var files = new Gee.ArrayList<File> ();
+    Vala.ArrayList<File> get_files_from_globs (ApplicationCommandLine command_line, string[] patterns) throws Error, IOError {
+        var files = new Vala.ArrayList<File> ();
         foreach (string pattern in patterns) {
             var matcher = Posix.Glob ();
 
@@ -138,8 +138,8 @@ public class ValaLint.Application : GLib.Application {
         return files;
     }
 
-    Gee.ArrayList<File> get_files_from_directory (File dir) throws Error, IOError {
-        var files = new Gee.ArrayList<File> ();
+    Vala.ArrayList<File> get_files_from_directory (File dir) throws Error, IOError {
+        var files = new Vala.ArrayList<File> ();
         FileEnumerator enumerator = dir.enumerate_children (FileAttribute.STANDARD_NAME, 0, null);
         var info = enumerator.next_file (null);
         while (info != null) {
@@ -161,7 +161,7 @@ public class ValaLint.Application : GLib.Application {
         return files;
     }
 
-    void print_mistakes (Gee.ArrayList<FileData?> file_data_list) {
+    void print_mistakes (Vala.ArrayList<FileData?> file_data_list) {
         foreach (FileData file_data in file_data_list) {
             if (!file_data.mistakes.is_empty) {
                 string path = "";

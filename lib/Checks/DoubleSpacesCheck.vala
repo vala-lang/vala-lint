@@ -25,7 +25,7 @@ public class ValaLint.Checks.DoubleSpacesCheck : Check {
         );
     }
 
-    public override void check (Gee.ArrayList<ParseResult?> parse_result, ref Gee.ArrayList<FormatMistake?> mistake_list) {
+    public override void check (Vala.ArrayList<ParseResult?> parse_result, ref Vala.ArrayList<FormatMistake?> mistake_list) {
         for (int i = 0; i < parse_result.size; i++) {
             ParseResult r = parse_result[i];
             if (r.type == ParseType.DEFAULT) {

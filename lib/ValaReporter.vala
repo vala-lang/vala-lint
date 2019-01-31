@@ -18,10 +18,10 @@
  */
 
 class ValaLint.Reporter : Vala.Report {
-    Gee.ArrayList<FormatMistake?> mistake_list;
+    Vala.ArrayList<FormatMistake?> mistake_list;
 
     /* If we want, the Vala Reporter class could add its own warnings to our mistake_list */
-    public Reporter (Gee.ArrayList<FormatMistake?> mistake_list) {
+    public Reporter (Vala.ArrayList<FormatMistake?> mistake_list) {
         this.mistake_list = mistake_list;
     }
 

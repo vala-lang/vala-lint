@@ -18,15 +18,15 @@
  */
 
 class ValaLint.Visitor : Vala.CodeVisitor {
-    public Gee.ArrayList<FormatMistake?> mistake_list;
+    public Vala.ArrayList<FormatMistake?> mistake_list;
 
-    public Gee.ArrayList<Check> checks { get; set; }
+    public Vala.ArrayList<Check> checks { get; set; }
 
     public Checks.NamingAllCapsCheck naming_all_caps_check;
     public Checks.NamingCamelCaseCheck naming_camel_case_check;
     public Checks.NamingUnderscoreCheck naming_underscore_check;
 
-    public void set_mistake_list (Gee.ArrayList<FormatMistake?> mistake_list) {
+    public void set_mistake_list (Vala.ArrayList<FormatMistake?> mistake_list) {
         this.mistake_list = mistake_list;
     }
 
@@ -363,8 +363,8 @@ class ValaLint.Visitor : Vala.CodeVisitor {
         expr.accept_children (this);
     }
 
-    private static Gee.ArrayList<ParseResult?> string_parsed (string text, Vala.SourceReference source_ref, ParseType type = ParseType.DEFAULT) {
-        var parsed = new Gee.ArrayList<ParseResult?> ();
+    private static Vala.ArrayList<ParseResult?> string_parsed (string text, Vala.SourceReference source_ref, ParseType type = ParseType.DEFAULT) {
+        var parsed = new Vala.ArrayList<ParseResult?> ();
         ParseResult result = { text, type, source_ref.begin.line, source_ref.begin.column };
         parsed.add (result);
         return parsed;
