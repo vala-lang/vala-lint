@@ -7,8 +7,7 @@ env:
  - DEPENDENCY_PACKAGES="libvala-dev valac meson"
 
 install:
- - docker pull elementary/docker:juno-unstable
- - docker run -v "$PWD":/tmp/build-dir elementary/docker:juno-unstable /bin/sh -c "apt-get update && apt-get -y install $DEPENDENCY_PACKAGES && cd /tmp/build-dir && meson build && cd build && ninja"
+ - docker run -v "$PWD":/tmp/build-dir elementary/docker:unstable /bin/sh -c "apt-get update && apt-get -y install $DEPENDENCY_PACKAGES && cd /tmp/build-dir && meson build && ninja -C build"
 
 script:
  - echo BUILDS PASSED
