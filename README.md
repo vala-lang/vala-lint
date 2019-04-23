@@ -33,3 +33,8 @@ you can lint every file in the current directory. Using the directory `d`-flag, 
     io.elementary.vala-lint -d ../my-project
 
 For all options, type `io.elementary.vala-lint -h`.
+
+### Docker and Continuous Integration
+Vala-Lint is primarily intended to be used in Continuous Integration (CI). It's available in a convenient, always up-to-date Docker container `elementary/docker:vala-lint` hosted on Docker Hub.
+
+    docker run -v "$PWD":/var/opt/vala-lint elementary/docker:vala-lint
