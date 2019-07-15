@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2019 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -15,19 +15,16 @@
  * License along with this program; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301 USA.
- *
- * Authored by: pantor
  */
-
-
-public struct ValaLint.DisableResult {
-    public string check_title;
-    public int line_pos;
-}
 
 public class ValaLint.Disabler : Object {
     const string DISABLE_KEY = "vala-lint";
 
+    /**
+     * Parses a list of checks to disable at specific lines.
+     *
+     * @param parse_result The parse result from ValaLint.Parser.
+     */
     public Vala.ArrayList<DisableResult?> parse (Vala.ArrayList<ParseResult?> parse_result) {
         var result = new Vala.ArrayList<DisableResult?> ();
 
@@ -50,6 +47,12 @@ public class ValaLint.Disabler : Object {
         return result;
     }
 
+    /**
+     * Filters a list of mistakes given checks to disable at specific lines.
+     *
+     * @param mistakes The overall mistake list from the Linter.
+     * @param disable_results The list of results to disable.
+     */
     public Vala.ArrayList<FormatMistake?> filter_mistakes (Vala.ArrayList<FormatMistake?> mistakes,
                                                            Vala.ArrayList<DisableResult?> disable_results) {
         var result = new Vala.ArrayList<FormatMistake?> ();

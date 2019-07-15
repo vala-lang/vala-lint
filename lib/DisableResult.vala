@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2019 elementary LLC. (https://github.com/elementary/Vala-Lint)
+ * Copyright (c) 2019 elementary LLC. (https://github.com/elementary/Vala-Lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -17,26 +17,7 @@
  * Boston, MA 02110-1301 USA.
  */
 
-public enum ParseType {
-    DEFAULT,
-    COMMENT,
-    STRING
-}
-
-public enum ParseDetailType { // start pattern, close pattern
-    INLINE_COMMENT, // //, \n
-    MULTILINE_COMMENT, // /*, */
-    VERBATIM_STRING, // """, """
-    INTERPOLATED_STRING, // @", "
-    NORMAL_STRING, // ", "
-    SINGLE_CHAR, // ', '
-    CODE
-}
-
-public struct ParseResult {
-    string text;
-    ParseType type;
-    ParseDetailType detail_type;
-    int line_pos;
-    int char_pos;
+public struct ValaLint.DisableResult {
+    public string check_title;
+    public int line_pos;
 }
