@@ -1,5 +1,6 @@
 vala_linter_files = files(
     'Check.vala',
+    'Disabler.vala',
     'FormatMistake.vala',
     'Linter.vala',
     'Parser.vala',

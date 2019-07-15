@@ -89,6 +89,11 @@ public class ValaLint.Linter : Object {
                 check.check (parse_result, ref mistake_list);
             }
 
+            var disabler = new ValaLint.Disabler ();
+            Vala.ArrayList<ValaLint.DisableResult?> disable_results = disabler.parse (parse_result);
+
+            mistake_list = disabler.filter_mistakes (mistake_list, disable_results);
+
             mistake_list.sort ((a, b) => {
                 if (a.line_index == b.line_index) {
                     return a.char_index - b.char_index;

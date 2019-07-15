@@ -37,15 +37,15 @@ class UnitTest : GLib.Object {
 
         var ellipsis_check = new ValaLint.Checks.EllipsisCheck ();
         assert_pass (ellipsis_check, "lorem ipsum");
-        assert_pass (ellipsis_check, "lorem ipsum...");
-        assert_warning (ellipsis_check, "lorem ipsum\"...\"");
-        
+        assert_pass (ellipsis_check, "lorem ipsum..."); // vala-lint=ellipsis
+        assert_warning (ellipsis_check, "lorem ipsum\"...\""); // vala-lint=ellipsis
+
         var line_length_check = new ValaLint.Checks.LineLengthCheck ();
-        assert_pass (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua.");
+        assert_pass (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua."); // vala-lint=line-length
         // This is 70 characters but 140 bytes, it should still pass.
         assert_pass (line_length_check, "éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé");
-        assert_warning (line_length_check, "/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua consectetur */ aliqua.", 120);
-        assert_warning (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", 120);
+        assert_warning (line_length_check, "/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua consectetur */ aliqua.", 120); // vala-lint=line-length
+        assert_warning (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", 120); // vala-lint=line-length
 
         var naming_all_caps_check = new ValaLint.Checks.NamingAllCapsCheck ();
         assert_pass (naming_all_caps_check, "LOREM");
