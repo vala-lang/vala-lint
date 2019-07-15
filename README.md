@@ -38,7 +38,9 @@ For all options, type `io.elementary.vala-lint -h`.
 
 You can disable a single or multiple errors on a given line by adding an inline comment like
 
-    if(...) // vala-lint=space-before-paren, line-length
+```vala
+if(...) { // vala-lint=space-before-paren, line-length
+```
 
 ### Docker and Continuous Integration
 Vala-Lint is primarily intended to be used in Continuous Integration (CI). It's available in a convenient, always up-to-date Docker container `elementary/docker:vala-lint` hosted on Docker Hub.
