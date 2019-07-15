@@ -67,7 +67,8 @@ public class ValaLint.Application : GLib.Application {
             option_context.parse (ref tmp);
         } catch (OptionError e) {
             command_line.print (_("Error: %s") + "\n", e.message);
-            command_line.print (_("Run '%s --help' to see a full list of available command line options.") + "\n", args[0]);
+            command_line.print (_("Run '%s --help' to see a full list of available command line options.") + "\n",
+                                args[0]);
             return 1;
         }
 
@@ -114,7 +115,8 @@ public class ValaLint.Application : GLib.Application {
         return 0;
     }
 
-    Vala.ArrayList<File> get_files_from_globs (ApplicationCommandLine command_line, string[] patterns) throws Error, IOError {
+    Vala.ArrayList<File> get_files_from_globs (ApplicationCommandLine command_line,
+                                               string[] patterns) throws Error, IOError {
         var files = new Vala.ArrayList<File> ();
         foreach (string pattern in patterns) {
             var matcher = Posix.Glob ();
