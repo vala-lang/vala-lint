@@ -52,11 +52,11 @@ public abstract class ValaLint.Check : Object {
      * @param mistake The mistake description.
      * @param parse_result The current parse result element.
      * @param mistakes The mistakes list.
-     * @param char_offset The offset between the mistake char position and the regex pattern start.
+     * @param column_offset The offset between the mistake char position and the regex pattern start.
      */
     protected void add_regex_mistake (string pattern, string mistake, ParseResult parse_result,
                                       ref Vala.ArrayList<FormatMistake?> mistakes,
-                                      int char_offset = 0, bool return_after_mistake = false) {
+                                      int column_offset = 0, bool return_after_mistake = false) {
 
         MatchInfo match_info;
         try {
@@ -66,18 +66,18 @@ public abstract class ValaLint.Check : Object {
                 int pos_start, pos_end;
                 match_info.fetch_pos (0, out pos_start, out pos_end);
 
-                int pos_mistake = pos_start + char_offset;
+                int pos_mistake = pos_start + column_offset;
                 int line_count = Utils.get_line_count (parse_result.text[0:pos_mistake]);
-                int line_pos = parse_result.line_pos + line_count;
-                int char_pos = Utils.get_char_index_in_line (parse_result.text, pos_mistake);
+                int line = parse_result.loc.line + line_count;
+                int column = Utils.get_column_in_line (parse_result.text, pos_mistake);
                 if (line_count == 0) {
-                    char_pos += parse_result.char_pos;
+                    column += parse_result.loc.column;
                 }
 
                 /* If single_mistake_in_line is true, add only one mistake of the same check per line */
                 if (!single_mistake_in_line ||
-                    (mistakes.is_empty || mistakes.last ().check != this || mistakes.last ().line_index < line_pos)) {
-                    mistakes.add ({ this, line_pos, char_pos, mistake });
+                    (mistakes.is_empty || mistakes.last ().check != this || mistakes.last ().loc.line < line)) {
+                    mistakes.add ({ this, Vala.SourceLocation (null, line, column), mistake });
                 }
 
                 if (return_after_mistake) {

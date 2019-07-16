@@ -127,8 +127,8 @@ public class ValaLint.Parser : Object {
     void add_result (string input, int start_pos, int end_pos, ParseDetailType detail_type,
                      Vala.ArrayList<ParseResult?> result, ref int current_line) {
         string text = input[start_pos:end_pos];
-        result.add ({ text, parse_types[detail_type], current_line + 1,
-                    Utils.get_char_index_in_line (input, start_pos) + 1 });
+        var loc = Vala.SourceLocation (null, current_line + 1, Utils.get_column_in_line (input, start_pos) + 1);
+        result.add ({ text, parse_types[detail_type], loc });
         current_line += Utils.get_line_count (text);
     }
 }

@@ -90,10 +90,10 @@ public class ValaLint.Linter : Object {
             }
 
             mistake_list.sort ((a, b) => {
-                if (a.line_index == b.line_index) {
-                    return a.char_index - b.char_index;
+                if (a.loc.line == b.loc.line) {
+                    return a.loc.column - b.loc.column;
                 }
-                return a.line_index - b.line_index;
+                return a.loc.line - b.loc.line;
             });
         }
 

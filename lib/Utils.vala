@@ -32,7 +32,7 @@ public class ValaLint.Utils : Object {
      *
      * @return The char index.
      */
-    public static int get_char_index_in_line (string input, int pos) {
+    public static int get_column_in_line (string input, int pos) {
         return pos - input[0:pos].last_index_of_char ('\n') - 1;
     }
 }
