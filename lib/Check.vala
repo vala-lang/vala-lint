@@ -68,16 +68,16 @@ public abstract class ValaLint.Check : Object {
 
                 int pos_mistake = pos_start + column_offset;
                 int line_count = Utils.get_line_count (parse_result.text[0:pos_mistake]);
-                int line = parse_result.loc.line + line_count;
+                int line = parse_result.begin.line + line_count;
                 int column = Utils.get_column_in_line (parse_result.text, pos_mistake);
                 if (line_count == 0) {
-                    column += parse_result.loc.column;
+                    column += parse_result.begin.column;
                 }
 
                 /* If single_mistake_in_line is true, add only one mistake of the same check per line */
                 if (!single_mistake_in_line ||
-                    (mistakes.is_empty || mistakes.last ().check != this || mistakes.last ().loc.line < line)) {
-                    mistakes.add ({ this, Vala.SourceLocation (null, line, column), mistake });
+                    (mistakes.is_empty || mistakes.last ().check != this || mistakes.last ().begin.line < line)) {
+                    mistakes.add ({ this, Vala.SourceLocation (parse_result.begin.pos + pos_start, line, column), mistake });
                 }
 
                 if (return_after_mistake) {

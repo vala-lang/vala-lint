@@ -95,7 +95,7 @@ class UnitTest : GLib.Object {
         var mistakes = new Vala.ArrayList<ValaLint.FormatMistake?> ();
         check.check (parsed_result, ref mistakes);
         if (mistakes.size != 0) {
-            error ("%s: %s at char %d", input, mistakes[0].mistake, mistakes[0].loc.column);
+            error ("%s: %s at char %d", input, mistakes[0].mistake, mistakes[0].begin.column);
         }
     }
 
@@ -106,7 +106,7 @@ class UnitTest : GLib.Object {
         check.check (parsed_result, ref mistakes);
         assert (mistakes.size > 0);
         if (column > -1) {
-            assert (mistakes[0].loc.column == column);
+            assert (mistakes[0].begin.column == column);
         }
     }
 }

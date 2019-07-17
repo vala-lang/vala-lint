@@ -36,5 +36,5 @@ public enum ParseDetailType { // start pattern, close pattern
 public struct ParseResult {
     public string text;
     public ParseType type;
-    public Vala.SourceLocation loc;
+    public Vala.SourceLocation begin;
 }

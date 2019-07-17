@@ -177,8 +177,8 @@ public class ValaLint.Application : GLib.Application {
 
                 foreach (FormatMistake mistake in file_data.mistakes) {
                     application_command_line.print ("\x001b[0m%5i.%-3i \x001b[1m%-40s   \x001b[0m%s\n",
-                        mistake.loc.line,
-                        mistake.loc.column,
+                        mistake.begin.line,
+                        mistake.begin.column,
                         mistake.mistake,
                         mistake.check.title);
                 }

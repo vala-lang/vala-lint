@@ -21,6 +21,6 @@
 
 public struct ValaLint.FormatMistake {
     public Check check;
-    public Vala.SourceLocation loc;
+    public Vala.SourceLocation begin;
     public string mistake;
 }
