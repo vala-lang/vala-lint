@@ -124,9 +124,11 @@ public class ValaLint.Parser : Object {
      * @param result The final parsed result array.
      * @param result The current line of the entry in the input string.
      */
-    void add_result (string input, int start_pos, int end_pos, ParseDetailType detail_type, Vala.ArrayList<ParseResult?> result, ref int current_line) {
+    void add_result (string input, int start_pos, int end_pos, ParseDetailType detail_type,
+                     Vala.ArrayList<ParseResult?> result, ref int current_line) {
         string text = input[start_pos:end_pos];
-        result.add ({ text, parse_types[detail_type], current_line + 1, Utils.get_char_index_in_line (input, start_pos) + 1 });
+        result.add ({ text, parse_types[detail_type], current_line + 1,
+                    Utils.get_char_index_in_line (input, start_pos) + 1 });
         current_line += Utils.get_line_count (text);
     }
 }
