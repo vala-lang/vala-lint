@@ -16,6 +16,7 @@ vala_linter_files = files(
     'Checks/NamingUnderscoreCheck.vala',
     'Checks/SpaceBeforeParenCheck.vala',
     'Checks/TabCheck.vala',
+    'Checks/TrailingNewlinesCheck.vala',
     'Checks/TrailingWhitespaceCheck.vala',
 )
 

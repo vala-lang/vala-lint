@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2016-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -35,6 +35,7 @@ public class ValaLint.Linter : Object {
         global_checks.add (new Checks.LineLengthCheck ());
         global_checks.add (new Checks.SpaceBeforeParenCheck ());
         global_checks.add (new Checks.TabCheck ());
+        global_checks.add (new Checks.TrailingNewlinesCheck ());
         global_checks.add (new Checks.TrailingWhitespaceCheck ());
 
         visitor = new ValaLint.Visitor ();

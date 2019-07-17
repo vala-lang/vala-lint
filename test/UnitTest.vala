@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2016-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -81,6 +81,12 @@ class UnitTest : GLib.Object {
         var tab_check = new ValaLint.Checks.TabCheck ();
         assert_pass (tab_check, "lorem ipsum");
         assert_warning (tab_check, "lorem	ipsum");
+
+        var trailing_newlines_check = new ValaLint.Checks.TrailingNewlinesCheck ();
+        assert_pass (trailing_newlines_check, "lorem ipsum\n");
+        assert_warning (trailing_newlines_check, "lorem ipsum", 11);
+        assert_warning (trailing_newlines_check, "lorem ipsum ", 12);
+        assert_warning (trailing_newlines_check, "lorem ipsum\n\n");
 
         var trailing_whitespace_check = new ValaLint.Checks.TrailingWhitespaceCheck ();
         assert_pass (trailing_whitespace_check, "lorem ipsum");
