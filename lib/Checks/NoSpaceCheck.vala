@@ -46,7 +46,7 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
 
                 char char_after = * (end.pos + 1);
                 if (char_after != ' ' && char_after != '\n' && char_after != ')') {
-                    mistake_list.add ({ this, end.line, end.column + 2, "Missing whitespace" });
+                    add_mistake ({ this, end.line, end.column + 2, "Missing whitespace" }, ref mistake_list);
                 }
             }
         }
@@ -57,12 +57,12 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
         
         char char_before_operator = * (expr.left.source_reference.end.pos);
         if (char_before_operator != ' ' && char_before_operator != '\n' && char_before_operator != ')') {
-            mistake_list.add ({ this, expr.left.source_reference.end.line, expr.left.source_reference.end.column + 1, "Missing whitespace" });
+            add_mistake ({ this, expr.left.source_reference.end.line, expr.left.source_reference.end.column + 1, "Missing whitespace" }, ref mistake_list);
         }
 
         char char_after_operator = * (expr.right.source_reference.begin.pos - 1);
         if (char_after_operator != ' ' && char_after_operator != '\n' && char_after_operator != '(') {
-            mistake_list.add ({ this, expr.right.source_reference.begin.line, expr.right.source_reference.begin.column, "Missing whitespace" });
+            add_mistake ({ this, expr.right.source_reference.begin.line, expr.right.source_reference.begin.column, "Missing whitespace" }, ref mistake_list);
         }
     }
 }

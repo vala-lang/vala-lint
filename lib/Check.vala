@@ -77,7 +77,7 @@ public abstract class ValaLint.Check : Object {
                 /* If single_mistake_in_line is true, add only one mistake of the same check per line */
                 if (!single_mistake_in_line ||
                     (mistakes.is_empty || mistakes.last ().check != this || mistakes.last ().line_index < line_pos)) {
-                    mistakes.add ({ this, line_pos, char_pos, mistake });
+                        add_mistake ({ this, line_pos, char_pos, mistake }, ref mistakes);
                 }
 
                 if (return_after_mistake) {
@@ -87,6 +87,22 @@ public abstract class ValaLint.Check : Object {
             }
         } catch {
             critical ("%s is not a valid Regex", pattern);
+        }
+    }
+
+    /**
+     * Adds a mistake to the mistake list and checks for duplicates.
+     *
+     * @param mistake The mistake.
+     * @param mistakes The mistakes list.
+     */
+    protected void add_mistake (FormatMistake mistake, ref Vala.ArrayList<FormatMistake?> mistakes) {
+        mistakes.equal_func = (a, b) => {
+            return a == b;
+        };
+        
+        if (!mistakes.contains(mistake)) {
+            mistakes.add (mistake);
         }
     }
 }
