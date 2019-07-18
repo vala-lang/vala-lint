@@ -95,9 +95,10 @@ class ValaLint.Visitor : Vala.CodeVisitor {
 
         no_space_check.check_list (m.get_parameters (), ref mistake_list);
 
-        var error_types = new Vala.ArrayList<Vala.DataType?> ();
-        m.get_error_types (error_types);
-        no_space_check.check_list (error_types, ref mistake_list);
+        /* Error types depend on the vala version. */
+        //  var error_types = new Vala.ArrayList<Vala.DataType?> ();
+        //  m.get_error_types (error_types);
+        //  no_space_check.check_list (error_types, ref mistake_list);
 
         m.accept_children (this);
     }
