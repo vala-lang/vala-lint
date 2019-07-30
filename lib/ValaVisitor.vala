@@ -22,6 +22,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
 
     public Vala.ArrayList<Check> checks { get; set; }
 
+    public Checks.ConditionSingleLineCheck condition_single_line_check;
     public Checks.NamingAllCapsCheck naming_all_caps_check;
     public Checks.NamingCamelCaseCheck naming_camel_case_check;
     public Checks.NamingUnderscoreCheck naming_underscore_check;
@@ -135,6 +136,8 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_block (Vala.Block b) {
+        //  print (@"$(b.source_reference.begin.line)\n");
+        //  print (@"$(b.source_reference.end.line)\n");
         b.accept_children (this);
     }
 
@@ -158,6 +161,8 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_if_statement (Vala.IfStatement stmt) {
+        condition_single_line_check.check_statement (stmt.condition, stmt.true_statement, ref mistake_list);
+
         stmt.accept_children (this);
     }
 
@@ -178,6 +183,8 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_while_statement (Vala.WhileStatement stmt) {
+        condition_single_line_check.check_statement (stmt.condition, stmt.body, ref mistake_list);
+
         stmt.accept_children (this);
     }
 
@@ -186,10 +193,14 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_for_statement (Vala.ForStatement stmt) {
+        condition_single_line_check.check_statement (stmt.condition, stmt.body, ref mistake_list);
+
         stmt.accept_children (this);
     }
 
     public override void visit_foreach_statement (Vala.ForeachStatement stmt) {
+        condition_single_line_check.check_statement (stmt.collection, stmt.body, ref mistake_list);
+
         stmt.accept_children (this);
     }
 
