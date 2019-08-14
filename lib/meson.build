@@ -1,5 +1,6 @@
 vala_linter_files = files(
     'Check.vala',
+    'Disabler.vala',
     'FormatMistake.vala',
     'Linter.vala',
     'Parser.vala',
@@ -14,6 +15,7 @@ vala_linter_files = files(
     'Checks/NamingAllCapsCheck.vala',
     'Checks/NamingCamelCaseCheck.vala',
     'Checks/NamingUnderscoreCheck.vala',
+    'Checks/NoteCheck.vala',
     'Checks/SpaceBeforeParenCheck.vala',
     'Checks/TabCheck.vala',
     'Checks/TrailingWhitespaceCheck.vala',
