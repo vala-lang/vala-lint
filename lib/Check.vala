@@ -100,8 +100,8 @@ public abstract class ValaLint.Check : Object {
         mistakes.equal_func = (a, b) => {
             return a == b;
         };
-        
-        if (!mistakes.contains(mistake)) {
+
+        if (!mistakes.contains (mistake)) {
             mistakes.add (mistake);
         }
     }

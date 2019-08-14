@@ -54,15 +54,17 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
 
     public void check_binary_expression (Vala.BinaryExpression expr,
                                          ref Vala.ArrayList<FormatMistake?> mistake_list) {
-        
+
         char char_before_operator = * (expr.left.source_reference.end.pos);
         if (char_before_operator != ' ' && char_before_operator != '\n' && char_before_operator != ')') {
-            add_mistake ({ this, expr.left.source_reference.end.line, expr.left.source_reference.end.column + 1, "Missing whitespace" }, ref mistake_list);
+            var loc = expr.left.source_reference.end;
+            add_mistake ({ this, loc.line, loc.column + 1, "Missing whitespace" }, ref mistake_list);
         }
 
         char char_after_operator = * (expr.right.source_reference.begin.pos - 1);
         if (char_after_operator != ' ' && char_after_operator != '\n' && char_after_operator != '(') {
-            add_mistake ({ this, expr.right.source_reference.begin.line, expr.right.source_reference.begin.column, "Missing whitespace" }, ref mistake_list);
+            var loc = expr.right.source_reference.begin;
+            add_mistake ({ this, loc.line, loc.column, "Missing whitespace" }, ref mistake_list);
         }
     }
 }
