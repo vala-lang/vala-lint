@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2016-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -77,7 +77,8 @@ public abstract class ValaLint.Check : Object {
                 /* If single_mistake_in_line is true, add only one mistake of the same check per line */
                 if (!single_mistake_in_line ||
                     (mistakes.is_empty || mistakes.last ().check != this || mistakes.last ().begin.line < line)) {
-                    mistakes.add ({ this, Vala.SourceLocation (parse_result.begin.pos + pos_start, line, column), mistake });
+                    var location = Vala.SourceLocation (parse_result.begin.pos + pos_start, line, column);
+                    mistakes.add ({ this, location, mistake });
                 }
 
                 if (return_after_mistake) {

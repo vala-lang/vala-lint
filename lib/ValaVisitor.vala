@@ -366,7 +366,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
                                                                ParseType type = ParseType.DEFAULT,
                                                                ParseDetailType detail_type = ParseDetailType.CODE) {
         var parsed = new Vala.ArrayList<ParseResult?> ();
-        parsed.add ({ text, type, source_ref.begin });
+        parsed.add ({ text, type, detail_type, source_ref.begin });
         return parsed;
     }
 }
