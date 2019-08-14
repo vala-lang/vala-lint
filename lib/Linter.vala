@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2016-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -89,6 +89,11 @@ public class ValaLint.Linter : Object {
             foreach (Check check in global_checks) {
                 check.check (parse_result, ref mistake_list);
             }
+
+            var disabler = new ValaLint.Disabler ();
+            Vala.ArrayList<ValaLint.DisableResult?> disable_results = disabler.parse (parse_result);
+
+            mistake_list = disabler.filter_mistakes (mistake_list, disable_results);
 
             mistake_list.sort ((a, b) => {
                 if (a.line_index == b.line_index) {
