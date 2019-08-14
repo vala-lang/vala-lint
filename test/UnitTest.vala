@@ -37,15 +37,15 @@ class UnitTest : GLib.Object {
 
         var ellipsis_check = new ValaLint.Checks.EllipsisCheck ();
         assert_pass (ellipsis_check, "lorem ipsum");
-        assert_pass (ellipsis_check, "lorem ipsum...");
-        assert_warning (ellipsis_check, "lorem ipsum\"...\"");
-        
+        assert_pass (ellipsis_check, "lorem ipsum..."); // vala-lint=ellipsis
+        assert_warning (ellipsis_check, "lorem ipsum\"...\""); // vala-lint=ellipsis
+
         var line_length_check = new ValaLint.Checks.LineLengthCheck ();
-        assert_pass (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua.");
+        assert_pass (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua."); // vala-lint=line-length
         // This is 70 characters but 140 bytes, it should still pass.
         assert_pass (line_length_check, "éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé");
-        assert_warning (line_length_check, "/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua consectetur */ aliqua.", 120);
-        assert_warning (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", 120);
+        assert_warning (line_length_check, "/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua consectetur */ aliqua.", 120); // vala-lint=line-length
+        assert_warning (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", 120); // vala-lint=line-length
 
         var naming_all_caps_check = new ValaLint.Checks.NamingAllCapsCheck ();
         assert_pass (naming_all_caps_check, "LOREM");
@@ -69,6 +69,13 @@ class UnitTest : GLib.Object {
         assert_warning (naming_underscore_check, "Lorem");
         assert_warning (naming_underscore_check, "Lorem_Ipsum");
         assert_warning (naming_underscore_check, "lorem_IPsum");
+
+        var note_check = new ValaLint.Checks.NoteCheck ();
+        assert_pass (note_check, "lorem");
+        assert_pass (note_check, "lorem todo");
+        assert_warning (note_check, "lorem // TODO: nothing to do", 10);
+        assert_warning (note_check, "lorem // NOTE: nothing to do", 10);
+        assert_warning (note_check, "lorem // FIXME: nothing to do", 10);
 
         var space_before_paren_check = new ValaLint.Checks.SpaceBeforeParenCheck ();
         assert_pass (space_before_paren_check, "void test ()");

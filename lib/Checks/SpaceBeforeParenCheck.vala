@@ -25,7 +25,8 @@ public class ValaLint.Checks.SpaceBeforeParenCheck : Check {
         );
     }
 
-    public override void check (Vala.ArrayList<ParseResult?> parse_result, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+    public override void check (Vala.ArrayList<ParseResult?> parse_result,
+                                ref Vala.ArrayList<FormatMistake?> mistake_list) {
         foreach (ParseResult r in parse_result) {
             if (r.type == ParseType.DEFAULT) {
                 add_regex_mistake ("""[^_\s{\[\(\)!~]\(""", _("Expected space before paren"), r, ref mistake_list, 1);

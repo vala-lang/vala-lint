@@ -33,6 +33,7 @@ public class ValaLint.Linter : Object {
         global_checks.add (new Checks.DoubleSpacesCheck ());
         global_checks.add (new Checks.EllipsisCheck ());
         global_checks.add (new Checks.LineLengthCheck ());
+        global_checks.add (new Checks.NoteCheck ());
         global_checks.add (new Checks.SpaceBeforeParenCheck ());
         global_checks.add (new Checks.TabCheck ());
         global_checks.add (new Checks.TrailingNewlinesCheck ());
@@ -89,6 +90,11 @@ public class ValaLint.Linter : Object {
             foreach (Check check in global_checks) {
                 check.check (parse_result, ref mistake_list);
             }
+
+            var disabler = new ValaLint.Disabler ();
+            Vala.ArrayList<ValaLint.DisableResult?> disable_results = disabler.parse (parse_result);
+
+            mistake_list = disabler.filter_mistakes (mistake_list, disable_results);
 
             mistake_list.sort ((a, b) => {
                 if (a.line_index == b.line_index) {

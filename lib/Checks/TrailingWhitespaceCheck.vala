@@ -27,7 +27,8 @@ public class ValaLint.Checks.TrailingWhitespaceCheck : Check {
         );
     }
 
-    public override void check (Vala.ArrayList<ParseResult?> parse_result, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+    public override void check (Vala.ArrayList<ParseResult?> parse_result,
+                                ref Vala.ArrayList<FormatMistake?> mistake_list) {
         foreach (ParseResult r in parse_result) {
             if (r.type == ParseType.DEFAULT) {
                 add_regex_mistake ("""\h\n""", _("Unexpected whitespace at end of line"), r, ref mistake_list);
