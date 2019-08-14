@@ -275,7 +275,6 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_string_literal (Vala.StringLiteral lit) {
-        // TODO Move ellipsis check here
         // ellipsis_check.check (string_parsed (lit.value, lit.source_reference, ParseType.STRING), ref mistake_list);
         lit.accept_children (this);
     }
