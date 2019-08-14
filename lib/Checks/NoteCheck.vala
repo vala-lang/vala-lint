@@ -42,11 +42,14 @@ public class ValaLint.Checks.NoteCheck : Check {
 
                         /* Get correct position of note */
                         int line_count = Utils.get_line_count (r.text[0:index]);
-                        int char_count = Utils.get_char_index_in_line (r.text, index);
-                        int line_pos = r.line_pos + line_count;
-                        int char_pos = line_count > 0 ? char_count + 1 : r.char_pos + char_count;
+                        int line = r.begin.line + line_count;
+                        int column = Utils.get_column_in_line (r.text, index);
+                        if (line_count == 0) {
+                            column += r.begin.column;
+                        }
 
-                        mistake_list.add ({ this, line_pos, char_pos, @"$keyword: $message" });
+                        var loc = Vala.SourceLocation ((char *)r.begin.pos + index, line, column);
+                        mistake_list.add ({ this, loc, @"$keyword: $message" });
                     }
                 }
             }
