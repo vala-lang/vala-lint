@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2018-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -363,7 +363,8 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     private static Vala.ArrayList<ParseResult?> string_parsed (string text, Vala.SourceReference source_ref,
-                                                               ParseType type = ParseType.DEFAULT) {
+                                                               ParseType type = ParseType.DEFAULT,
+                                                               ParseDetailType detail_type = ParseDetailType.CODE) {
         var parsed = new Vala.ArrayList<ParseResult?> ();
         parsed.add ({ text, type, source_ref.begin });
         return parsed;
