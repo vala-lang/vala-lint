@@ -17,8 +17,15 @@
  * Boston, MA 02110-1301 USA.
  */
 
+
+public struct ValaLint.DisableResult {
+    public string check_title;
+    public int line_pos;
+}
+
+
 public class ValaLint.Disabler : Object {
-    const string DISABLE_KEY = "vala-lint";
+    const string DISABLE_KEY = "vala-lint=";
 
     /**
      * Parses a list of checks to disable at specific lines.
@@ -30,9 +37,9 @@ public class ValaLint.Disabler : Object {
 
         foreach (ParseResult r in parse_result) {
             if (r.detail_type == ParseDetailType.INLINE_COMMENT) {
-                int index = r.text.index_of (@"$DISABLE_KEY=");
+                int index = r.text.index_of (DISABLE_KEY);
                 if (index > 0) {
-                    index += DISABLE_KEY.length + 1;
+                    index += DISABLE_KEY.length;
 
                     /* Find list of checks by splitting with "," */
                     var title_list = r.text.slice (index, r.text.length).split (",");
