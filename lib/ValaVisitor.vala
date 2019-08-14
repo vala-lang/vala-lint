@@ -384,9 +384,10 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     private static Vala.ArrayList<ParseResult?> string_parsed (string text, Vala.SourceReference source_ref,
-                                                               ParseType type = ParseType.DEFAULT) {
+                                                               ParseType type = ParseType.DEFAULT,
+                                                               ParseDetailType detail_type = ParseDetailType.CODE) {
         var parsed = new Vala.ArrayList<ParseResult?> ();
-        ParseResult result = { text, type, source_ref.begin.line, source_ref.begin.column };
+        ParseResult result = { text, type, detail_type, source_ref.begin.line, source_ref.begin.column };
         parsed.add (result);
         return parsed;
     }
