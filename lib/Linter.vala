@@ -43,6 +43,7 @@ public class ValaLint.Linter : Object {
         visitor.naming_camel_case_check = new Checks.NamingCamelCaseCheck ();
         visitor.naming_underscore_check = new Checks.NamingUnderscoreCheck ();
         visitor.no_space_check = new Checks.NoSpaceCheck ();
+        
         visitor.checks = new Vala.ArrayList<Check> ();
         visitor.checks.add (visitor.naming_all_caps_check);
         visitor.checks.add (visitor.naming_camel_case_check);
