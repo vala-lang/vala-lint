@@ -70,6 +70,13 @@ class UnitTest : GLib.Object {
         assert_warning (naming_underscore_check, "Lorem_Ipsum");
         assert_warning (naming_underscore_check, "lorem_IPsum");
 
+        var note_check = new ValaLint.Checks.NoteCheck ();
+        assert_pass (note_check, "lorem");
+        assert_pass (note_check, "lorem todo");
+        assert_warning (note_check, "lorem // TODO: nothing to do", 10);
+        assert_warning (note_check, "lorem // NOTE: nothing to do", 10);
+        assert_warning (note_check, "lorem // FIXME: nothing to do", 10);
+
         var space_before_paren_check = new ValaLint.Checks.SpaceBeforeParenCheck ();
         assert_pass (space_before_paren_check, "void test ()");
         assert_pass (space_before_paren_check, "var test = 2 * (3 + 1);");

@@ -25,11 +25,13 @@ public class ValaLint.Checks.DoubleSpacesCheck : Check {
         );
     }
 
-    public override void check (Vala.ArrayList<ParseResult?> parse_result, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+    public override void check (Vala.ArrayList<ParseResult?> parse_result,
+                                ref Vala.ArrayList<FormatMistake?> mistake_list) {
         for (int i = 0; i < parse_result.size; i++) {
             ParseResult r = parse_result[i];
             if (r.type == ParseType.DEFAULT) {
-                bool next_parse_type_is_comment = (i + 1 < parse_result.size && parse_result[i + 1].type == ParseType.COMMENT);
+                bool next_parse_type_is_comment = (i + 1 < parse_result.size
+                                                   && parse_result[i + 1].type == ParseType.COMMENT);
 
                 /* Should not end with spaces pattern */
                 string no_spaces_pattern = next_parse_type_is_comment ? """(?!(?:$| ))""" : "";

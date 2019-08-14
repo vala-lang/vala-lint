@@ -19,6 +19,7 @@
 
 public class ValaLint.Checks.LineLengthCheck : Check {
     const int MAXIMUM_CHARACTERS = 120;
+    const string MESSAGE = @"Line exceeds limit of %d characters (currently %d characters)";
 
     public LineLengthCheck () {
         Object (
@@ -27,7 +28,8 @@ public class ValaLint.Checks.LineLengthCheck : Check {
         );
     }
 
-    public override void check (Vala.ArrayList<ParseResult?> parse_result, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+    public override void check (Vala.ArrayList<ParseResult?> parse_result,
+                                ref Vala.ArrayList<FormatMistake?> mistake_list) {
         string input = "";
         foreach (ParseResult r in parse_result) {
             input += r.text;
