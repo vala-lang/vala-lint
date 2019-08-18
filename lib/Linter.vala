@@ -31,7 +31,6 @@ public class ValaLint.Linter : Object {
         global_checks = new Vala.ArrayList<Check> ();
         global_checks.add (new Checks.BlockOpeningBraceSpaceBeforeCheck ());
         global_checks.add (new Checks.DoubleSpacesCheck ());
-        global_checks.add (new Checks.EllipsisCheck ());
         global_checks.add (new Checks.LineLengthCheck ());
         global_checks.add (new Checks.NoteCheck ());
         global_checks.add (new Checks.SpaceBeforeParenCheck ());
@@ -39,6 +38,7 @@ public class ValaLint.Linter : Object {
         global_checks.add (new Checks.TrailingWhitespaceCheck ());
 
         visitor = new ValaLint.Visitor ();
+        visitor.ellipsis_check = new Checks.EllipsisCheck ();
         visitor.naming_all_caps_check = new Checks.NamingAllCapsCheck ();
         visitor.naming_camel_case_check = new Checks.NamingCamelCaseCheck ();
         visitor.naming_underscore_check = new Checks.NamingUnderscoreCheck ();
@@ -58,7 +58,7 @@ public class ValaLint.Linter : Object {
     }
 
     public Vala.ArrayList<FormatMistake?> run_checks_for_file (File file) throws Error, IOError {
-        var mistake_list = new Vala.ArrayList<FormatMistake?> ();
+        var mistake_list = new Vala.ArrayList<FormatMistake?> ((a, b) => a.equal_to (b));
 
         var context = new Vala.CodeContext ();
         var reporter = new Reporter (mistake_list);

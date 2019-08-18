@@ -22,6 +22,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
 
     public Vala.ArrayList<Check> checks { get; set; }
 
+    public Checks.EllipsisCheck ellipsis_check;
     public Checks.NamingAllCapsCheck naming_all_caps_check;
     public Checks.NamingCamelCaseCheck naming_camel_case_check;
     public Checks.NamingUnderscoreCheck naming_underscore_check;
@@ -264,7 +265,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_string_literal (Vala.StringLiteral lit) {
-        // ellipsis_check.check (string_parsed (lit.value, lit.source_reference, ParseType.STRING), ref mistake_list);
+        ellipsis_check.check (string_parsed (lit.value, lit.source_reference, ParseType.STRING), ref mistake_list);
         lit.accept_children (this);
     }
 
