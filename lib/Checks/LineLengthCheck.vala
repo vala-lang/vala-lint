@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2018-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -40,7 +40,8 @@ public class ValaLint.Checks.LineLengthCheck : Check {
             if (line.char_count () > MAXIMUM_CHARACTERS) {
                 int line_length = line.char_count ();
                 string formatted_message = MESSAGE.printf (MAXIMUM_CHARACTERS, line_length);
-                mistake_list.add ({ this, line_counter, MAXIMUM_CHARACTERS, formatted_message });
+                var loc = Vala.SourceLocation ((char *)line + MAXIMUM_CHARACTERS, line_counter, MAXIMUM_CHARACTERS);
+                mistake_list.add ({ this, loc, formatted_message });
             }
             line_counter += 1;
         }

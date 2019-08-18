@@ -34,9 +34,8 @@ public enum ParseDetailType { // start pattern, close pattern
 }
 
 public struct ParseResult {
-    string text;
-    ParseType type;
-    ParseDetailType detail_type;
-    int line_pos;
-    int char_pos;
+    public string text;
+    public ParseType type;
+    public ParseDetailType detail_type;
+    public Vala.SourceLocation begin;
 }
