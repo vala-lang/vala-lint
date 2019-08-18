@@ -74,7 +74,7 @@ class UnitTest : GLib.Object {
         assert_pass (note_check, "lorem");
         assert_pass (note_check, "lorem todo");
         assert_warning (note_check, "lorem // TODO: nothing to do", 10);
-        assert_warning (note_check, "lorem // NOTE: nothing to do", 10);
+        assert_pass (note_check, "lorem // NOTE: nothing to do");
         assert_warning (note_check, "lorem // FIXME: nothing to do", 10);
 
         var space_before_paren_check = new ValaLint.Checks.SpaceBeforeParenCheck ();
