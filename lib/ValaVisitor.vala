@@ -35,6 +35,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_namespace (Vala.Namespace ns) {
+        /* namespace name may be null */
         naming_camel_case_check.check (string_parsed (ns.name, ns.source_reference), ref mistake_list);
 
         /* Dont visit namespaces, as double visiting can occur. */
@@ -89,6 +90,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_method (Vala.Method m) {
+        /* method name may be null */
         naming_underscore_check.check (string_parsed (m.name, m.source_reference), ref mistake_list);
         m.accept_children (this);
     }
@@ -362,11 +364,13 @@ class ValaLint.Visitor : Vala.CodeVisitor {
         expr.accept_children (this);
     }
 
-    private static Vala.ArrayList<ParseResult?> string_parsed (string text, Vala.SourceReference source_ref,
+    private static Vala.ArrayList<ParseResult?> string_parsed (string? text, Vala.SourceReference source_ref,
                                                                ParseType type = ParseType.DEFAULT,
                                                                ParseDetailType detail_type = ParseDetailType.CODE) {
         var parsed = new Vala.ArrayList<ParseResult?> ();
-        ParseResult result = { text, type, detail_type, source_ref.begin.line, source_ref.begin.column };
+        ParseResult result = { text == null ? "" : text,
+                              type, detail_type, source_ref.begin.line, source_ref.begin.column };
+
         parsed.add (result);
         return parsed;
     }
