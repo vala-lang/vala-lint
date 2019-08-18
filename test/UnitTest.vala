@@ -37,8 +37,7 @@ class UnitTest : GLib.Object {
 
         var ellipsis_check = new ValaLint.Checks.EllipsisCheck ();
         assert_pass (ellipsis_check, "lorem ipsum");
-        assert_pass (ellipsis_check, "lorem ipsum..."); // vala-lint=ellipsis
-        assert_warning (ellipsis_check, "lorem ipsum\"...\""); // vala-lint=ellipsis
+        assert_warning (ellipsis_check, "..."); // vala-lint=ellipsis
 
         var line_length_check = new ValaLint.Checks.LineLengthCheck ();
         assert_pass (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua."); // vala-lint=line-length

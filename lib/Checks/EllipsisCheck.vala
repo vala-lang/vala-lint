@@ -28,9 +28,7 @@ public class ValaLint.Checks.EllipsisCheck : Check {
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
         foreach (ParseResult r in parse_result) {
-            if (r.type == ParseType.STRING) {
-                add_regex_mistake ("""\.\.\.""", _("Expected ... ellipsis instead of three periods"), r, ref mistake_list);
-            }
+            add_regex_mistake ("""\.\.\.""", _("Expected ellipsis instead of three periods"), r, ref mistake_list);
         }
     }
 }
