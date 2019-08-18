@@ -96,7 +96,7 @@ public abstract class ValaLint.Check : Object {
      * @param mistake The mistake.
      * @param mistakes The mistakes list.
      */
-    protected void add_mistake (FormatMistake mistake,ref Vala.ArrayList<FormatMistake?> mistakes) {
+    protected void add_mistake (FormatMistake mistake, ref Vala.ArrayList<FormatMistake?> mistakes) {
         if (!mistakes.contains (mistake)) {
             mistakes.add (mistake);
         }
