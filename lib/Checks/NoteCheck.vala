@@ -18,7 +18,7 @@
  */
 
 public class ValaLint.Checks.NoteCheck : Check {
-    const string[] KEYWORDS = {"FIXME", "TODO", "NOTE"};
+    const string[] KEYWORDS = {"FIXME", "TODO"};
 
     public NoteCheck () {
         Object (
