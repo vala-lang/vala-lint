@@ -61,7 +61,7 @@ public class ValaLint.Linter : Object {
     }
 
     public Vala.ArrayList<FormatMistake?> run_checks_for_file (File file) throws Error, IOError {
-        var mistake_list = new Vala.ArrayList<FormatMistake?> ();
+        var mistake_list = new Vala.ArrayList<FormatMistake?> ((a, b) => a.equal_to (b));
 
         var context = new Vala.CodeContext ();
         var reporter = new Reporter (mistake_list);
