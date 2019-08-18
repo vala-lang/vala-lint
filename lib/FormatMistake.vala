@@ -27,8 +27,7 @@ public struct ValaLint.FormatMistake {
     public bool equal_to (FormatMistake b) {
         return (
             check == b.check
-            && line_index == b.line_index
-            && char_index == b.char_index
+            && begin == b.begin
             && mistake == b.mistake
         );
     }

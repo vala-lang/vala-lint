@@ -78,7 +78,7 @@ public abstract class ValaLint.Check : Object {
                 if (!single_mistake_in_line ||
                     (mistakes.is_empty || mistakes.last ().check != this || mistakes.last ().begin.line < line)) {
                     var location = Vala.SourceLocation (parse_result.begin.pos + pos_start, line, column);
-                    add_mistake ({ this, location, mistake });
+                    add_mistake ({ this, location, mistake }, ref mistakes);
                 }
 
                 if (return_after_mistake) {
