@@ -35,10 +35,6 @@ class UnitTest : GLib.Object {
         assert_warning (double_spaces_check, "int test  = 2;", 9);
         assert_warning (double_spaces_check, "int test = {  };", 13);
 
-        var ellipsis_check = new ValaLint.Checks.EllipsisCheck ();
-        assert_pass (ellipsis_check, "lorem ipsum");
-        assert_warning (ellipsis_check, "..."); // vala-lint=ellipsis
-
         var line_length_check = new ValaLint.Checks.LineLengthCheck ();
         assert_pass (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua."); // vala-lint=line-length
         // This is 70 characters but 140 bytes, it should still pass.

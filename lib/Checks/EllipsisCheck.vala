@@ -27,8 +27,14 @@ public class ValaLint.Checks.EllipsisCheck : Check {
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
-        foreach (ParseResult r in parse_result) {
-            add_regex_mistake ("""\.\.\.""", _("Expected ellipsis instead of three periods"), r, ref mistake_list);
+
+    }
+
+    public void check_string_literal (Vala.StringLiteral lit, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        var a = lit.value.index_of ("..."); // vala-lint=ellipsis
+        if (a > -1) {
+            var location = Utils.get_absolute_location (lit.source_reference.begin, lit.value, a);
+            add_mistake ({ this, location, _("Expected ellipsis instead of three periods") }, ref mistake_list);
         }
     }
 }
