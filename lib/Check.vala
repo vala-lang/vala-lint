@@ -54,9 +54,13 @@ public abstract class ValaLint.Check : Object {
      * @param mistakes The mistakes list.
      * @param column_offset The offset between the mistake char position and the regex pattern start.
      */
-    protected void add_regex_mistake (string pattern, string mistake, ParseResult parse_result,
+    protected void add_regex_mistake (string pattern,
+                                      string mistake,
+                                      ParseResult parse_result,
                                       ref Vala.ArrayList<FormatMistake?> mistakes,
-                                      int column_offset = 0, bool return_after_mistake = false) {
+                                      int length = 1,
+                                      int column_offset = 0,
+                                      bool return_after_mistake = false) {
 
         MatchInfo match_info;
         try {
@@ -67,18 +71,15 @@ public abstract class ValaLint.Check : Object {
                 match_info.fetch_pos (0, out pos_start, out pos_end);
 
                 int pos_mistake = pos_start + column_offset;
-                int line_count = Utils.get_line_count (parse_result.text[0:pos_mistake]);
-                int line = parse_result.begin.line + line_count;
-                int column = Utils.get_column_in_line (parse_result.text, pos_mistake);
-                if (line_count == 0) {
-                    column += parse_result.begin.column;
-                }
+                var begin = Utils.get_absolute_location (parse_result.begin, parse_result.text, pos_mistake);
+                var end = Utils.get_absolute_location (parse_result.begin, parse_result.text, pos_mistake + length);
 
                 /* If single_mistake_in_line is true, add only one mistake of the same check per line */
                 if (!single_mistake_in_line ||
-                    (mistakes.is_empty || mistakes.last ().check != this || mistakes.last ().begin.line < line)) {
-                    var location = Vala.SourceLocation (parse_result.begin.pos + pos_start, line, column);
-                    mistakes.add ({ this, location, mistake });
+                    (mistakes.is_empty || mistakes.last ().check != this ||
+                    mistakes.last ().begin.line < begin.line)) {
+
+                    mistakes.add ({ this, begin, end, mistake });
                 }
 
                 if (return_after_mistake) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2016-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -32,13 +32,13 @@ class UnitTest : GLib.Object {
         assert_pass (double_spaces_check, "   lorem ipsum");
         assert_pass (double_spaces_check, "int test = 2;    // asdf");
         assert_pass (double_spaces_check, "int test = 2;    /* asdf  */");
-        assert_warning (double_spaces_check, "int test  = 2;", 9);
-        assert_warning (double_spaces_check, "int test = {  };", 13);
+        assert_warning (double_spaces_check, "int test  = 2;", 9, 11);
+        assert_warning (double_spaces_check, "int test = {  };", 13, 15);
 
         var ellipsis_check = new ValaLint.Checks.EllipsisCheck ();
         assert_pass (ellipsis_check, "lorem ipsum");
         assert_pass (ellipsis_check, "lorem ipsum..."); // vala-lint=ellipsis
-        assert_warning (ellipsis_check, "lorem ipsum\"...\""); // vala-lint=ellipsis
+        assert_warning (ellipsis_check, "lorem ipsum\"...\"", 13, 16); // vala-lint=ellipsis
 
         var line_length_check = new ValaLint.Checks.LineLengthCheck ();
         assert_pass (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua."); // vala-lint=line-length
@@ -82,12 +82,12 @@ class UnitTest : GLib.Object {
         assert_pass (space_before_paren_check, "var test = 2 * (3 + 1);");
         assert_pass (space_before_paren_check, "a = !(true && false);");
         assert_pass (space_before_paren_check, "actions &= ~(Gdk.DragAction.COPY | Gdk.DragAction.LINK)");
-        assert_warning (space_before_paren_check, "void test()", 10);
-        assert_warning (space_before_paren_check, "void = 2*(2+2)", 10);
+        assert_warning (space_before_paren_check, "void test()", 10, 11);
+        assert_warning (space_before_paren_check, "void = 2*(2+2)", 10, 11);
 
         var tab_check = new ValaLint.Checks.TabCheck ();
         assert_pass (tab_check, "lorem ipsum");
-        assert_warning (tab_check, "lorem	ipsum");
+        assert_warning (tab_check, "lorem	ipsum", 6, 7);
 
         var trailing_whitespace_check = new ValaLint.Checks.TrailingWhitespaceCheck ();
         assert_pass (trailing_whitespace_check, "lorem ipsum");
@@ -106,14 +106,17 @@ class UnitTest : GLib.Object {
         }
     }
 
-    private static void assert_warning (ValaLint.Check check, string input, int column = -1) {
+    private static void assert_warning (ValaLint.Check check, string input, int begin = -1, int end = -1) {
         var parser = new ValaLint.Parser ();
         var parsed_result = parser.parse (input);
         var mistakes = new Vala.ArrayList<ValaLint.FormatMistake?> ();
         check.check (parsed_result, ref mistakes);
         assert (mistakes.size > 0);
-        if (column > -1) {
-            assert (mistakes[0].begin.column == column);
+        if (begin > -1) {
+            assert (mistakes[0].begin.column == begin);
+        }
+        if (end > -1) {
+            assert (mistakes[0].end.column == end);
         }
     }
 }

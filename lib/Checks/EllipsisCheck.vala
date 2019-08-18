@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2016-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -29,7 +29,8 @@ public class ValaLint.Checks.EllipsisCheck : Check {
                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
         foreach (ParseResult r in parse_result) {
             if (r.type == ParseType.STRING) {
-                add_regex_mistake ("""\.\.\.""", _("Expected ellipsis instead of three periods"), r, ref mistake_list);
+                add_regex_mistake ("""\.\.\.""", _("Expected ellipsis instead of three periods"), r,
+                                   ref mistake_list, 3);
             }
         }
     }
