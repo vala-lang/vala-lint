@@ -8,6 +8,7 @@ env:
 
 install:
  - docker run -v "$PWD":/tmp/build-dir elementary/docker:unstable /bin/sh -c "apt-get update && apt-get -y install $DEPENDENCY_PACKAGES && cd /tmp/build-dir && meson build && ninja -C build"
+ - docker run -v "$PWD":/var/opt/vala-lint elementary/docker:vala-lint
 
 script:
  - echo BUILDS PASSED

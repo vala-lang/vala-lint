@@ -39,7 +39,7 @@ public class ValaLint.Checks.DoubleSpacesCheck : Check {
                 add_regex_mistake ("""\S {2,}""" + no_spaces_pattern, "Expected single space", r, ref mistake_list, 1);
 
                 /* Check for problems at the beginning of strings */
-                if (r.char_pos > 1) {
+                if (r.begin.column > 1) {
                     add_regex_mistake ("""^ {2,}""" + no_spaces_pattern, "Expected single space", r, ref mistake_list);
                 }
             }

@@ -99,10 +99,10 @@ public class ValaLint.Linter : Object {
             mistake_list = disabler.filter_mistakes (mistake_list, disable_results);
 
             mistake_list.sort ((a, b) => {
-                if (a.line_index == b.line_index) {
-                    return a.char_index - b.char_index;
+                if (a.begin.line == b.begin.line) {
+                    return a.begin.column - b.begin.column;
                 }
-                return a.line_index - b.line_index;
+                return a.begin.line - b.begin.line;
             });
         }
 

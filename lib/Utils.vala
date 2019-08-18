@@ -30,9 +30,9 @@ public class ValaLint.Utils : Object {
     /**
      * Method to get the char position in the current line of the input string.
      *
-     * @return The char index.
+     * @return The char column.
      */
-    public static int get_char_index_in_line (string input, int pos) {
+    public static int get_column_in_line (string input, int pos) {
         return pos - input[0:pos].last_index_of_char ('\n') - 1;
     }
 }

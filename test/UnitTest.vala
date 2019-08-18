@@ -74,7 +74,7 @@ class UnitTest : GLib.Object {
         assert_pass (note_check, "lorem");
         assert_pass (note_check, "lorem todo");
         assert_warning (note_check, "lorem // TODO: nothing to do", 10);
-        assert_warning (note_check, "lorem // NOTE: nothing to do", 10);
+        assert_pass (note_check, "lorem // NOTE: nothing to do");
         assert_warning (note_check, "lorem // FIXME: nothing to do", 10);
 
         var space_before_paren_check = new ValaLint.Checks.SpaceBeforeParenCheck ();
@@ -102,18 +102,18 @@ class UnitTest : GLib.Object {
         var mistakes = new Vala.ArrayList<ValaLint.FormatMistake?> ();
         check.check (parsed_result, ref mistakes);
         if (mistakes.size != 0) {
-            error ("%s: %s at char %d", input, mistakes[0].mistake, mistakes[0].char_index);
+            error ("%s: %s at char %d", input, mistakes[0].mistake, mistakes[0].begin.column);
         }
     }
 
-    private static void assert_warning (ValaLint.Check check, string input, int char_pos = -1) {
+    private static void assert_warning (ValaLint.Check check, string input, int column = -1) {
         var parser = new ValaLint.Parser ();
         var parsed_result = parser.parse (input);
         var mistakes = new Vala.ArrayList<ValaLint.FormatMistake?> ();
         check.check (parsed_result, ref mistakes);
         assert (mistakes.size > 0);
-        if (char_pos > -1) {
-            assert (mistakes[0].char_index == char_pos);
+        if (column > -1) {
+            assert (mistakes[0].begin.column == column);
         }
     }
 }

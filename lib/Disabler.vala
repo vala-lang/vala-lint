@@ -20,7 +20,7 @@
 
 public struct ValaLint.DisableResult {
     public string check_title;
-    public int line_pos;
+    public Vala.SourceLocation location;
 }
 
 
@@ -45,7 +45,7 @@ public class ValaLint.Disabler : Object {
                     var title_list = r.text.slice (index, r.text.length).split (",");
 
                     foreach (string title in title_list) {
-                        result.add ({ title.strip (), r.line_pos });
+                        result.add ({ title.strip (), r.begin });
                     }
                 }
             }
@@ -68,7 +68,7 @@ public class ValaLint.Disabler : Object {
             bool found_no_disabler = true;
             foreach (DisableResult r in disable_results) {
                 /* Find mistakes with same title and line index */
-                if (m.check.title == r.check_title && m.line_index == r.line_pos) {
+                if (m.check.title == r.check_title && m.begin.line == r.location.line) {
                     found_no_disabler = false;
                     break;
                 }
