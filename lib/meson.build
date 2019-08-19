@@ -18,6 +18,7 @@ vala_linter_files = files(
     'Checks/NoteCheck.vala',
     'Checks/SpaceBeforeParenCheck.vala',
     'Checks/TabCheck.vala',
+    'Checks/TrailingNewlinesCheck.vala',
     'Checks/TrailingWhitespaceCheck.vala',
 )
 
