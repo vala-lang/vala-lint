@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2016-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -34,6 +34,11 @@ class UnitTest : GLib.Object {
         assert_pass (double_spaces_check, "int test = 2;    /* asdf  */");
         assert_warning (double_spaces_check, "int test  = 2;", 9);
         assert_warning (double_spaces_check, "int test = {  };", 13);
+
+        var ellipsis_check = new ValaLint.Checks.EllipsisCheck ();
+        Assertion<Vala.StringLiteral>.pass (ellipsis_check.check_string_literal, new Vala.StringLiteral ("lorem ipsum"));
+        Assertion<Vala.StringLiteral>.warning (ellipsis_check.check_string_literal, new Vala.StringLiteral ("lorem [...] ipsum"), 1, 7);
+        Assertion<Vala.StringLiteral>.warning (ellipsis_check.check_string_literal, new Vala.StringLiteral ("lorem [...] ipsum..."), 2);
 
         var line_length_check = new ValaLint.Checks.LineLengthCheck ();
         assert_pass (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua."); // vala-lint=line-length
@@ -107,6 +112,36 @@ class UnitTest : GLib.Object {
         var mistakes = new Vala.ArrayList<ValaLint.FormatMistake?> ();
         check.check (parsed_result, ref mistakes);
         assert (mistakes.size > 0);
+        if (column > -1) {
+            assert (mistakes[0].begin.column == column);
+        }
+    }
+}
+
+
+
+public class Assertion<G> {
+    public delegate void CheckFunction<G> (G input, ref Vala.ArrayList<ValaLint.FormatMistake?> mistakes);
+
+    public static void pass (CheckFunction<G> check_function, G input) {
+        var mistakes = new Vala.ArrayList<ValaLint.FormatMistake?> ();
+
+        check_function (input, ref mistakes);
+        if (mistakes.size != 0) {
+            error ("%s at char %d", mistakes[0].mistake, mistakes[0].begin.column);
+        }
+    }
+
+    public static void warning (CheckFunction<G> check_function, G input, int number_mistakes = -1, int column = -1) {
+        var mistakes = new Vala.ArrayList<ValaLint.FormatMistake?> ();
+
+        check_function (input, ref mistakes);
+        if (number_mistakes > 0) {
+            assert (mistakes.size == number_mistakes);
+        } else {
+            assert (mistakes.size > 0);
+        }
+        
         if (column > -1) {
             assert (mistakes[0].begin.column == column);
         }
