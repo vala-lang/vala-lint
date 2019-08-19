@@ -49,7 +49,7 @@ public class ValaLint.Checks.NoteCheck : Check {
                         }
 
                         var loc = Vala.SourceLocation ((char *)r.begin.pos + index, line, column);
-                        mistake_list.add ({ this, loc, @"$keyword: $message" });
+                        add_mistake ({ this, loc, @"$keyword: $message" }, ref mistake_list);
                     }
                 }
             }

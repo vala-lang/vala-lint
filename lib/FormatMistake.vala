@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2016-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -23,4 +23,12 @@ public struct ValaLint.FormatMistake {
     public Check check;
     public Vala.SourceLocation begin;
     public string mistake;
+
+    public bool equal_to (FormatMistake b) {
+        return (
+            check == b.check
+            && begin == b.begin
+            && mistake == b.mistake
+        );
+    }
 }
