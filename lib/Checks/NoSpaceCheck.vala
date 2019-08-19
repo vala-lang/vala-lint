@@ -44,10 +44,17 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
                     }
                 }
 
-                char char_after = * (end.pos + 1);
-                if (char_after != ' ' && char_after != '\n' && char_after != ')') {
+                // Move char to comma seperator
+                int offset = 0;
+                while (end.pos[offset] != ',') {
+                    offset += 1;
+                }
+                offset += 1;
+
+                if (end.pos[offset] != ' ' && end.pos[offset] != '\n') {
                     var loc = end;
-                    loc.column += 2;
+                    loc.pos += offset + 1;
+                    loc.column += offset + 1;
                     add_mistake ({ this, loc, "Missing whitespace" }, ref mistake_list);
                 }
             }
@@ -57,15 +64,15 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
     public void check_binary_expression (Vala.BinaryExpression expr,
                                          ref Vala.ArrayList<FormatMistake?> mistake_list) {
 
-        char char_before_operator = * (expr.left.source_reference.end.pos);
-        if (char_before_operator != ' ' && char_before_operator != '\n' && char_before_operator != ')') {
+        char* char_before = expr.left.source_reference.end.pos;
+        if (char_before[0] != ' ' && char_before[0] != '\n' && char_before[0] != ')') {
             var loc = expr.left.source_reference.end;
             loc.column += 1;
             add_mistake ({ this, loc, "Missing whitespace" }, ref mistake_list);
         }
 
-        char char_after_operator = * (expr.right.source_reference.begin.pos - 1);
-        if (char_after_operator != ' ' && char_after_operator != '\n' && char_after_operator != '(') {
+        char* char_after = expr.right.source_reference.begin.pos - 1;
+        if (char_after[0] != ' ' && char_after[0] != '\n' && char_after[0] != '(') {
             var loc = expr.right.source_reference.begin;
             add_mistake ({ this, loc, "Missing whitespace" }, ref mistake_list);
         }
