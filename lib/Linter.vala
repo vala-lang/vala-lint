@@ -42,12 +42,12 @@ public class ValaLint.Linter : Object {
         visitor.naming_all_caps_check = new Checks.NamingAllCapsCheck ();
         visitor.naming_camel_case_check = new Checks.NamingCamelCaseCheck ();
         visitor.naming_underscore_check = new Checks.NamingUnderscoreCheck ();
-        visitor.unused_string_template_check = new Checks.UnusedStringTemplateCheck ();
+        visitor.unnecessary_string_template_check = new Checks.UnnecessaryStringTemplateCheck ();
         visitor.checks = new Vala.ArrayList<Check> ();
         visitor.checks.add (visitor.naming_all_caps_check);
         visitor.checks.add (visitor.naming_camel_case_check);
         visitor.checks.add (visitor.naming_underscore_check);
-        visitor.checks.add (visitor.unused_string_template_check);
+        visitor.checks.add (visitor.unnecessary_string_template_check);
     }
 
     public Linter.with_check (Check check) {

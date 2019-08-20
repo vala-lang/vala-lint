@@ -17,12 +17,12 @@
  * Boston, MA 02110-1301 USA.
  */
 
-public class ValaLint.Checks.UnusedStringTemplateCheck : Check {
+public class ValaLint.Checks.UnnecessaryStringTemplateCheck : Check {
     const string MESSAGE = _("String template can be simplified using a literal");
 
-    public UnusedStringTemplateCheck () {
+    public UnnecessaryStringTemplateCheck () {
         Object (
-            title: _("unused-string-template"),
+            title: _("unnecessary-string-template"),
             description:_("Checks for templates that could be replaced by a string literal")
         );
     }

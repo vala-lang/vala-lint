@@ -19,7 +19,7 @@ vala_linter_files = files(
     'Checks/SpaceBeforeParenCheck.vala',
     'Checks/TabCheck.vala',
     'Checks/TrailingWhitespaceCheck.vala',
-    'Checks/UnusedStringTemplateCheck.vala',
+    'Checks/UnnecessaryStringTemplateCheck.vala',
 )
 
 vala_linter_deps = [
