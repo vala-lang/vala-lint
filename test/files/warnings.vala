@@ -4,6 +4,7 @@ class FileTest : GLib.Object {
         bool true_bool = true;
 
         if (true_bool == false) true_bool = false; // vala-lint=condition-single-line
+        if (true_bool == false) { true_bool = false; } // vala-lint=condition-single-line
 
         return 0;
     }

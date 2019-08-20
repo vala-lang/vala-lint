@@ -32,10 +32,25 @@ public class ValaLint.Checks.ConditionSingleLineCheck : Check {
 
     public void check_statement (Vala.Expression condition, Vala.Block body,
                                  ref Vala.ArrayList<FormatMistake?> mistake_list) {
-        if (body.source_reference.begin.line == condition.source_reference.end.line
-            && body.source_reference.end.line == condition.source_reference.end.line) {
-            var loc = body.source_reference.begin;
-            add_mistake ({ this, loc, "If statement should not be on a single line" }, ref mistake_list);
+        var statements = body.get_statements ();
+        if (!statements.is_empty) {
+            var first_statement = statements.first ();
+
+            if (body.source_reference.begin.line > body.source_reference.end.line
+                || (body.source_reference.begin.line == body.source_reference.end.line
+                    && body.source_reference.begin.column > body.source_reference.end.column)) {
+                // Block doesnt have braces                
+                if (body.source_reference.end.line == first_statement.source_reference.begin.line) {
+                    var loc = first_statement.source_reference.begin;
+                    add_mistake ({ this, loc, "If statement should not be on a single line" }, ref mistake_list);
+                }
+            } else {
+                // Block has braces
+                if (body.source_reference.begin.line == first_statement.source_reference.begin.line) {
+                    var loc = first_statement.source_reference.begin;
+                    add_mistake ({ this, loc, "If statement should not be on a single line" }, ref mistake_list);
+                }
+            }
         }
     }
 }

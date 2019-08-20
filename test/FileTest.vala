@@ -33,10 +33,11 @@ class FileTest : GLib.Object {
 
         try {
             mistakes = linter.run_checks_for_file (File.new_for_path ("../test/files/warnings.vala"));
-            assert (mistakes.size == 3);
+            assert (mistakes.size == 4);
             assert (mistakes[0].check.title == "space-before-paren");
             assert (mistakes[1].check.title == "condition-single-line");
-            assert (mistakes[2].check.title == "no-space");
+            assert (mistakes[2].check.title == "condition-single-line");
+            assert (mistakes[3].check.title == "no-space");
 
             //  assert (mistakes[3].check.title == "no-space");
         } catch (Error e) {
