@@ -26,6 +26,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     public Checks.NamingAllCapsCheck naming_all_caps_check;
     public Checks.NamingCamelCaseCheck naming_camel_case_check;
     public Checks.NamingUnderscoreCheck naming_underscore_check;
+    public Checks.NoSpaceCheck no_space_check;
 
     public void set_mistake_list (Vala.ArrayList<FormatMistake?> mistake_list) {
         this.mistake_list = mistake_list;
@@ -81,17 +82,27 @@ class ValaLint.Visitor : Vala.CodeVisitor {
 
     public override void visit_constant (Vala.Constant c) {
         naming_all_caps_check.check (string_parsed (c.name, c.source_reference), ref mistake_list);
+
         c.accept_children (this);
     }
 
     public override void visit_field (Vala.Field f) {
         naming_underscore_check.check (string_parsed (f.name, f.source_reference), ref mistake_list);
+
         f.accept_children (this);
     }
 
     public override void visit_method (Vala.Method m) {
         /* method name may be null */
         naming_underscore_check.check (string_parsed (m.name, m.source_reference), ref mistake_list);
+
+        no_space_check.check_list (m.get_parameters (), ref mistake_list);
+
+        /* Error types depend on the vala version. */
+        //  var error_types = new Vala.ArrayList<Vala.DataType?> ();
+        //  m.get_error_types (error_types);
+        //  no_space_check.check_list (error_types, ref mistake_list);
+
         m.accept_children (this);
     }
 
@@ -101,6 +112,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
 
     public override void visit_formal_parameter (Vala.Parameter p) {
         naming_underscore_check.check (string_parsed (p.name, p.source_reference), ref mistake_list);
+
         p.accept_children (this);
     }
 
@@ -152,6 +164,8 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_initializer_list (Vala.InitializerList list) {
+        no_space_check.check_list (list.get_initializers (), ref mistake_list);
+
         list.accept_children (this);
     }
 
@@ -273,6 +287,8 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_tuple (Vala.Tuple tuple) {
+        no_space_check.check_list (tuple.get_expressions (), ref mistake_list);
+
         tuple.accept_children (this);
     }
 
@@ -285,6 +301,8 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_method_call (Vala.MethodCall expr) {
+        no_space_check.check_list (expr.get_argument_list (), ref mistake_list);
+
         expr.accept_children (this);
     }
 
@@ -341,6 +359,8 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_binary_expression (Vala.BinaryExpression expr) {
+        no_space_check.check_binary_expression (expr, ref mistake_list);
+
         expr.accept_children (this);
     }
 
@@ -353,6 +373,8 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_lambda_expression (Vala.LambdaExpression expr) {
+        no_space_check.check_list (expr.get_parameters (), ref mistake_list);
+
         expr.accept_children (this);
     }
 
