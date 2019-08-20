@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -17,19 +17,20 @@
  * Boston, MA 02110-1301 USA.
  */
 
-public class ValaLint.Checks.NamingCamelCaseCheck : Check {
-    public NamingCamelCaseCheck () {
+public class ValaLint.Checks.TrailingNewlinesCheck : Check {
+    public TrailingNewlinesCheck () {
         Object (
-            title: _("naming-convention"),
-            description: _("Checks for the camel case naming convention")
+            title: _("trailing-newlines"),
+            description:_("Checks for a single newline at the end of files")
         );
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
-        foreach (ParseResult r in parse_result) {
-            add_regex_mistake ("""(^[a-z]|_)""", _("Expected variable name in CamelCaseConvention"), r,
-                               ref mistake_list, 0, true);
+        ParseResult r_last = parse_result.last ();
+        if (r_last.type == ParseType.DEFAULT) {
+            add_regex_mistake ("""[^\n]\z""", _("Missing newline at the end of file"), r_last, ref mistake_list);
+            add_regex_mistake ("""\n{2,}\z""", _("Multiple newlines at the end of file"), r_last, ref mistake_list);
         }
     }
 }

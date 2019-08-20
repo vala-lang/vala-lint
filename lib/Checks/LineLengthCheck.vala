@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2018-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -19,6 +19,7 @@
 
 public class ValaLint.Checks.LineLengthCheck : Check {
     const int MAXIMUM_CHARACTERS = 120;
+    const string MESSAGE = @"Line exceeds limit of %d characters (currently %d characters)";
 
     public LineLengthCheck () {
         Object (
@@ -27,7 +28,8 @@ public class ValaLint.Checks.LineLengthCheck : Check {
         );
     }
 
-    public override void check (Vala.ArrayList<ParseResult?> parse_result, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+    public override void check (Vala.ArrayList<ParseResult?> parse_result,
+                                ref Vala.ArrayList<FormatMistake?> mistake_list) {
         string input = "";
         foreach (ParseResult r in parse_result) {
             input += r.text;
@@ -37,8 +39,9 @@ public class ValaLint.Checks.LineLengthCheck : Check {
         foreach (string line in input.split ("\n")) {
             if (line.char_count () > MAXIMUM_CHARACTERS) {
                 int line_length = line.char_count ();
-                string message = @"Line exceeds limit of $MAXIMUM_CHARACTERS characters (currently $line_length characters)";
-                mistake_list.add ({ this, line_counter, MAXIMUM_CHARACTERS, message });
+                string formatted_message = MESSAGE.printf (MAXIMUM_CHARACTERS, line_length);
+                var loc = Vala.SourceLocation ((char *)line + MAXIMUM_CHARACTERS, line_counter, MAXIMUM_CHARACTERS);
+                add_mistake ({ this, loc, formatted_message }, ref mistake_list);
             }
             line_counter += 1;
         }

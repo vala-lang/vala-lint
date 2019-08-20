@@ -25,11 +25,13 @@ public class ValaLint.Checks.DoubleSpacesCheck : Check {
         );
     }
 
-    public override void check (Vala.ArrayList<ParseResult?> parse_result, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+    public override void check (Vala.ArrayList<ParseResult?> parse_result,
+                                ref Vala.ArrayList<FormatMistake?> mistake_list) {
         for (int i = 0; i < parse_result.size; i++) {
             ParseResult r = parse_result[i];
             if (r.type == ParseType.DEFAULT) {
-                bool next_parse_type_is_comment = (i + 1 < parse_result.size && parse_result[i + 1].type == ParseType.COMMENT);
+                bool next_parse_type_is_comment = (i + 1 < parse_result.size
+                                                   && parse_result[i + 1].type == ParseType.COMMENT);
 
                 /* Should not end with spaces pattern */
                 string no_spaces_pattern = next_parse_type_is_comment ? """(?!(?:$| ))""" : "";
@@ -37,7 +39,7 @@ public class ValaLint.Checks.DoubleSpacesCheck : Check {
                 add_regex_mistake ("""\S {2,}""" + no_spaces_pattern, "Expected single space", r, ref mistake_list, 1);
 
                 /* Check for problems at the beginning of strings */
-                if (r.char_pos > 1) {
+                if (r.begin.column > 1) {
                     add_regex_mistake ("""^ {2,}""" + no_spaces_pattern, "Expected single space", r, ref mistake_list);
                 }
             }

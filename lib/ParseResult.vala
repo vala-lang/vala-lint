@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 elementary LLC. (https://github.com/elementary/Vala-Lint)
+ * Copyright (c) 2018-2019 elementary LLC. (https://github.com/elementary/Vala-Lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -34,8 +34,8 @@ public enum ParseDetailType { // start pattern, close pattern
 }
 
 public struct ParseResult {
-    string text;
-    ParseType type;
-    int line_pos;
-    int char_pos;
+    public string text;
+    public ParseType type;
+    public ParseDetailType detail_type;
+    public Vala.SourceLocation begin;
 }

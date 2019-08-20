@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2016-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -37,15 +37,15 @@ class UnitTest : GLib.Object {
 
         var ellipsis_check = new ValaLint.Checks.EllipsisCheck ();
         assert_pass (ellipsis_check, "lorem ipsum");
-        assert_pass (ellipsis_check, "lorem ipsum...");
-        assert_warning (ellipsis_check, "lorem ipsum\"...\"");
-        
+        assert_pass (ellipsis_check, "lorem ipsum..."); // vala-lint=ellipsis
+        assert_warning (ellipsis_check, "lorem ipsum\"...\""); // vala-lint=ellipsis
+
         var line_length_check = new ValaLint.Checks.LineLengthCheck ();
-        assert_pass (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua.");
+        assert_pass (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua."); // vala-lint=line-length
         // This is 70 characters but 140 bytes, it should still pass.
         assert_pass (line_length_check, "éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé");
-        assert_warning (line_length_check, "/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua consectetur */ aliqua.", 120);
-        assert_warning (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", 120);
+        assert_warning (line_length_check, "/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua consectetur */ aliqua.", 120); // vala-lint=line-length
+        assert_warning (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", 120); // vala-lint=line-length
 
         var naming_all_caps_check = new ValaLint.Checks.NamingAllCapsCheck ();
         assert_pass (naming_all_caps_check, "LOREM");
@@ -70,6 +70,13 @@ class UnitTest : GLib.Object {
         assert_warning (naming_underscore_check, "Lorem_Ipsum");
         assert_warning (naming_underscore_check, "lorem_IPsum");
 
+        var note_check = new ValaLint.Checks.NoteCheck ();
+        assert_pass (note_check, "lorem");
+        assert_pass (note_check, "lorem todo");
+        assert_warning (note_check, "lorem // TODO: nothing to do", 10);
+        assert_pass (note_check, "lorem // NOTE: nothing to do");
+        assert_warning (note_check, "lorem // FIXME: nothing to do", 10);
+
         var space_before_paren_check = new ValaLint.Checks.SpaceBeforeParenCheck ();
         assert_pass (space_before_paren_check, "void test ()");
         assert_pass (space_before_paren_check, "var test = 2 * (3 + 1);");
@@ -81,6 +88,12 @@ class UnitTest : GLib.Object {
         var tab_check = new ValaLint.Checks.TabCheck ();
         assert_pass (tab_check, "lorem ipsum");
         assert_warning (tab_check, "lorem	ipsum");
+
+        var trailing_newlines_check = new ValaLint.Checks.TrailingNewlinesCheck ();
+        assert_pass (trailing_newlines_check, "lorem ipsum\n");
+        assert_warning (trailing_newlines_check, "lorem ipsum", 11);
+        assert_warning (trailing_newlines_check, "lorem ipsum ", 12);
+        assert_warning (trailing_newlines_check, "lorem ipsum\n\n");
 
         var trailing_whitespace_check = new ValaLint.Checks.TrailingWhitespaceCheck ();
         assert_pass (trailing_whitespace_check, "lorem ipsum");
@@ -95,18 +108,18 @@ class UnitTest : GLib.Object {
         var mistakes = new Vala.ArrayList<ValaLint.FormatMistake?> ();
         check.check (parsed_result, ref mistakes);
         if (mistakes.size != 0) {
-            error ("%s: %s at char %d", input, mistakes[0].mistake, mistakes[0].char_index);
+            error ("%s: %s at char %d", input, mistakes[0].mistake, mistakes[0].begin.column);
         }
     }
 
-    private static void assert_warning (ValaLint.Check check, string input, int char_pos = -1) {
+    private static void assert_warning (ValaLint.Check check, string input, int column = -1) {
         var parser = new ValaLint.Parser ();
         var parsed_result = parser.parse (input);
         var mistakes = new Vala.ArrayList<ValaLint.FormatMistake?> ();
         check.check (parsed_result, ref mistakes);
         assert (mistakes.size > 0);
-        if (char_pos > -1) {
-            assert (mistakes[0].char_index == char_pos);
+        if (column > -1) {
+            assert (mistakes[0].begin.column == column);
         }
     }
 }

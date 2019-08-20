@@ -28,13 +28,15 @@ public class ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck : Check {
         );
     }
 
-    public override void check (Vala.ArrayList<ParseResult?> parse_result, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+    public override void check (Vala.ArrayList<ParseResult?> parse_result,
+                                ref Vala.ArrayList<FormatMistake?> mistake_list) {
         foreach (ParseResult r in parse_result) {
             if (r.type == ParseType.DEFAULT) {
                 add_regex_mistake ("""[\w)=]\n\s*{""", _("Unexpected line break before \"{\""), r, ref mistake_list, 1);
                 add_regex_mistake ("""[\w)=]{""", _("Expected whitespace before \"{\""), r, ref mistake_list, 1);
                 // Check for a tab character or more than one whitespace character before the open parenthesis
-                add_regex_mistake ("""[\w)=](?:\t|\s{2,}){""", _("Expected single space before \"{\""), r, ref mistake_list, 1);
+                add_regex_mistake ("""[\w)=](?:\t|\s{2,}){""", _("Expected single space before \"{\""), r,
+                                   ref mistake_list, 1);
             }
         }
     }

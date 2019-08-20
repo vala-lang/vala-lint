@@ -21,7 +21,14 @@
 
 public struct ValaLint.FormatMistake {
     public Check check;
-    public int line_index;
-    public int char_index;
+    public Vala.SourceLocation begin;
     public string mistake;
+
+    public bool equal_to (FormatMistake b) {
+        return (
+            check == b.check
+            && begin == b.begin
+            && mistake == b.mistake
+        );
+    }
 }
