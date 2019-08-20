@@ -149,8 +149,6 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_block (Vala.Block b) {
-        //  print (@"$(b.source_reference.begin.line)\n");
-        //  print (@"$(b.source_reference.end.line)\n");
         b.accept_children (this);
     }
 
