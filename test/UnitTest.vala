@@ -36,9 +36,18 @@ class UnitTest : GLib.Object {
         assert_warning (double_spaces_check, "int test = {  };", 13);
 
         var ellipsis_check = new ValaLint.Checks.EllipsisCheck ();
-        Assertion<Vala.StringLiteral>.pass (ellipsis_check.check_string_literal, new Vala.StringLiteral ("lorem ipsum"));
-        Assertion<Vala.StringLiteral>.warning (ellipsis_check.check_string_literal, new Vala.StringLiteral ("lorem [...] ipsum"), 1, 7);
-        Assertion<Vala.StringLiteral>.warning (ellipsis_check.check_string_literal, new Vala.StringLiteral ("lorem [...] ipsum..."), 2);
+        Assertion<Vala.StringLiteral>.pass (
+            ellipsis_check.check_string_literal,
+            new Vala.StringLiteral ("lorem ipsum")
+        );
+        Assertion<Vala.StringLiteral>.warning (
+            ellipsis_check.check_string_literal,
+            new Vala.StringLiteral ("lorem [...] ipsum"), 1, 7 // vala-lint=ellipsis
+        );
+        Assertion<Vala.StringLiteral>.warning (
+            ellipsis_check.check_string_literal,
+            new Vala.StringLiteral ("lorem [...] ipsum..."), 2 // vala-lint=ellipsis
+        );
 
         var line_length_check = new ValaLint.Checks.LineLengthCheck ();
         assert_pass (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua."); // vala-lint=line-length
@@ -147,7 +156,7 @@ public class Assertion<G> {
         } else {
             assert (mistakes.size > 0);
         }
-        
+
         if (column > -1) {
             assert (mistakes[0].begin.column == column);
         }
