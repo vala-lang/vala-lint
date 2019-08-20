@@ -21,6 +21,9 @@
 
 public class ValaLint.Linter : Object {
 
+    /* Property whether the mistakes can be disabled by inline comments. */
+    public bool disable_mistakes { get; set; default = true; }
+
     /* Checks which work on the result of our own ValaLint.Parser. */
     public Vala.ArrayList<Check> global_checks { get; set; }
 
@@ -43,10 +46,13 @@ public class ValaLint.Linter : Object {
         visitor.naming_all_caps_check = new Checks.NamingAllCapsCheck ();
         visitor.naming_camel_case_check = new Checks.NamingCamelCaseCheck ();
         visitor.naming_underscore_check = new Checks.NamingUnderscoreCheck ();
+        visitor.no_space_check = new Checks.NoSpaceCheck ();
+
         visitor.checks = new Vala.ArrayList<Check> ();
         visitor.checks.add (visitor.naming_all_caps_check);
         visitor.checks.add (visitor.naming_camel_case_check);
         visitor.checks.add (visitor.naming_underscore_check);
+        visitor.checks.add (visitor.no_space_check);
     }
 
     public Linter.with_check (Check check) {
@@ -59,7 +65,7 @@ public class ValaLint.Linter : Object {
     }
 
     public Vala.ArrayList<FormatMistake?> run_checks_for_file (File file) throws Error, IOError {
-        var mistake_list = new Vala.ArrayList<FormatMistake?> ();
+        var mistake_list = new Vala.ArrayList<FormatMistake?> ((a, b) => a.equal_to (b));
 
         var context = new Vala.CodeContext ();
         var reporter = new Reporter (mistake_list);
@@ -94,7 +100,9 @@ public class ValaLint.Linter : Object {
             var disabler = new ValaLint.Disabler ();
             Vala.ArrayList<ValaLint.DisableResult?> disable_results = disabler.parse (parse_result);
 
-            mistake_list = disabler.filter_mistakes (mistake_list, disable_results);
+            if (disable_mistakes) {
+                mistake_list = disabler.filter_mistakes (mistake_list, disable_results);
+            }
 
             mistake_list.sort ((a, b) => {
                 if (a.begin.line == b.begin.line) {
