@@ -43,7 +43,7 @@ public class ValaLint.Checks.LineLengthCheck : Check {
 
                 var begin = Vala.SourceLocation ((char *)line + MAXIMUM_CHARACTERS, line_counter, MAXIMUM_CHARACTERS);
                 var end = Vala.SourceLocation ((char *)line + line_length, line_counter, line_length);
-                mistake_list.add ({ this, begin, end, formatted_message });
+                add_mistake ({ this, begin, end, formatted_message }, ref mistake_list);
             }
             line_counter += 1;
         }

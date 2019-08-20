@@ -89,6 +89,12 @@ class UnitTest : GLib.Object {
         assert_pass (tab_check, "lorem ipsum");
         assert_warning (tab_check, "lorem	ipsum", 6, 7);
 
+        var trailing_newlines_check = new ValaLint.Checks.TrailingNewlinesCheck ();
+        assert_pass (trailing_newlines_check, "lorem ipsum\n");
+        assert_warning (trailing_newlines_check, "lorem ipsum", 11);
+        assert_warning (trailing_newlines_check, "lorem ipsum ", 12);
+        assert_warning (trailing_newlines_check, "lorem ipsum\n\n");
+
         var trailing_whitespace_check = new ValaLint.Checks.TrailingWhitespaceCheck ();
         assert_pass (trailing_whitespace_check, "lorem ipsum");
         assert_warning (trailing_whitespace_check, "lorem ipsum ");
