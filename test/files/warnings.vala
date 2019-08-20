@@ -1,6 +1,9 @@
 class FileTest : GLib.Object {
 
     public static int main(string[] args) { // vala-lint=space-before-paren
+        bool true_bool = true;
+
+        if (true_bool == false) true_bool = false; // vala-lint=condition-single-line
 
         return 0;
     }

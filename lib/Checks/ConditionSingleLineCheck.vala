@@ -35,7 +35,7 @@ public class ValaLint.Checks.ConditionSingleLineCheck : Check {
         if (body.source_reference.begin.line == condition.source_reference.end.line
             && body.source_reference.end.line == condition.source_reference.end.line) {
             var loc = body.source_reference.begin;
-            mistake_list.add ({this, loc.line, loc.column, "If statement should not be on a single line" });
+            add_mistake ({ this, loc, "If statement should not be on a single line" }, ref mistake_list);
         }
     }
 }
