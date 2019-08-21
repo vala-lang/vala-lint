@@ -18,13 +18,14 @@
  */
 
 public class ValaLint.Checks.NoteCheck : Check {
-    const string[] KEYWORDS = {"FIXME", "TODO"};
+    public string[] keywords { get; construct; }
 
-    public NoteCheck () {
+    public NoteCheck (string[] keywords) {
         Object (
             single_mistake_in_line: true,
             title: _("note"),
-            description: _("Checks for notes (TODO, FIXME, etc.)")
+            description: _("Checks for notes (TODO, FIXME, etc.)"),
+            keywords: keywords
         );
     }
 
@@ -32,7 +33,7 @@ public class ValaLint.Checks.NoteCheck : Check {
                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
         foreach (ParseResult r in parse_result) {
             if (r.type == ParseType.COMMENT) {
-                foreach (string keyword in KEYWORDS) {
+                foreach (string keyword in keywords) {
                     int index = r.text.index_of (keyword);
                     if (index > 0) {
                         /* Get message of note */

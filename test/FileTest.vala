@@ -20,7 +20,8 @@
 class FileTest : GLib.Object {
 
     public static int main (string[] args) {
-        var linter = new ValaLint.Linter ();
+        var config = new ValaLint.Config ();
+        var linter = new ValaLint.Linter (config);
         linter.disable_mistakes = false;
         Vala.ArrayList<ValaLint.FormatMistake?> mistakes;
 

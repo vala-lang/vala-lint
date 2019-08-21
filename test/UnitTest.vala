@@ -40,7 +40,7 @@ class UnitTest : GLib.Object {
         assert_pass (ellipsis_check, "lorem ipsum..."); // vala-lint=ellipsis
         assert_warning (ellipsis_check, "lorem ipsum\"...\""); // vala-lint=ellipsis
 
-        var line_length_check = new ValaLint.Checks.LineLengthCheck ();
+        var line_length_check = new ValaLint.Checks.LineLengthCheck (120);
         assert_pass (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua."); // vala-lint=line-length
         // This is 70 characters but 140 bytes, it should still pass.
         assert_pass (line_length_check, "éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé");
@@ -70,7 +70,7 @@ class UnitTest : GLib.Object {
         assert_warning (naming_underscore_check, "Lorem_Ipsum");
         assert_warning (naming_underscore_check, "lorem_IPsum");
 
-        var note_check = new ValaLint.Checks.NoteCheck ();
+        var note_check = new ValaLint.Checks.NoteCheck ({"FIXME", "TODO"});
         assert_pass (note_check, "lorem");
         assert_pass (note_check, "lorem todo");
         assert_warning (note_check, "lorem // TODO: nothing to do", 10);

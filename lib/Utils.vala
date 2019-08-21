@@ -35,4 +35,17 @@ public class ValaLint.Utils : Object {
     public static int get_column_in_line (string input, int pos) {
         return pos - input[0:pos].last_index_of_char ('\n') - 1;
     }
+
+    public delegate bool<G> FilterFunction<G> (G element);
+    public static Vala.ArrayList<G> filter<G> (FilterFunction<G> func, Vala.ArrayList<G> source) {
+        var result = new Vala.ArrayList<G> ();
+
+        foreach (G elem in source) {
+            if (func (elem)) {
+                result.add (elem);
+            }
+        }
+
+        return result;
+    }
 }

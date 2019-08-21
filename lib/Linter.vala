@@ -22,21 +22,20 @@
 public class ValaLint.Linter : Object {
 
     /* Property whether the mistakes can be disabled by inline comments. */
-    public bool disable_mistakes { get; set; default = true; }
+    public bool disable_mistakes;
 
     /* Checks which work on the result of our own ValaLint.Parser. */
-    public Vala.ArrayList<Check> global_checks { get; set; }
+    public Vala.ArrayList<Check> global_checks;
 
     /* Checks which work on the abstract syntax tree of the offical Vala.Parser */
     ValaLint.Visitor visitor;
 
-    public Linter () {
+    public Linter (Config config) {
         global_checks = new Vala.ArrayList<Check> ();
-        global_checks.add (new Checks.BlockOpeningBraceSpaceBeforeCheck ());
         global_checks.add (new Checks.DoubleSpacesCheck ());
         global_checks.add (new Checks.EllipsisCheck ());
-        global_checks.add (new Checks.LineLengthCheck ());
-        global_checks.add (new Checks.NoteCheck ());
+        global_checks.add (new Checks.LineLengthCheck (config.get_integer ("line-length", "max-line-length")));
+        global_checks.add (new Checks.NoteCheck (config.get_string_list ("note", "keywords")));
         global_checks.add (new Checks.SpaceBeforeParenCheck ());
         global_checks.add (new Checks.TabCheck ());
         global_checks.add (new Checks.TrailingNewlinesCheck ());
@@ -48,20 +47,26 @@ public class ValaLint.Linter : Object {
         visitor.naming_underscore_check = new Checks.NamingUnderscoreCheck ();
         visitor.no_space_check = new Checks.NoSpaceCheck ();
 
-        visitor.checks = new Vala.ArrayList<Check> ();
-        visitor.checks.add (visitor.naming_all_caps_check);
-        visitor.checks.add (visitor.naming_camel_case_check);
-        visitor.checks.add (visitor.naming_underscore_check);
-        visitor.checks.add (visitor.no_space_check);
-    }
+        // Load config
+        global_checks = Utils.filter<Check> (c => {
+            try {
+                return config.get_boolean ("Checks", c.title);
+            } catch (KeyFileError e) {
+                critical ("");
+                return false;
+            }
+        }, global_checks);
 
-    public Linter.with_check (Check check) {
-        global_checks = new Vala.ArrayList<Check> ();
-        global_checks.add (check);
-    }
+        try {
+            disable_mistakes = config.get_boolean ("Disabler", "disable-by-inline-comments");
 
-    public Linter.with_checks (Vala.ArrayList<Check> checks) {
-        global_checks = checks;
+            visitor.naming_all_caps_check.enabled = config.get_boolean ("Checks", visitor.naming_all_caps_check.title);
+            visitor.naming_camel_case_check.enabled = config.get_boolean ("Checks", visitor.naming_camel_case_check.title);
+            visitor.naming_underscore_check.enabled = config.get_boolean ("Checks", visitor.naming_underscore_check.title);
+            visitor.no_space_check.enabled = config.get_boolean ("Checks", visitor.no_space_check.title);
+        } catch (KeyFileError e) {
+            critical ("a");
+        }
     }
 
     public Vala.ArrayList<FormatMistake?> run_checks_for_file (File file) throws Error, IOError {

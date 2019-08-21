@@ -27,7 +27,12 @@ public class ValaLint.Checks.NamingUnderscoreCheck : Check {
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        if (!enabled) {
+            return;
+        }
+
         foreach (ParseResult r in parse_result) {
+
             add_regex_mistake ("""[A-Z-]""", _("Expected variable name in underscore_convention"), r,
                                ref mistake_list, 0, true);
         }

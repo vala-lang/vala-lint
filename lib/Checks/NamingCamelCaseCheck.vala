@@ -27,6 +27,10 @@ public class ValaLint.Checks.NamingCamelCaseCheck : Check {
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        if (!enabled) {
+            return;
+        }
+
         foreach (ParseResult r in parse_result) {
             add_regex_mistake ("""(^[a-z]|_)""", _("Expected variable name in CamelCaseConvention"), r,
                                ref mistake_list, 0, true);

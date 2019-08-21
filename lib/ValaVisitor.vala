@@ -20,8 +20,6 @@
 class ValaLint.Visitor : Vala.CodeVisitor {
     public Vala.ArrayList<FormatMistake?> mistake_list;
 
-    public Vala.ArrayList<Check> checks { get; set; }
-
     public Checks.NamingAllCapsCheck naming_all_caps_check;
     public Checks.NamingCamelCaseCheck naming_camel_case_check;
     public Checks.NamingUnderscoreCheck naming_underscore_check;

@@ -21,14 +21,19 @@
 
 public class ValaLint.Application : GLib.Application {
     private static bool print_version = false;
+    private static bool generate_config_file = false;
     private static string? lint_directory = null;
     private static File? lint_directory_file = null;
+    private static string? config_file = null;
+
 
     private ApplicationCommandLine application_command_line;
 
     private const OptionEntry[] OPTIONS = {
         { "version", 'v', 0, OptionArg.NONE, ref print_version, "Display version number", null },
         { "directory", 'd', 0, OptionArg.STRING, ref lint_directory, "Lint all Vala files in the given directory." },
+        { "config", 'c', 0, OptionArg.STRING, ref config_file, "Configuration file." },
+        { "generate-config", 'g', 0, OptionArg.NONE, ref generate_config_file, "Generate a default config file." },
         { null }
     };
 
@@ -77,6 +82,12 @@ public class ValaLint.Application : GLib.Application {
             return 0;
         }
 
+        if (generate_config_file) {
+            var default_config = new ValaLint.Config ();
+            command_line.print (default_config.to_data ());
+            return 0;
+        }
+
         this.application_command_line = command_line;
 
         /* 1. Get list of files */
@@ -93,7 +104,8 @@ public class ValaLint.Application : GLib.Application {
         }
 
         /* 2. Check files */
-        var linter = new Linter ();
+        var config = new ValaLint.Config.load_file (config_file);
+        var linter = new Linter (config);
         var file_data_list = new Vala.ArrayList<FileData?> ();
         foreach (File file in files) {
             try {
