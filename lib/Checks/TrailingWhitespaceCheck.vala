@@ -20,11 +20,13 @@
  */
 
 public class ValaLint.Checks.TrailingWhitespaceCheck : Check {
-    public TrailingWhitespaceCheck () {
+    public TrailingWhitespaceCheck (Config config = new Config ()) throws KeyFileError  {
         Object (
             title: _("trailing-whitespace"),
             description:_("Checks for whitespaces at the end of lines")
         );
+
+        enabled = config.get_boolean ("Checks", title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,

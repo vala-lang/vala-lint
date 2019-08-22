@@ -18,11 +18,13 @@
  */
 
 public class ValaLint.Checks.EllipsisCheck : Check {
-    public EllipsisCheck () {
+    public EllipsisCheck (Config config = new Config ()) throws KeyFileError  {
         Object (
             title: _("ellipsis"),
             description: _("Checks for ellipsis character instead of three periods")
         );
+
+        enabled = config.get_boolean ("Checks", title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,

@@ -18,11 +18,13 @@
  */
 
 public class ValaLint.Checks.SpaceBeforeParenCheck : Check {
-    public SpaceBeforeParenCheck () {
+    public SpaceBeforeParenCheck (Config config = new Config ()) throws KeyFileError  {
         Object (
             title: _("space-before-paren"),
             description: _("Checks for a space before parenthesis.")
         );
+
+        enabled = config.get_boolean ("Checks", title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,

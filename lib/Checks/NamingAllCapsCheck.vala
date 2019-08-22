@@ -18,11 +18,13 @@
  */
 
 public class ValaLint.Checks.NamingAllCapsCheck : Check {
-    public NamingAllCapsCheck () {
+    public NamingAllCapsCheck (Config config = new Config ()) throws KeyFileError  {
         Object (
             title: _("naming-convention"),
             description: _("Checks for the all caps naming convention")
         );
+
+        enabled = config.get_boolean ("Checks", title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,

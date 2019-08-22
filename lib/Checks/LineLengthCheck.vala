@@ -20,14 +20,16 @@
 public class ValaLint.Checks.LineLengthCheck : Check {
     const string MESSAGE = "Line exceeds limit of %d characters (currently %d characters)";
 
-    public int maximum_characters { get; construct; }
+    public int maximum_characters { get; set; }
 
-    public LineLengthCheck (int maximum_characters) {
+    public LineLengthCheck (Config config = new Config ()) throws KeyFileError  {
         Object (
             title: _("line-length"),
-            description: _("Checks for a maxmimum line legnth"),
-            maximum_characters: maximum_characters
+            description: _("Checks for a maxmimum line legnth")
         );
+
+        enabled = config.get_boolean ("Checks", title);
+        maximum_characters = config.get_integer (title, "max-line-length");
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,

@@ -18,15 +18,17 @@
  */
 
 public class ValaLint.Checks.NoteCheck : Check {
-    public string[] keywords { get; construct; }
+    public string[] keywords { get; set; }
 
-    public NoteCheck (string[] keywords) {
+    public NoteCheck (Config config = new Config ()) throws KeyFileError  {
         Object (
-            single_mistake_in_line: true,
             title: _("note"),
             description: _("Checks for notes (TODO, FIXME, etc.)"),
-            keywords: keywords
+            single_mistake_in_line: true
         );
+
+        enabled = config.get_boolean ("Checks", title);
+        keywords = config.get_string_list (title, "keywords");
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,

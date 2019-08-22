@@ -40,7 +40,7 @@ public class ValaLint.Config : KeyFile {
         set_string_list ("note", "keywords", {"TODO", "FIXME"});
     }
 
-    public Config.load_file (string path) {
+    public Config.load_file (string? path) {
         // Load default config
         this ();
 
@@ -63,7 +63,7 @@ public class ValaLint.Config : KeyFile {
                 }
             }
         } catch (KeyFileError e) {
-            critical ("asdf");
+            critical ("Error while loading config file %s: %s\n", path, e.message);
         }
     }
 }

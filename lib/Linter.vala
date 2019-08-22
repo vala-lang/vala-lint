@@ -32,20 +32,28 @@ public class ValaLint.Linter : Object {
 
     public Linter (Config config) {
         global_checks = new Vala.ArrayList<Check> ();
-        global_checks.add (new Checks.DoubleSpacesCheck ());
-        global_checks.add (new Checks.EllipsisCheck ());
-        global_checks.add (new Checks.LineLengthCheck (config.get_integer ("line-length", "max-line-length")));
-        global_checks.add (new Checks.NoteCheck (config.get_string_list ("note", "keywords")));
-        global_checks.add (new Checks.SpaceBeforeParenCheck ());
-        global_checks.add (new Checks.TabCheck ());
-        global_checks.add (new Checks.TrailingNewlinesCheck ());
-        global_checks.add (new Checks.TrailingWhitespaceCheck ());
-
         visitor = new ValaLint.Visitor ();
-        visitor.naming_all_caps_check = new Checks.NamingAllCapsCheck ();
-        visitor.naming_camel_case_check = new Checks.NamingCamelCaseCheck ();
-        visitor.naming_underscore_check = new Checks.NamingUnderscoreCheck ();
-        visitor.no_space_check = new Checks.NoSpaceCheck ();
+
+        try {
+            disable_mistakes = config.get_boolean ("Disabler", "disable-by-inline-comments");
+
+            global_checks.add (new Checks.DoubleSpacesCheck (config));
+            global_checks.add (new Checks.EllipsisCheck (config));
+            global_checks.add (new Checks.LineLengthCheck (config));
+            global_checks.add (new Checks.NoteCheck (config));
+            global_checks.add (new Checks.SpaceBeforeParenCheck (config));
+            global_checks.add (new Checks.TabCheck (config));
+            global_checks.add (new Checks.TrailingNewlinesCheck (config));
+            global_checks.add (new Checks.TrailingWhitespaceCheck (config));
+
+            visitor.naming_all_caps_check = new Checks.NamingAllCapsCheck (config);
+            visitor.naming_camel_case_check = new Checks.NamingCamelCaseCheck (config);
+            visitor.naming_underscore_check = new Checks.NamingUnderscoreCheck (config);
+            visitor.no_space_check = new Checks.NoSpaceCheck (config);
+
+        } catch (KeyFileError e) {
+            critical ("Could not load config: %s", e.message);
+        }
 
         // Load config
         global_checks = Utils.filter<Check> (c => {
@@ -56,17 +64,6 @@ public class ValaLint.Linter : Object {
                 return false;
             }
         }, global_checks);
-
-        try {
-            disable_mistakes = config.get_boolean ("Disabler", "disable-by-inline-comments");
-
-            visitor.naming_all_caps_check.enabled = config.get_boolean ("Checks", visitor.naming_all_caps_check.title);
-            visitor.naming_camel_case_check.enabled = config.get_boolean ("Checks", visitor.naming_camel_case_check.title);
-            visitor.naming_underscore_check.enabled = config.get_boolean ("Checks", visitor.naming_underscore_check.title);
-            visitor.no_space_check.enabled = config.get_boolean ("Checks", visitor.no_space_check.title);
-        } catch (KeyFileError e) {
-            critical ("a");
-        }
     }
 
     public Vala.ArrayList<FormatMistake?> run_checks_for_file (File file) throws Error, IOError {
@@ -82,7 +79,7 @@ public class ValaLint.Linter : Object {
 
         // Checks if file is supported by Vala compiler
         if (context.add_source_filename (filename)) {
-            /* This parser builds the abstract syntax tree (AST) */
+            // This parser builds the abstract syntax tree (AST)
             var parser_ast = new Vala.Parser ();
             parser_ast.parse (context);
 
@@ -92,9 +89,9 @@ public class ValaLint.Linter : Object {
             }
 
             string content;
-            FileUtils.get_contents (filename, out content); // Get file content
+            FileUtils.get_contents (filename, out content);
 
-            /* Our parser checks only strings, comments and other code */
+            // Our parser checks only strings, comments and other code
             var parser_code = new ValaLint.Parser ();
             Vala.ArrayList<ParseResult?> parse_result = parser_code.parse (content);
 

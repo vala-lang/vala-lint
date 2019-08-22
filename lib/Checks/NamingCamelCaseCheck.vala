@@ -18,11 +18,13 @@
  */
 
 public class ValaLint.Checks.NamingCamelCaseCheck : Check {
-    public NamingCamelCaseCheck () {
+    public NamingCamelCaseCheck (Config config = new Config ()) throws KeyFileError  {
         Object (
             title: _("naming-convention"),
             description: _("Checks for the camel case naming convention")
         );
+
+        enabled = config.get_boolean ("Checks", title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
