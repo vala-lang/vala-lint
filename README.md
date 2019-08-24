@@ -1,5 +1,6 @@
 # Vala-Lint
 
+[![Build Status](https://travis-ci.com/elementary/vala-lint.svg?branch=master)](https://travis-ci.com/elementary/vala-lint)
 [![Bountysource](https://www.bountysource.com/badge/tracker?tracker_id=45980444)](https://www.bountysource.com/trackers/45980444-elementary-Vala-lint)
 
 Small command line tool and library for checking Vala code files for code-style errors.
@@ -37,15 +38,18 @@ you can lint every file in the current directory. Using the directory `d`-flag, 
 For all options, type `io.elementary.vala-lint -h`.
 
 ### Configuration
-A configuration file can be included via
+Using a configuration file, you can overwrite the default settings of vala-lint. It can be included via the `config`-option
 
     io.elementary.vala-lint -c vala-lint.conf
 
-The default configuration file can be generated using
+A file of the default configuration can be generated and saved by
 
     io.elementary.vala-lint --generate-config >> vala-lint.conf
 
-```[Checks]
+The generated file will look like
+
+```Ini
+[Checks]
 block-opening-brace-space-before=true
 double-spaces=true
 ellipsis=true
@@ -65,13 +69,13 @@ disable-by-inline-comments=true
 max-line-length=120
 
 [note]
-keywords=TODO,FIXME```
+keywords=TODO,FIXME
+```
 
-In the configuration, you can disable each check individually, as well as settings properties of the checks. All checks including their settings are listed here.
+In the *Checks* group, each check can be enabled/disabled individually. The *Disabler* group allows for disabling a single check at a specific line using an inline comment (see Disabling Errors below). Furthermore, each check can have individual - hohpefully self-explanatory - settings, which are also listed in the [wiki](https://github.com/elementary/vala-lint/wiki/Vala-Lint-Checks).
 
 
 ### Disabling Errors
-
 You can disable a single or multiple errors on a given line by adding an inline comment like
 
 ```vala
