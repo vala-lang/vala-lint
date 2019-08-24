@@ -31,15 +31,13 @@ public class ValaLint.Linter : Object {
     ValaLint.Visitor visitor;
 
     public Linter (Config config) {
-        global_checks = new Vala.ArrayList<Check> ();
-        visitor = new ValaLint.Visitor ();
-
         try {
             disable_mistakes = config.get_boolean ("Disabler", "disable-by-inline-comments");
         } catch (KeyFileError e) {
             critical ("Error while loading linter config: %s", e.message);
         }
 
+        global_checks = new Vala.ArrayList<Check> ();
         global_checks.add (new Checks.DoubleSpacesCheck (config));
         global_checks.add (new Checks.EllipsisCheck (config));
         global_checks.add (new Checks.LineLengthCheck (config));
@@ -49,6 +47,7 @@ public class ValaLint.Linter : Object {
         global_checks.add (new Checks.TrailingNewlinesCheck (config));
         global_checks.add (new Checks.TrailingWhitespaceCheck (config));
 
+        visitor = new ValaLint.Visitor ();
         visitor.naming_all_caps_check = new Checks.NamingAllCapsCheck (config);
         visitor.naming_camel_case_check = new Checks.NamingCamelCaseCheck (config);
         visitor.naming_underscore_check = new Checks.NamingUnderscoreCheck (config);
@@ -58,7 +57,7 @@ public class ValaLint.Linter : Object {
             try {
                 return config.get_boolean ("Checks", c.title);
             } catch (KeyFileError e) {
-                critical ("");
+                critical ("Error while loading enabled config for check %s: %s", c.title, e.message);
                 return false;
             }
         }, global_checks);

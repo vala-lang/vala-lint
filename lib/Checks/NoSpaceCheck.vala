@@ -38,6 +38,10 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
 
     public void check_list (Vala.List<Vala.CodeNode?> list,
                             ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        if (!enabled) {
+            return;
+        }
+
         if (list.size > 1) {
             for (int i = 0; i < list.size - 1; i++) {
                 var expr = list[i];
