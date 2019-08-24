@@ -36,26 +36,24 @@ public class ValaLint.Linter : Object {
 
         try {
             disable_mistakes = config.get_boolean ("Disabler", "disable-by-inline-comments");
-
-            global_checks.add (new Checks.DoubleSpacesCheck (config));
-            global_checks.add (new Checks.EllipsisCheck (config));
-            global_checks.add (new Checks.LineLengthCheck (config));
-            global_checks.add (new Checks.NoteCheck (config));
-            global_checks.add (new Checks.SpaceBeforeParenCheck (config));
-            global_checks.add (new Checks.TabCheck (config));
-            global_checks.add (new Checks.TrailingNewlinesCheck (config));
-            global_checks.add (new Checks.TrailingWhitespaceCheck (config));
-
-            visitor.naming_all_caps_check = new Checks.NamingAllCapsCheck (config);
-            visitor.naming_camel_case_check = new Checks.NamingCamelCaseCheck (config);
-            visitor.naming_underscore_check = new Checks.NamingUnderscoreCheck (config);
-            visitor.no_space_check = new Checks.NoSpaceCheck (config);
-
         } catch (KeyFileError e) {
-            critical ("Could not load config: %s", e.message);
+            critical ("Error while loading linter config: %s", e.message);
         }
 
-        // Load config
+        global_checks.add (new Checks.DoubleSpacesCheck (config));
+        global_checks.add (new Checks.EllipsisCheck (config));
+        global_checks.add (new Checks.LineLengthCheck (config));
+        global_checks.add (new Checks.NoteCheck (config));
+        global_checks.add (new Checks.SpaceBeforeParenCheck (config));
+        global_checks.add (new Checks.TabCheck (config));
+        global_checks.add (new Checks.TrailingNewlinesCheck (config));
+        global_checks.add (new Checks.TrailingWhitespaceCheck (config));
+
+        visitor.naming_all_caps_check = new Checks.NamingAllCapsCheck (config);
+        visitor.naming_camel_case_check = new Checks.NamingCamelCaseCheck (config);
+        visitor.naming_underscore_check = new Checks.NamingUnderscoreCheck (config);
+        visitor.no_space_check = new Checks.NoSpaceCheck (config);
+
         global_checks = Utils.filter<Check> (c => {
             try {
                 return config.get_boolean ("Checks", c.title);

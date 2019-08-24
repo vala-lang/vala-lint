@@ -5,6 +5,7 @@
 Small command line tool and library for checking Vala code files for code-style errors.
 Based on the [elementary Code-Style guidelines](https://elementary.io/docs/code/reference#code-style).
 
+
 ## Building, Testing, and Installation
 You'll need the following dependencies:
 
@@ -23,6 +24,7 @@ To install, use ninja install, then execute with `io.elementary.vala-lint`
     sudo ninja install
     io.elementary.vala-lint
 
+
 ## Usage
 You can use the command-line tool to scan files or include the library into your own projects to scan single lines or whole files easily. By default, the command-line tool uses [globs](https://en.wikipedia.org/wiki/Glob_%28programming%29) to match files. For example, by
 
@@ -33,6 +35,40 @@ you can lint every file in the current directory. Using the directory `d`-flag, 
     io.elementary.vala-lint -d ../my-project
 
 For all options, type `io.elementary.vala-lint -h`.
+
+### Configuration
+A configuration file can be included via
+
+    io.elementary.vala-lint -c vala-lint.conf
+
+The default configuration file can be generated using
+
+    io.elementary.vala-lint --generate-config >> vala-lint.conf
+
+```[Checks]
+block-opening-brace-space-before=true
+double-spaces=true
+ellipsis=true
+line-length=true
+naming-convention=true
+no-space=true
+note=true
+space-before-paren=true
+use-of-tabs=true
+trailing-newlines=true
+trailing-whitespace=true
+
+[Disabler]
+disable-by-inline-comments=true
+
+[line-length]
+max-line-length=120
+
+[note]
+keywords=TODO,FIXME```
+
+In the configuration, you can disable each check individually, as well as settings properties of the checks. All checks including their settings are listed here.
+
 
 ### Disabling Errors
 

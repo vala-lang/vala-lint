@@ -60,18 +60,16 @@ public class ValaLint.Application : GLib.Application {
             args = { args[0], "-d", "." };
         }
 
+        unowned string[] tmp = args;
+
         try {
             var option_context = new OptionContext ("- Vala-Lint");
             option_context.set_help_enabled (true);
             option_context.add_main_entries (OPTIONS, null);
-
-            print (@"$(args.length)\n");
-            option_context.parse_strv (ref args);
-            print (@"$(args.length)\n");
-            print (@"$(config_file)\n");
+            option_context.parse (ref tmp);
         } catch (OptionError e) {
             command_line.print (_("Error: %s") + "\n", e.message);
-            command_line.print (_("Run '%s --help' to see a full list of available command line options.") + "\n", args[0]);
+            command_line.print (_("Run '%s --help' to see a full list of available options.") + "\n", args[0]);
             return 1;
         }
 
@@ -95,7 +93,7 @@ public class ValaLint.Application : GLib.Application {
                 lint_directory_file = File.new_for_path (lint_directory);
                 files = get_files_from_directory (lint_directory_file);
             } else {
-                files = get_files_from_globs (command_line, args);
+                files = get_files_from_globs (command_line, tmp);
             }
         } catch (Error e) {
             critical ("Error: %s\n", e.message);

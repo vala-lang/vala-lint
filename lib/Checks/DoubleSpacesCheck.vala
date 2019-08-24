@@ -18,13 +18,17 @@
  */
 
 public class ValaLint.Checks.DoubleSpacesCheck : Check {
-    public DoubleSpacesCheck (Config config = new Config ()) throws KeyFileError  {
+    public DoubleSpacesCheck (Config config = new Config ()) {
         Object (
             title: _("double-spaces"),
             description: _("Checks for double spaces")
         );
 
-        enabled = config.get_boolean ("Checks", title);
+        try {
+            enabled = config.get_boolean ("Checks", title);
+        } catch (KeyFileError e) {
+            critical ("Error while loading check %s: %s", title, e.message);
+        }
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,

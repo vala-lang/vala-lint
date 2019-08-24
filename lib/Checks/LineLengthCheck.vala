@@ -22,14 +22,18 @@ public class ValaLint.Checks.LineLengthCheck : Check {
 
     public int maximum_characters { get; set; }
 
-    public LineLengthCheck (Config config = new Config ()) throws KeyFileError  {
+    public LineLengthCheck (Config config = new Config ()) {
         Object (
             title: _("line-length"),
             description: _("Checks for a maxmimum line legnth")
         );
 
-        enabled = config.get_boolean ("Checks", title);
-        maximum_characters = config.get_integer (title, "max-line-length");
+        try {
+            enabled = config.get_boolean ("Checks", title);
+            maximum_characters = config.get_integer (title, "max-line-length");
+        } catch (KeyFileError e) {
+            critical ("Error while loading check %s: %s", title, e.message);
+        }
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
