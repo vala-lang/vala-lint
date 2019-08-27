@@ -24,7 +24,7 @@ public class ValaLint.Utils : Object {
      * @return The number of lines in the input string.
      */
     public static int get_line_count (string input) {
-        return int.max (input.split ("\n").length - 1, 0);
+        return int.max (input.split ("\n").length - 1, 0);        
     }
 
     /**
@@ -42,6 +42,9 @@ public class ValaLint.Utils : Object {
      * @return The absolute location.
      */
     public static Vala.SourceLocation get_absolute_location (Vala.SourceLocation reference, string text, int offset) {
+        // Clip the offset at text end
+        offset = int.min (offset, text.length);
+
         int line_count = Utils.get_line_count (text[0:offset]);
         int line = reference.line + line_count;
         int column = Utils.get_column_in_line (text, offset);
