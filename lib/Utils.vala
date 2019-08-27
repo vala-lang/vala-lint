@@ -24,7 +24,7 @@ public class ValaLint.Utils : Object {
      * @return The number of lines in the input string.
      */
     public static int get_line_count (string input) {
-        return int.max (input.split ("\n").length - 1, 0);        
+        return int.max (input.split ("\n").length - 1, 0);
     }
 
     /**
