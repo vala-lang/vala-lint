@@ -24,8 +24,8 @@ class UnitTest : GLib.Object {
         var block_parenthesis_check = new ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck ();
         assert_pass (block_parenthesis_check, "test () {");
         assert_warning (block_parenthesis_check, "test (){", 8, 9);
-        assert_warning (block_parenthesis_check, "test ()\n{", 8);
-        assert_warning (block_parenthesis_check, "test ()   {");
+        assert_warning (block_parenthesis_check, "test ()\n{", 8, 0); // Mistake end in new line
+        assert_warning (block_parenthesis_check, "test ()   {", 8, 9);
 
         var double_spaces_check = new ValaLint.Checks.DoubleSpacesCheck ();
         assert_pass (double_spaces_check, "/*    *//*");
@@ -74,8 +74,8 @@ class UnitTest : GLib.Object {
         assert_pass (note_check, "lorem");
         assert_pass (note_check, "lorem todo");
         assert_pass (note_check, "lorem // NOTE: nothing to do");
-        assert_warning (note_check, "lorem // TODO: nothing to do", 10);
-        assert_warning (note_check, "lorem // FIXME: nothing to do", 10);
+        assert_warning (note_check, "lorem // TODO: nothing to do", 10, 29);
+        assert_warning (note_check, "lorem // FIXME: nothing to do", 10, 30);
 
         var space_before_paren_check = new ValaLint.Checks.SpaceBeforeParenCheck ();
         assert_pass (space_before_paren_check, "void test ()");
@@ -93,7 +93,7 @@ class UnitTest : GLib.Object {
         assert_pass (trailing_newlines_check, "lorem ipsum\n");
         assert_warning (trailing_newlines_check, "lorem ipsum", 11, 12);
         assert_warning (trailing_newlines_check, "lorem ipsum ", 12, 13);
-        assert_warning (trailing_newlines_check, "lorem ipsum\n\n", 12);
+        assert_warning (trailing_newlines_check, "lorem ipsum\n\n", 12, 0); // Mistake end in new line
 
         var trailing_whitespace_check = new ValaLint.Checks.TrailingWhitespaceCheck ();
         assert_pass (trailing_whitespace_check, "lorem ipsum");
@@ -112,7 +112,7 @@ class UnitTest : GLib.Object {
         }
     }
 
-    private static void assert_warning (ValaLint.Check check, string input, int begin = -1, int end = -1) {
+    private static void assert_warning (ValaLint.Check check, string input, int begin, int end) {
         var parser = new ValaLint.Parser ();
         var parsed_result = parser.parse (input);
         var mistakes = new Vala.ArrayList<ValaLint.FormatMistake?> ();
