@@ -40,8 +40,6 @@ public class ValaLint.Checks.NoteCheck : Check {
                         int index_end = (index_newline > -1) ? int.min (r.text.length, index_newline) : r.text.length;
                         string message = r.text.slice (index + keyword.length + 1, index_end).strip ();
 
-                        print (@"$index_end\n");
-
                         var begin = Utils.get_absolute_location (r.begin, r.text, index);
                         var end = Utils.get_absolute_location (r.begin, r.text, index_end);
                         mistake_list.add ({ this, begin, end, @"$keyword: $message" });
