@@ -41,14 +41,22 @@ public class ValaLint.Checks.ConditionSingleLineCheck : Check {
                     && body.source_reference.begin.column > body.source_reference.end.column)) {
                 // Block doesnt have braces                
                 if (body.source_reference.end.line == first_statement.source_reference.begin.line) {
-                    var loc = first_statement.source_reference.begin;
-                    add_mistake ({ this, loc, "If statement should not be on a single line" }, ref mistake_list);
+                    var begin = first_statement.source_reference.begin;
+                    var end = begin;
+                    end.pos += 1;
+                    end.column += 1;
+
+                    add_mistake ({ this, begin, end, "If statement should not be on a single line" }, ref mistake_list);
                 }
             } else {
                 // Block has braces
                 if (body.source_reference.begin.line == first_statement.source_reference.begin.line) {
-                    var loc = first_statement.source_reference.begin;
-                    add_mistake ({ this, loc, "If statement should not be on a single line" }, ref mistake_list);
+                    var begin = first_statement.source_reference.begin;
+                    var end = begin;
+                    end.pos += 1;
+                    end.column += 1;
+
+                    add_mistake ({ this, begin, end, "If statement should not be on a single line" }, ref mistake_list);
                 }
             }
         }
