@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 elementary LLC. (https://github.com/elementary/Vala-Lint)
+ * Copyright (c) 2018-2019 elementary LLC. (https://github.com/elementary/Vala-Lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -42,6 +42,9 @@ public class ValaLint.Utils : Object {
      * @return The absolute location.
      */
     public static Vala.SourceLocation get_absolute_location (Vala.SourceLocation reference, string text, int offset) {
+        // Clip the offset at text end
+        offset = int.min (offset, text.length);
+
         int line_count = Utils.get_line_count (text[0:offset]);
         int line = reference.line + line_count;
         int column = Utils.get_column_in_line (text, offset);

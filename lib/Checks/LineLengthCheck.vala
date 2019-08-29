@@ -40,8 +40,10 @@ public class ValaLint.Checks.LineLengthCheck : Check {
             if (line.char_count () > MAXIMUM_CHARACTERS) {
                 int line_length = line.char_count ();
                 string formatted_message = MESSAGE.printf (MAXIMUM_CHARACTERS, line_length);
-                var loc = Vala.SourceLocation ((char *)line + MAXIMUM_CHARACTERS, line_counter, MAXIMUM_CHARACTERS);
-                add_mistake ({ this, loc, formatted_message }, ref mistake_list);
+
+                var begin = Vala.SourceLocation ((char *)line + MAXIMUM_CHARACTERS, line_counter, MAXIMUM_CHARACTERS);
+                var end = Vala.SourceLocation ((char *)line + line_length, line_counter, line_length);
+                add_mistake ({ this, begin, end, formatted_message }, ref mistake_list);
             }
             line_counter += 1;
         }

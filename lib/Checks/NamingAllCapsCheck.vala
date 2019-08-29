@@ -29,7 +29,7 @@ public class ValaLint.Checks.NamingAllCapsCheck : Check {
                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
         foreach (ParseResult r in parse_result) {
             add_regex_mistake ("""[a-z-]""", _("Expected variable name in ALL_CAPS_CONVENTION"), r,
-                               ref mistake_list, 0, true);
+                               ref mistake_list, r.text.length, 0, true);
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2016-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -30,7 +30,7 @@ public class ValaLint.Checks.TabCheck : Check {
                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
         foreach (ParseResult r in parse_result) {
             if (r.type == ParseType.DEFAULT || r.type == ParseType.COMMENT) {
-                add_regex_mistake ("""\t""", _("Expected spaces instead of tabs"), r, ref mistake_list, 0);
+                add_regex_mistake ("""\t""", _("Expected spaces instead of tabs"), r, ref mistake_list);
             }
         }
     }
