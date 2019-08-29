@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2018-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -35,7 +35,8 @@ public class ValaLint.Checks.SpaceBeforeParenCheck : Check {
                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
         foreach (ParseResult r in parse_result) {
             if (r.type == ParseType.DEFAULT) {
-                add_regex_mistake ("""[^_\s{\[\(\)!~]\(""", _("Expected space before paren"), r, ref mistake_list, 1);
+                add_regex_mistake ("""[^_\s{\[\(\)!~]\(""", _("Expected space before paren"), r,
+                                   ref mistake_list, 1, 1);
             }
         }
     }

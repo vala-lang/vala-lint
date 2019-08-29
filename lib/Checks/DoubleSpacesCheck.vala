@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2018-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -42,11 +42,13 @@ public class ValaLint.Checks.DoubleSpacesCheck : Check {
                 /* Should not end with spaces pattern */
                 string no_spaces_pattern = next_parse_type_is_comment ? """(?!(?:$| ))""" : "";
 
-                add_regex_mistake ("""\S {2,}""" + no_spaces_pattern, "Expected single space", r, ref mistake_list, 1);
+                add_regex_mistake ("""\S {2,}""" + no_spaces_pattern, "Expected single space", r,
+                                   ref mistake_list, 2, 1);
 
                 /* Check for problems at the beginning of strings */
                 if (r.begin.column > 1) {
-                    add_regex_mistake ("""^ {2,}""" + no_spaces_pattern, "Expected single space", r, ref mistake_list);
+                    add_regex_mistake ("""^ {2,}""" + no_spaces_pattern, "Expected single space", r,
+                                       ref mistake_list, 2);
                 }
             }
         }

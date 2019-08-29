@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2016-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -38,11 +38,13 @@ public class ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck : Check {
                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
         foreach (ParseResult r in parse_result) {
             if (r.type == ParseType.DEFAULT) {
-                add_regex_mistake ("""[\w)=]\n\s*{""", _("Unexpected line break before \"{\""), r, ref mistake_list, 1);
-                add_regex_mistake ("""[\w)=]{""", _("Expected whitespace before \"{\""), r, ref mistake_list, 1);
+                add_regex_mistake ("""[\w)=]\n\s*{""", _("Unexpected line break before \"{\""), r,
+                                   ref mistake_list, 1, 1);
+                add_regex_mistake ("""[\w)=]{""", _("Expected whitespace before \"{\""), r,
+                                   ref mistake_list, 1, 1);
                 // Check for a tab character or more than one whitespace character before the open parenthesis
                 add_regex_mistake ("""[\w)=](?:\t|\s{2,}){""", _("Expected single space before \"{\""), r,
-                                   ref mistake_list, 1);
+                                   ref mistake_list, 1, 1);
             }
         }
     }

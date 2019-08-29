@@ -20,7 +20,7 @@
 
 public struct ValaLint.DisableResult {
     public string check_title;
-    public Vala.SourceLocation location;
+    public Vala.SourceLocation location; // Only using line location
 }
 
 
