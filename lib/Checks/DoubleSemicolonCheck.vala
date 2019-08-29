@@ -33,15 +33,14 @@ public class ValaLint.Checks.DoubleSemicolonCheck : Check {
     public void check_statement (Vala.CodeNode stmt,
                             ref Vala.ArrayList<FormatMistake?> mistake_list) {
 
-        var end = stmt.source_reference.end;
-        var offset = end.pos[-1] == ';' ? -1 : 0; // End location can be off by one
+        var reference = stmt.source_reference.end;
+        var offset = reference.pos[-1] == ';' ? -1 : 0; // End location can be off by one
 
-        if (end.pos[offset] == ';' && end.pos[offset + 1] == ';') {
-            var loc = end;
-            loc.pos += offset + 2;
-            loc.column += offset + 2;
+        if (reference.pos[offset] == ';' && reference.pos[offset + 1] == ';') {
+            var begin = Utils.shift_location (reference, offset + 2);
+            var end = Utils.shift_location (begin, 1);
 
-            add_mistake ({ this, loc, "Unnecessary semicolon" }, ref mistake_list);
+            add_mistake ({ this, begin, end, "Unnecessary semicolon" }, ref mistake_list);
         }
     }
 }
