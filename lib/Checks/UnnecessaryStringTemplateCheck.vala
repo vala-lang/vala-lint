@@ -34,7 +34,7 @@ public class ValaLint.Checks.UnnecessaryStringTemplateCheck : Check {
 
     public void check_template (Vala.Template tmpl, ref Vala.ArrayList<FormatMistake?> mistake_list) {
         if (tmpl.get_expressions ().size <= 1) {
-            add_mistake ({ this, tmpl.source_reference.begin, MESSAGE }, ref mistake_list);
+            add_mistake ({ this, tmpl.source_reference.begin, tmpl.source_reference.end, MESSAGE }, ref mistake_list);
         }
     }
 }

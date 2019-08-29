@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2018-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -29,7 +29,7 @@ public class ValaLint.Checks.NamingUnderscoreCheck : Check {
                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
         foreach (ParseResult r in parse_result) {
             add_regex_mistake ("""[A-Z-]""", _("Expected variable name in underscore_convention"), r,
-                               ref mistake_list, 0, true);
+                               ref mistake_list, r.text.length, 0, true);
         }
     }
 }

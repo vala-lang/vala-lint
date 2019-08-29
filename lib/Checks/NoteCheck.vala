@@ -37,19 +37,12 @@ public class ValaLint.Checks.NoteCheck : Check {
                     if (index > 0) {
                         /* Get message of note */
                         int index_newline = r.text.index_of ("\n", index);
-                        int index_end = int.min (r.text.length, index_newline);
+                        int index_end = (index_newline > -1) ? int.min (r.text.length, index_newline) : r.text.length;
                         string message = r.text.slice (index + keyword.length + 1, index_end).strip ();
 
-                        /* Get correct position of note */
-                        int line_count = Utils.get_line_count (r.text[0:index]);
-                        int line = r.begin.line + line_count;
-                        int column = Utils.get_column_in_line (r.text, index);
-                        if (line_count == 0) {
-                            column += r.begin.column;
-                        }
-
-                        var loc = Vala.SourceLocation ((char *)r.begin.pos + index, line, column);
-                        add_mistake ({ this, loc, @"$keyword: $message" }, ref mistake_list);
+                        var begin = Utils.get_absolute_location (r.begin, r.text, index);
+                        var end = Utils.get_absolute_location (r.begin, r.text, index_end);
+                        mistake_list.add ({ this, begin, end, @"$keyword: $message" });
                     }
                 }
             }

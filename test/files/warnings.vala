@@ -6,6 +6,7 @@ class FileTest : GLib.Object {
     }
 
     public void test (string a,string b) { // vala-lint=no-space
+        var a = @""; // vala-lint=unnecessary-string-template
 
     }
 } // vala-lint=trailing-newlines
