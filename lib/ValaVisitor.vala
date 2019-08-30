@@ -371,7 +371,8 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     public override void visit_binary_expression (Vala.BinaryExpression expr) {
         no_space_check.check_binary_expression (expr, ref mistake_list);
 
-        expr.accept_children (this);
+        // Can hang linter on many recursive binary expressions
+        // expr.accept_children (this);
     }
 
     public override void visit_type_check (Vala.TypeCheck expr) {
