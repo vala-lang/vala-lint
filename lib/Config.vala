@@ -22,6 +22,7 @@ public class ValaLint.Config : KeyFile {
         set_list_separator (',');
 
         set_boolean ("Checks", "block-opening-brace-space-before", true);
+        set_boolean ("Checks", "double-semicolon", true);
         set_boolean ("Checks", "double-spaces", true);
         set_boolean ("Checks", "ellipsis", true);
         set_boolean ("Checks", "line-length", true);

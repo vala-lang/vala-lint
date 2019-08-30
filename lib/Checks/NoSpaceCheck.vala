@@ -62,12 +62,8 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
                 offset += 1;
 
                 if (reference.pos[offset] != ' ' && reference.pos[offset] != '\n') {
-                    var begin = reference;
-                    begin.pos += offset + 1;
-                    begin.column += offset + 1;
-                    var end = begin;
-                    end.pos += 1;
-                    end.column += 1;
+                    var begin = Utils.shift_location (reference, offset + 1);
+                    var end = Utils.shift_location (begin, 1);
 
                     add_mistake ({ this, begin, end, "Missing whitespace" }, ref mistake_list);
                 }
@@ -80,12 +76,8 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
 
         char* char_before = expr.left.source_reference.end.pos;
         if (char_before[0] != ' ' && char_before[0] != '\n' && char_before[0] != ')') {
-            var begin = expr.left.source_reference.end;
-            begin.pos += 1;
-            begin.column += 1;
-            var end = begin;
-            end.pos += 1;
-            end.column += 1;
+            var begin = Utils.shift_location (expr.left.source_reference.end, 1);
+            var end = Utils.shift_location (begin, 1);
 
             add_mistake ({ this, begin, end, "Missing whitespace" }, ref mistake_list);
         }
@@ -93,9 +85,7 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
         char* char_after = expr.right.source_reference.begin.pos - 1;
         if (char_after[0] != ' ' && char_after[0] != '\n' && char_after[0] != '(') {
             var begin = expr.right.source_reference.begin;
-            var end = begin;
-            end.pos += 1;
-            end.column += 1;
+            var end = Utils.shift_location (begin, 1);
 
             add_mistake ({ this, begin, end, "Missing whitespace" }, ref mistake_list);
         }

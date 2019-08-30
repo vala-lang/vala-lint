@@ -20,6 +20,7 @@
 class ValaLint.Visitor : Vala.CodeVisitor {
     public Vala.ArrayList<FormatMistake?> mistake_list;
 
+    public Checks.DoubleSemicolonCheck double_semicolon_check;
     public Checks.NamingAllCapsCheck naming_all_caps_check;
     public Checks.NamingCamelCaseCheck naming_camel_case_check;
     public Checks.NamingUnderscoreCheck naming_underscore_check;
@@ -153,6 +154,8 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_declaration_statement (Vala.DeclarationStatement stmt) {
+        double_semicolon_check.check_statement (stmt, ref mistake_list);
+
         stmt.accept_children (this);
     }
 
@@ -167,6 +170,8 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_expression_statement (Vala.ExpressionStatement stmt) {
+        double_semicolon_check.check_statement (stmt, ref mistake_list);
+
         stmt.accept_children (this);
     }
 
@@ -207,14 +212,20 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_break_statement (Vala.BreakStatement stmt) {
+        double_semicolon_check.check_statement (stmt, ref mistake_list);
+
         stmt.accept_children (this);
     }
 
     public override void visit_continue_statement (Vala.ContinueStatement stmt) {
+        double_semicolon_check.check_statement (stmt, ref mistake_list);
+
         stmt.accept_children (this);
     }
 
     public override void visit_return_statement (Vala.ReturnStatement stmt) {
+        double_semicolon_check.check_statement (stmt, ref mistake_list);
+
         stmt.accept_children (this);
     }
 

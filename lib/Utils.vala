@@ -72,4 +72,16 @@ public class ValaLint.Utils : Object {
 
         return result;
     }
+
+    /**
+     * Method to return a new Vala.SourceLocation from a reference shifted by a given offset.
+     * 
+     * @return The new Vala.SourceLocation
+     */
+    public static Vala.SourceLocation shift_location (Vala.SourceLocation reference, int offset) {
+        var result = reference;
+        result.pos += offset;
+        result.column += offset;
+        return result;
+    }
 }

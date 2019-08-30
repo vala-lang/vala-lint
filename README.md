@@ -51,6 +51,7 @@ The generated file will look like
 ```Ini
 [Checks]
 block-opening-brace-space-before=true
+double-semicolon=true
 double-spaces=true
 ellipsis=true
 line-length=true
