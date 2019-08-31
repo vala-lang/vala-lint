@@ -73,7 +73,7 @@ max-line-length=120
 keywords=TODO,FIXME
 ```
 
-In the *Checks* group, each check can be enabled/disabled individually. The *Disabler* group allows for disabling a single check at a specific line using an inline comment (see Disabling Errors below). Furthermore, each check can have individual - hohpefully self-explanatory - settings, which are also listed in the [wiki](https://github.com/elementary/vala-lint/wiki/Vala-Lint-Checks).
+In the *Checks* group, each check can be enabled/disabled individually. The *Disabler* group allows for disabling a single check at a specific line using an inline comment (see Disabling Errors below). Furthermore, each check can have individual, hopefully self-explanatory, settings, which are also listed in the [wiki](https://github.com/elementary/vala-lint/wiki/Vala-Lint-Checks).
 
 
 ### Disabling Errors
