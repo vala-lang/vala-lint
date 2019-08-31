@@ -10,6 +10,7 @@ class FileTest : GLib.Object {
     }
 
     public void test (string a,string b) { // vala-lint=no-space
+        var a = 2;; // vala-lint=double-semicolon
 
     }
 } // vala-lint=trailing-newlines
