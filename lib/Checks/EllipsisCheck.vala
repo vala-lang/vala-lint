@@ -39,7 +39,7 @@ public class ValaLint.Checks.EllipsisCheck : Check {
             var end = begin;
             end.pos += 3;
             end.column += 3;
-            
+
             add_mistake ({ this, begin, end, _("Expected ellipsis instead of three periods") }, ref mistake_list);
 
             index = lit.value.index_of (ELLIPSIS, index + ELLIPSIS.length);
