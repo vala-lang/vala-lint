@@ -9,6 +9,7 @@ vala_linter_files = files(
     'ValaReporter.vala',
     'ValaVisitor.vala',
     'Checks/BlockOpeningBraceSpaceBeforeCheck.vala',
+    'Checks/DoubleSemicolonCheck.vala',
     'Checks/DoubleSpacesCheck.vala',
     'Checks/EllipsisCheck.vala',
     'Checks/LineLengthCheck.vala',
