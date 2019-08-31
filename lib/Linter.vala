@@ -42,6 +42,7 @@ public class ValaLint.Linter : Object {
         global_checks.add (new Checks.TrailingWhitespaceCheck ());
 
         visitor = new ValaLint.Visitor ();
+        visitor.double_semicolon_check = new Checks.DoubleSemicolonCheck ();
         visitor.ellipsis_check = new Checks.EllipsisCheck ();
         visitor.naming_all_caps_check = new Checks.NamingAllCapsCheck ();
         visitor.naming_camel_case_check = new Checks.NamingCamelCaseCheck ();
@@ -49,6 +50,7 @@ public class ValaLint.Linter : Object {
         visitor.no_space_check = new Checks.NoSpaceCheck ();
 
         visitor.checks = new Vala.ArrayList<Check> ();
+        visitor.checks.add (visitor.double_semicolon_check);
         visitor.checks.add (visitor.naming_all_caps_check);
         visitor.checks.add (visitor.naming_camel_case_check);
         visitor.checks.add (visitor.naming_underscore_check);
