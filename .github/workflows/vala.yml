@@ -14,7 +14,8 @@ jobs:
     - uses: actions/checkout@v1
     - name: Install Depedencies
       run: |
-        apt install -y libvala-0.40-dev
+        apt-get update
+        apt-get install -y libvala-0.40-dev
     - name: Build
       run: |
         meson build
