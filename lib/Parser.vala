@@ -59,7 +59,7 @@ public class ValaLint.Parser : Object {
         int search_pos = 0;
         int current_line = 0;
 
-        MatchTypeInfo info = match_type (input, start_patterns, search_pos);
+        MatchTypeInfo info = match_type(input, start_patterns, search_pos);
         while (info.match_info.matches ()) {
             if (info.start_pos > search_pos) {
                 add_result (input, search_pos, info.start_pos, ParseDetailType.CODE, result, ref current_line);
