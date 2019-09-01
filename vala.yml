@@ -1,0 +1,18 @@
+name: Vala CI
+
+on: push
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    container:
+      image: elementary/docker
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Run Tests
+      run: |
+        meson build
+        ninja test -C build
