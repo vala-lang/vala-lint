@@ -12,7 +12,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Run Tests
+    - name: Install Depedencies
+      run: |
+        apt install -y libvala-0.40-dev
+    - name: Build
       run: |
         meson build
-        ninja test -C build
+        ninja -C build
+    - name: Run Tests
+      run: ninja test -C build
