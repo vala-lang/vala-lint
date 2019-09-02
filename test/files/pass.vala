@@ -14,9 +14,6 @@ class FileTest : GLib.Object {
             true_bool = false;
         }
 
-        if (true_bool == false)
-            true_bool = false;
-
         return 0;
     }
 }
