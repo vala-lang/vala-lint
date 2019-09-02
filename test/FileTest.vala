@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2016-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -32,7 +32,7 @@ class FileTest : GLib.Object {
             Vala.ArrayList<ValaLint.FormatMistake?> mistakes = linter.run_checks_for_file (file);
 
             if (mistakes.size != mistake_list.size) {
-                error ("Error: File %s has %d but should have %d mistakes.", file.get_path (), mistakes.size, mistake_list.size);
+                error ("%s has %d but should have %d mistakes.", file.get_path (), mistakes.size, mistake_list.size);
             }
 
             for (int i = 0; i < mistakes.size; i++) {
@@ -45,10 +45,10 @@ class FileTest : GLib.Object {
     }
 
     public static int main (string[] args) {
-        var m_pass = new Vala.ArrayList<FileTestMistake?>();
+        var m_pass = new Vala.ArrayList<FileTestMistake?> ();
         check_file_for_mistake (File.new_for_path ("../test/files/pass.vala"), m_pass);
 
-        var m_warnings = new Vala.ArrayList<FileTestMistake?>();
+        var m_warnings = new Vala.ArrayList<FileTestMistake?> ();
         m_warnings.add ({ "space-before-paren", 3 });
         m_warnings.add ({ "no-space", 9 });
         m_warnings.add ({ "unnecessary-string-template", 10 });
