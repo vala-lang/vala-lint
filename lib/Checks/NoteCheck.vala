@@ -20,19 +20,15 @@
 public class ValaLint.Checks.NoteCheck : Check {
     public string[] keywords { get; set; }
 
-    public NoteCheck (Config config = new Config ()) {
+    public NoteCheck () {
         Object (
             title: _("note"),
             description: _("Checks for notes (TODO, FIXME, etc.)"),
             single_mistake_in_line: true
         );
 
-        try {
-            enabled = config.get_boolean ("Checks", title);
-            keywords = config.get_string_list (title, "keywords");
-        } catch (KeyFileError e) {
-            critical ("Error while loading check %s: %s", title, e.message);
-        }
+        enabled = Config.get_boolean ("Checks", title);
+        keywords = Config.get_string_list (title, "keywords");
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,

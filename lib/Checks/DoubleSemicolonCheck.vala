@@ -18,17 +18,13 @@
  */
 
 public class ValaLint.Checks.DoubleSemicolonCheck : Check {
-    public DoubleSemicolonCheck (Config config = new Config ()) {
+    public DoubleSemicolonCheck () {
         Object (
             title: _("double-semicolon"),
             description: _("Checks for unnecessary semicolons")
         );
 
-        try {
-            enabled = config.get_boolean ("Checks", title);
-        } catch (KeyFileError e) {
-            critical ("Error while loading check %s: %s", title, e.message);
-        }
+        enabled = Config.get_boolean ("Checks", title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,

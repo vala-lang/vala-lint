@@ -18,17 +18,13 @@
  */
 
 public class ValaLint.Checks.NoSpaceCheck : Check {
-    public NoSpaceCheck (Config config = new Config ()) {
+    public NoSpaceCheck () {
         Object (
             title: _("no-space"),
             description: _("Checks for missing spaces")
         );
 
-        try {
-            enabled = config.get_boolean ("Checks", title);
-        } catch (KeyFileError e) {
-            critical ("Error while loading check %s: %s", title, e.message);
-        }
+        enabled = Config.get_boolean ("Checks", title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,

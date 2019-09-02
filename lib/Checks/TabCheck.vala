@@ -18,18 +18,14 @@
  */
 
 public class ValaLint.Checks.TabCheck : Check {
-    public TabCheck (Config config = new Config ()) {
+    public TabCheck () {
         Object (
             title: _("use-of-tabs"),
             description: _("Checks for tabs instead of spaces"),
             single_mistake_in_line: true
         );
 
-        try {
-            enabled = config.get_boolean ("Checks", title);
-        } catch (KeyFileError e) {
-            critical ("Error while loading check %s: %s", title, e.message);
-        }
+        enabled = Config.get_boolean ("Checks", title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,

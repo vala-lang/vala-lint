@@ -79,7 +79,7 @@ public class ValaLint.Application : GLib.Application {
         }
 
         if (generate_config_file) {
-            var default_config = new ValaLint.Config ();
+            var default_config = ValaLint.Config.get_default_config ();
             command_line.print (default_config.to_data ());
             return 0;
         }
@@ -99,9 +99,11 @@ public class ValaLint.Application : GLib.Application {
             critical ("Error: %s\n", e.message);
         }
 
-        /* 2. Check files */
-        var config = new ValaLint.Config.load_file (config_file);
-        var linter = new Linter (config);
+        /* 2. Load config */
+        ValaLint.Config.load_file (config_file);
+
+        /* 3. Check files */
+        var linter = new Linter ();
         var file_data_list = new Vala.ArrayList<FileData?> ();
         foreach (File file in files) {
             try {
@@ -112,7 +114,7 @@ public class ValaLint.Application : GLib.Application {
             }
         }
 
-        /* 3. Print mistakes */
+        /* 4. Print mistakes */
         print_mistakes (file_data_list);
 
         foreach (FileData file_data in file_data_list) {

@@ -18,17 +18,13 @@
  */
 
 public class ValaLint.Checks.TrailingNewlinesCheck : Check {
-    public TrailingNewlinesCheck (Config config = new Config ()) {
+    public TrailingNewlinesCheck () {
         Object (
             title: _("trailing-newlines"),
             description:_("Checks for a single newline at the end of files")
         );
 
-        try {
-            enabled = config.get_boolean ("Checks", title);
-        } catch (KeyFileError e) {
-            critical ("Error while loading check %s: %s", title, e.message);
-        }
+        enabled = Config.get_boolean ("Checks", title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,

@@ -30,38 +30,27 @@ public class ValaLint.Linter : Object {
     /* Checks which work on the abstract syntax tree of the offical Vala.Parser */
     ValaLint.Visitor visitor;
 
-    public Linter (Config config) {
-        try {
-            disable_mistakes = config.get_boolean ("Disabler", "disable-by-inline-comments");
-        } catch (KeyFileError e) {
-            critical ("Error while loading linter config: %s", e.message);
-        }
+    public Linter () {
+        disable_mistakes = Config.get_boolean ("Disabler", "disable-by-inline-comments");
 
         global_checks = new Vala.ArrayList<Check> ();
-        global_checks.add (new Checks.DoubleSpacesCheck (config));
-        global_checks.add (new Checks.EllipsisCheck (config));
-        global_checks.add (new Checks.LineLengthCheck (config));
-        global_checks.add (new Checks.NoteCheck (config));
-        global_checks.add (new Checks.SpaceBeforeParenCheck (config));
-        global_checks.add (new Checks.TabCheck (config));
-        global_checks.add (new Checks.TrailingNewlinesCheck (config));
-        global_checks.add (new Checks.TrailingWhitespaceCheck (config));
+        global_checks.add (new Checks.DoubleSpacesCheck ());
+        global_checks.add (new Checks.EllipsisCheck ());
+        global_checks.add (new Checks.LineLengthCheck ());
+        global_checks.add (new Checks.NoteCheck ());
+        global_checks.add (new Checks.SpaceBeforeParenCheck ());
+        global_checks.add (new Checks.TabCheck ());
+        global_checks.add (new Checks.TrailingNewlinesCheck ());
+        global_checks.add (new Checks.TrailingWhitespaceCheck ());
+
+        global_checks = Utils.filter<Check> (c => Config.get_boolean ("Checks", c.title), global_checks);
 
         visitor = new ValaLint.Visitor ();
-        visitor.double_semicolon_check = new Checks.DoubleSemicolonCheck (config);
-        visitor.naming_all_caps_check = new Checks.NamingAllCapsCheck (config);
-        visitor.naming_camel_case_check = new Checks.NamingCamelCaseCheck (config);
-        visitor.naming_underscore_check = new Checks.NamingUnderscoreCheck (config);
-        visitor.no_space_check = new Checks.NoSpaceCheck (config);
-
-        global_checks = Utils.filter<Check> (c => {
-            try {
-                return config.get_boolean ("Checks", c.title);
-            } catch (KeyFileError e) {
-                critical ("Error while loading enabled config for check %s: %s", c.title, e.message);
-                return false;
-            }
-        }, global_checks);
+        visitor.double_semicolon_check = new Checks.DoubleSemicolonCheck ();
+        visitor.naming_all_caps_check = new Checks.NamingAllCapsCheck ();
+        visitor.naming_camel_case_check = new Checks.NamingCamelCaseCheck ();
+        visitor.naming_underscore_check = new Checks.NamingUnderscoreCheck ();
+        visitor.no_space_check = new Checks.NoSpaceCheck ();
     }
 
     public Vala.ArrayList<FormatMistake?> run_checks_for_file (File file) throws Error, IOError {

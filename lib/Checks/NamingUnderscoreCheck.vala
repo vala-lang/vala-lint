@@ -18,17 +18,13 @@
  */
 
 public class ValaLint.Checks.NamingUnderscoreCheck : Check {
-    public NamingUnderscoreCheck (Config config = new Config ()) {
+    public NamingUnderscoreCheck () {
         Object (
             title: _("naming-convention"),
             description: _("Checks for the underscore naming convention")
         );
 
-        try {
-            enabled = config.get_boolean ("Checks", title);
-        } catch (KeyFileError e) {
-            critical ("Error while loading check %s: %s", title, e.message);
-        }
+        enabled = Config.get_boolean ("Checks", title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,

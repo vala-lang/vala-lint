@@ -20,18 +20,14 @@
  */
 
 public class ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck : Check {
-    public BlockOpeningBraceSpaceBeforeCheck (Config config = new Config ()) {
+    public BlockOpeningBraceSpaceBeforeCheck () {
         Object (
             title: _("block-opening-brace-space-before"),
             description: _("Checks for correct use of opening braces"),
             single_mistake_in_line: true
         );
 
-        try {
-            enabled = config.get_boolean ("Checks", title);
-        } catch (KeyFileError e) {
-            critical ("Error while loading check %s: %s", title, e.message);
-        }
+        enabled = Config.get_boolean ("Checks", title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,

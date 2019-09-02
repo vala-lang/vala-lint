@@ -17,33 +17,38 @@
  * Boston, MA 02110-1301 USA.
  */
 
-public class ValaLint.Config : KeyFile {
-    public Config () {
-        set_list_separator (',');
+public class ValaLint.Config {
+    static KeyFile? config;
 
-        set_boolean ("Checks", "block-opening-brace-space-before", true);
-        set_boolean ("Checks", "double-semicolon", true);
-        set_boolean ("Checks", "double-spaces", true);
-        set_boolean ("Checks", "ellipsis", true);
-        set_boolean ("Checks", "line-length", true);
-        set_boolean ("Checks", "naming-convention", true);
-        set_boolean ("Checks", "no-space", true);
-        set_boolean ("Checks", "note", true);
-        set_boolean ("Checks", "space-before-paren", true);
-        set_boolean ("Checks", "use-of-tabs", true);
-        set_boolean ("Checks", "trailing-newlines", true);
-        set_boolean ("Checks", "trailing-whitespace", true);
+    public static KeyFile get_default_config () {
+        var default_config = new KeyFile ();
 
-        set_boolean ("Disabler", "disable-by-inline-comments", true);
+        default_config.set_list_separator (',');
 
-        set_double ("line-length", "max-line-length", 120);
+        default_config.set_boolean ("Checks", "block-opening-brace-space-before", true);
+        default_config.set_boolean ("Checks", "double-semicolon", true);
+        default_config.set_boolean ("Checks", "double-spaces", true);
+        default_config.set_boolean ("Checks", "ellipsis", true);
+        default_config.set_boolean ("Checks", "line-length", true);
+        default_config.set_boolean ("Checks", "naming-convention", true);
+        default_config.set_boolean ("Checks", "no-space", true);
+        default_config.set_boolean ("Checks", "note", true);
+        default_config.set_boolean ("Checks", "space-before-paren", true);
+        default_config.set_boolean ("Checks", "use-of-tabs", true);
+        default_config.set_boolean ("Checks", "trailing-newlines", true);
+        default_config.set_boolean ("Checks", "trailing-whitespace", true);
 
-        set_string_list ("note", "keywords", {"TODO", "FIXME"});
+        default_config.set_boolean ("Disabler", "disable-by-inline-comments", true);
+
+        default_config.set_double ("line-length", "max-line-length", 120);
+
+        default_config.set_string_list ("note", "keywords", {"TODO", "FIXME"});
+
+        return default_config;
     }
 
-    public Config.load_file (string? path) {
-        // Load default config
-        this ();
+    public static void load_file (string? path) {
+        config = get_default_config ();
 
         if (path == null) {
             return;
@@ -60,11 +65,50 @@ public class ValaLint.Config : KeyFile {
         try {
             foreach (string group in keyfile.get_groups ()) {
                 foreach (string key in keyfile.get_keys (group)) {
-                    set_value (group, key, keyfile.get_value (group, key));
+                    config.set_value (group, key, keyfile.get_value (group, key));
                 }
             }
         } catch (KeyFileError e) {
             critical ("Error while loading config file %s: %s\n", path, e.message);
+        }
+    }
+
+    public static bool get_boolean (string group, string key) {
+        if (config == null) {
+            config = get_default_config ();
+        }
+
+        try {
+            return config.get_boolean (group, key);
+        } catch (KeyFileError e) {
+            critical ("Error while loading config %s-%s: %s", group, key, e.message);
+            return false;
+        }
+    }
+
+    public static int get_integer (string group, string key) {
+        if (config == null) {
+            config = get_default_config ();
+        }
+
+        try {
+            return config.get_integer (group, key);
+        } catch (KeyFileError e) {
+            critical ("Error while loading config %s-%s: %s", group, key, e.message);
+            return 0;
+        }
+    }
+
+    public static string[] get_string_list (string group, string key) {
+        if (config == null) {
+            config = get_default_config ();
+        }
+
+        try {
+            return config.get_string_list (group, key);
+        } catch (KeyFileError e) {
+            critical ("Error while loading config %s-%s: %s", group, key, e.message);
+            return {};
         }
     }
 }
