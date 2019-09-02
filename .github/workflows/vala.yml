@@ -4,7 +4,6 @@ on: push
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     container:
@@ -12,15 +11,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+
     - name: Install Depedencies
-      run: |
-        apt-get update
-        apt-get install -y libvala-0.40-dev
+      env:
+        dependency_packages: libvala-dev valac meson
+      run: apt-get update && apt-get -y install ${dependency_packages}
+
     - name: Build
-      run: |
-        meson build
-        ninja -C build
+      run: meson build && ninja -C build
+
     - name: Run Tests
       run: ninja test -C build
+
     - name: Lint
       run: ./build/src/io.elementary.vala-lint -d .
