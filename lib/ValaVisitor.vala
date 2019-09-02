@@ -23,6 +23,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     public Vala.ArrayList<Check> checks { get; set; }
 
     public Checks.DoubleSemicolonCheck double_semicolon_check;
+    public Checks.IndentationCheck indentation_check;
     public Checks.NamingAllCapsCheck naming_all_caps_check;
     public Checks.NamingCamelCaseCheck naming_camel_case_check;
     public Checks.NamingUnderscoreCheck naming_underscore_check;
@@ -149,6 +150,8 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_block (Vala.Block b) {
+        indentation_check.check_block (b, ref mistake_list);
+
         b.accept_children (this);
     }
 
