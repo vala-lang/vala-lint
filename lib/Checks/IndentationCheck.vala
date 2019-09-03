@@ -18,7 +18,7 @@
  */
 
 public class ValaLint.Checks.IndentationCheck : Check {
-    public int indentation_distance = 4;
+    public int indent_size = 4;
 
     public IndentationCheck () {
         Object (
@@ -35,20 +35,18 @@ public class ValaLint.Checks.IndentationCheck : Check {
     public void check_block (Vala.Block b,
                             ref Vala.ArrayList<FormatMistake?> mistake_list) {
 
-        int indentation_counter = 1;
-        Vala.CodeNode node = b;
+        int indent_counter = 1;
+        Vala.CodeNode node = b.parent_node;
         while (node != null) {
-            if (node.parent_node is Vala.Block && node.source_reference.begin.line != node.parent_node.source_reference.begin.line) {
-                if (!(node is Vala.IfStatement)) {
-                    //  print ("asdfasdf\n");
-                    
-                }
-                indentation_counter += 1;
-            } else if (node is Vala.Method) {
-                indentation_counter += 1;
+            if (node is Vala.Block
+                || node is Vala.Method
+            ) {
+                indent_counter += 1;
             }
+
             node = node.parent_node;
         }
+        int indent_should = indent_counter * indent_size;
 
         foreach (var s in b.get_statements ()) {           
             var begin_line = s.source_reference.begin;
@@ -58,18 +56,18 @@ public class ValaLint.Checks.IndentationCheck : Check {
             }
             
             var first_character = begin_line;
-            int indentation = 0;
+            int indent = 0;
             while (first_character.pos[0] == ' ' || first_character.pos[0] == '\n' || first_character.pos[0] == '\t') {
                 if (first_character.pos[0] == ' ') {
-                    indentation += 1;
+                    indent += 1;
                 }
 
                 first_character.pos += 1;
                 first_character.column += 1;
             }
 
-            if (indentation != indentation_counter * indentation_distance) {
-                add_mistake ({ this, first_character, begin_line, "Indentation" }, ref mistake_list);
+            if (indent != indent_should) {
+                add_mistake ({ this, first_character, begin_line, @"Indentation is $indent but should $indent_should" }, ref mistake_list);
             }
         }
     }
