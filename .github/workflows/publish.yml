@@ -1,0 +1,21 @@
+name: Publish Docker Image
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container:
+      image: elementary/docker:unstable
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Publish
+      run: |
+        docker login -u ${{ secrets.DockerUsername }} -p ${{ secrets.DockerPassword }}
+        docker build -t elementary/docker:vala-lint .
+        docker push elementary/docker:vala-lint
