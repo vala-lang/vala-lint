@@ -45,4 +45,4 @@ if(...) { // vala-lint=space-before-paren, line-length
 ### Docker and Continuous Integration
 Vala-Lint is primarily intended to be used in Continuous Integration (CI). It's available in a convenient, always up-to-date Docker container `elementary/docker:vala-lint` hosted on Docker Hub.
 
-    docker run -v "$PWD":/var/opt/vala-lint elementary/docker:vala-lint
+    docker run -v "$PWD":/app elementary/docker:vala-lint
