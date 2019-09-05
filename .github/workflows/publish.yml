@@ -17,5 +17,5 @@ jobs:
     - name: Publish
       run: |
         docker login -u ${{ secrets.DockerUsername }} -p ${{ secrets.DockerPassword }}
-        docker build -t elementary/docker:vala-lint .
-        docker push elementary/docker:vala-lint
+        docker build -t valalang/lint:latest .
+        docker push valalang/lint:latest

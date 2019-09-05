@@ -1,6 +1,6 @@
 # elementary docker image for vala-lint
 
-FROM elementary/docker:juno-unstable
+FROM debian:stable-slim
 
 LABEL Blake Kostner <blake@elementary.io>
 
