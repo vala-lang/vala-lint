@@ -1,6 +1,6 @@
 # Vala-Lint
 
-[![Build Status](https://travis-ci.com/elementary/vala-lint.svg?branch=master)](https://travis-ci.com/elementary/vala-lint)
+[![Build Status](https://action-badges.now.sh/elementary/vala-lint)](https://github.com/elementary/vala-lint/actions)
 [![Bountysource](https://www.bountysource.com/badge/tracker?tracker_id=45980444)](https://www.bountysource.com/trackers/45980444-elementary-Vala-lint)
 
 Small command line tool and library for checking Vala code files for code-style errors.
