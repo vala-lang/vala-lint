@@ -21,7 +21,7 @@ public class ValaLint.Checks.ConditionSingleLineCheck : Check {
     public ConditionSingleLineCheck () {
         Object (
             title: _("condition-single-line"),
-            description: _("Checks that a condition does not share its line")
+            description: _("Checks that a statement does not share its line")
         );
     }
 
@@ -30,35 +30,29 @@ public class ValaLint.Checks.ConditionSingleLineCheck : Check {
 
     }
 
-    public void check_statement (Vala.Expression condition, Vala.Block body,
-                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
+    public void check_statement (Vala.Block body, ref Vala.ArrayList<FormatMistake?> mistake_list) {
         var statements = body.get_statements ();
-        if (!statements.is_empty) {
-            var first_statement = statements.first ();
+        if (statements.is_empty) {
+            return;
+        }
 
-            if (body.source_reference.begin.line > body.source_reference.end.line
-                || (body.source_reference.begin.line == body.source_reference.end.line
-                    && body.source_reference.begin.column > body.source_reference.end.column)) {
-                // Block doesnt have braces                
-                if (body.source_reference.end.line == first_statement.source_reference.begin.line) {
-                    var begin = first_statement.source_reference.begin;
-                    var end = begin;
-                    end.pos += 1;
-                    end.column += 1;
+        var body_ref = body.source_reference;
+        var first_ref = statements.first ().source_reference;
 
-                    add_mistake ({ this, begin, end, "Expected line break after conditional" }, ref mistake_list);
-                }
-            } else {
-                // Block has braces
-                if (body.source_reference.begin.line == first_statement.source_reference.begin.line) {
-                    var begin = first_statement.source_reference.begin;
-                    var end = begin;
-                    end.pos += 1;
-                    end.column += 1;
+        /* First find out if the body has braces around it */
+        bool body_without_braces = body_ref.begin.line > body_ref.end.line
+            || (body_ref.begin.line == body_ref.end.line && body_ref.begin.column > body_ref.end.column);
 
-                    add_mistake ({ this, begin, end, "Expected line break after conditional" }, ref mistake_list);
-                }
-            }
+        /* If it does, it can only have one line */
+        var comparison_pos = body_without_braces ? body_ref.end : body_ref.begin;
+
+        if (comparison_pos.line == first_ref.begin.line) {
+            var begin = first_ref.begin;
+            var end = begin;
+            end.pos += 1;
+            end.column += 1;
+
+            add_mistake ({ this, begin, end, "Expected line break after statement" }, ref mistake_list);
         }
     }
 }
