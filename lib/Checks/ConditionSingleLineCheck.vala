@@ -56,7 +56,7 @@ public class ValaLint.Checks.ConditionSingleLineCheck : Check {
                     end.pos += 1;
                     end.column += 1;
 
-                    add_mistake ({ this, begin, end, "If statement should not be on a single line" }, ref mistake_list);
+                    add_mistake ({ this, begin, end, "Expected line break after conditional" }, ref mistake_list);
                 }
             }
         }
