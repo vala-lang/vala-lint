@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2016-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -21,6 +21,7 @@
 
 public class ValaLint.Application : GLib.Application {
     private static bool print_version = false;
+    private static bool print_mistakes_end = false;
     private static string? lint_directory = null;
     private static File? lint_directory_file = null;
 
@@ -29,12 +30,15 @@ public class ValaLint.Application : GLib.Application {
     private const OptionEntry[] OPTIONS = {
         { "version", 'v', 0, OptionArg.NONE, ref print_version, "Display version number", null },
         { "directory", 'd', 0, OptionArg.STRING, ref lint_directory, "Lint all Vala files in the given directory." },
+        { "print-end", 'e', 0, OptionArg.NONE, ref print_mistakes_end, "Show end of mistakes", null },
         { null }
     };
 
     private Application () {
-        Object (application_id: "io.elementary.vala-lint",
-            flags: ApplicationFlags.HANDLES_COMMAND_LINE);
+        Object (
+            application_id: "io.elementary.vala-lint",
+            flags: ApplicationFlags.HANDLES_COMMAND_LINE
+        );
     }
 
     public override int command_line (ApplicationCommandLine command_line) {
@@ -52,23 +56,19 @@ public class ValaLint.Application : GLib.Application {
 
         if (args.length == 1) {
             _args = { args[0], "-d", "." };
-        } else {
-            for (int i = 0; i < args.length; i++) {
-                _args[i] = args[i];
-            }
         }
+
+        unowned string[] tmp = args;
 
         try {
             var option_context = new OptionContext ("- Vala-Lint");
             option_context.set_help_enabled (true);
             option_context.add_main_entries (OPTIONS, null);
 
-            unowned string[] tmp = _args;
             option_context.parse (ref tmp);
         } catch (OptionError e) {
             command_line.print (_("Error: %s") + "\n", e.message);
-            command_line.print (_("Run '%s --help' to see a full list of available command line options.") + "\n",
-                                args[0]);
+            command_line.print (_("Run '%s --help' to see a full list of available options.") + "\n", args[0]);
             return 1;
         }
 
@@ -86,7 +86,7 @@ public class ValaLint.Application : GLib.Application {
                 lint_directory_file = File.new_for_path (lint_directory);
                 files = get_files_from_directory (lint_directory_file);
             } else {
-                files = get_files_from_globs (command_line, args[1:args.length]);
+                files = get_files_from_globs (command_line, tmp);
             }
         } catch (Error e) {
             critical ("Error: %s\n", e.message);
@@ -176,11 +176,25 @@ public class ValaLint.Application : GLib.Application {
                 application_command_line.print ("\x001b[1m\x001b[4m" + "%s" + "\x001b[0m\n", path);
 
                 foreach (FormatMistake mistake in file_data.mistakes) {
-                    application_command_line.print ("\x001b[0m%5i.%-3i \x001b[1m%-40s   \x001b[0m%s\n",
-                        mistake.begin.line,
-                        mistake.begin.column,
-                        mistake.mistake,
-                        mistake.check.title);
+                    if (print_mistakes_end) {
+                        application_command_line.print (
+                            "\x001b[0m%5i.%-4i-%4i.%-5i \x001b[1m%-40s   \x001b[0m%s\n",
+                            mistake.begin.line,
+                            mistake.begin.column,
+                            mistake.end.line,
+                            mistake.end.column,
+                            mistake.mistake,
+                            mistake.check.title
+                        );
+                    } else {
+                        application_command_line.print (
+                            "\x001b[0m%5i.%-3i \x001b[1m%-40s   \x001b[0m%s\n",
+                            mistake.begin.line,
+                            mistake.begin.column,
+                            mistake.mistake,
+                            mistake.check.title
+                        );
+                    }
                 }
             }
         }
