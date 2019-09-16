@@ -50,6 +50,7 @@ class FileTest : GLib.Object {
 
         var m_warnings = new Vala.ArrayList<FileTestMistake?> ();
         m_warnings.add ({ "space-before-paren", 3 });
+        m_warnings.add ({ "note", 4 });
         m_warnings.add ({ "no-space", 9 });
         m_warnings.add ({ "unnecessary-string-template", 10 });
         m_warnings.add ({ "unnecessary-string-template", 11 });

@@ -1,7 +1,7 @@
 class FileTest : GLib.Object {
 
     public static int main(string[] args) { // vala-lint=space-before-paren
-        test ();
+        test (); // TODO vala-lint=note
 
         return 0;
     }
