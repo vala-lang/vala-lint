@@ -33,10 +33,14 @@ class FileTest : GLib.Object {
 
         try {
             mistakes = linter.run_checks_for_file (File.new_for_path ("../test/files/warnings.vala"));
-            assert (mistakes.size == 3);
-            assert (mistakes[0].check.title == "space-before-paren");
-            assert (mistakes[1].check.title == "no-space");
-            assert (mistakes[2].check.title == "double-semicolon");
+            assert (mistakes.size == 7);
+            assert (mistakes[0].check.title == "space-before-paren"); // Line 3
+            assert (mistakes[1].check.title == "no-space"); // Line 8
+            assert (mistakes[2].check.title == "double-semicolon"); // Line 9
+            assert (mistakes[3].check.title == "ellipsis"); // Line 11
+            assert (mistakes[4].check.title == "ellipsis"); // Line 12
+            assert (mistakes[5].check.title == "ellipsis"); // Line 13
+            assert (mistakes[6].check.title == "ellipsis"); // Line 13
             //  assert (mistakes[2].check.title == "trailing-newlines");
         } catch (Error e) {
             critical ("Error: %s while linting warnings file\n", e.message);

@@ -36,13 +36,18 @@ public class ValaLint.Checks.EllipsisCheck : Check {
         var index = lit.value.index_of (ELLIPSIS);
         while (index > -1) {
             var begin = Utils.get_absolute_location (lit.source_reference.begin, lit.value, index);
-            var end = begin;
-            end.pos += 3;
-            end.column += 3;
 
-            add_mistake ({ this, begin, end, _("Expected ellipsis instead of three periods") }, ref mistake_list);
+            // Find length and end of periods
+            var length = 0;
+            while (lit.value[index + length] == '.') {
+                length += 1;
+            }
 
-            index = lit.value.index_of (ELLIPSIS, index + ELLIPSIS.length);
+            var end = Utils.shift_location(begin, length);
+
+            add_mistake ({ this, begin, end, _("Expected ellipsis instead of periods") }, ref mistake_list);
+
+            index = lit.value.index_of (ELLIPSIS, index + length);
         }
     }
 }
