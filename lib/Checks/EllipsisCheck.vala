@@ -18,6 +18,8 @@
  */
 
 public class ValaLint.Checks.EllipsisCheck : Check {
+    const string ELLIPSIS = "..."; // vala-lint=ellipsis
+
     public EllipsisCheck () {
         Object (
             title: _("ellipsis"),
@@ -29,11 +31,25 @@ public class ValaLint.Checks.EllipsisCheck : Check {
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
-        foreach (ParseResult r in parse_result) {
-            if (r.type == ParseType.STRING) {
-                add_regex_mistake ("""\.\.\.""", _("Expected ellipsis instead of three periods"), r,
-                                   ref mistake_list, 3);
+
+    }
+
+    public void check_string_literal (Vala.StringLiteral lit, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        var index = lit.value.index_of (ELLIPSIS);
+        while (index > -1) {
+            var begin = Utils.get_absolute_location (lit.source_reference.begin, lit.value, index);
+
+            // Find length and end of periods
+            var length = 0;
+            while (lit.value[index + length] == '.') {
+                length += 1;
             }
+
+            var end = Utils.shift_location (begin, length);
+
+            add_mistake ({ this, begin, end, _("Expected ellipsis instead of periods") }, ref mistake_list);
+
+            index = lit.value.index_of (ELLIPSIS, index + length);
         }
     }
 }

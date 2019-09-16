@@ -21,6 +21,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     public Vala.ArrayList<FormatMistake?> mistake_list;
 
     public Checks.DoubleSemicolonCheck double_semicolon_check;
+    public Checks.EllipsisCheck ellipsis_check;
     public Checks.NamingAllCapsCheck naming_all_caps_check;
     public Checks.NamingCamelCaseCheck naming_camel_case_check;
     public Checks.NamingUnderscoreCheck naming_underscore_check;
@@ -287,7 +288,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_string_literal (Vala.StringLiteral lit) {
-        // ellipsis_check.check (string_parsed (lit.value, lit.source_reference, ParseType.STRING), ref mistake_list);
+        ellipsis_check.check_string_literal (lit, ref mistake_list);
         lit.accept_children (this);
     }
 
@@ -396,11 +397,9 @@ class ValaLint.Visitor : Vala.CodeVisitor {
         expr.accept_children (this);
     }
 
-    private static Vala.ArrayList<ParseResult?> string_parsed (string? text, Vala.SourceReference source_ref,
-                                                               ParseType type = ParseType.DEFAULT,
-                                                               ParseDetailType detail_type = ParseDetailType.CODE) {
+    private static Vala.ArrayList<ParseResult?> string_parsed (string? text, Vala.SourceReference source_ref) {
         var parsed = new Vala.ArrayList<ParseResult?> ();
-        parsed.add ({ text == null ? "" : text, type, detail_type, source_ref.begin });
+        parsed.add ({ text == null ? "" : text, ParseType.DEFAULT, ParseDetailType.CODE, source_ref.begin });
         return parsed;
     }
 }
