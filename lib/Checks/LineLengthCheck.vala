@@ -28,7 +28,7 @@ public class ValaLint.Checks.LineLengthCheck : Check {
             description: _("Checks for a maxmimum line legnth")
         );
 
-        enabled = Config.get_boolean ("Checks", title);
+        state = Config.get_state (title);
         maximum_characters = Config.get_integer (title, "max-line-length");
     }
 

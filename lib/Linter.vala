@@ -34,6 +34,7 @@ public class ValaLint.Linter : Object {
         disable_mistakes = Config.get_boolean ("Disabler", "disable-by-inline-comments");
 
         global_checks = new Vala.ArrayList<Check> ();
+        global_checks.add (new Checks.BlockOpeningBraceSpaceBeforeCheck ());
         global_checks.add (new Checks.DoubleSpacesCheck ());
         global_checks.add (new Checks.EllipsisCheck ());
         global_checks.add (new Checks.LineLengthCheck ());
@@ -43,7 +44,7 @@ public class ValaLint.Linter : Object {
         global_checks.add (new Checks.TrailingNewlinesCheck ());
         global_checks.add (new Checks.TrailingWhitespaceCheck ());
 
-        global_checks = Utils.filter<Check> (c => Config.get_boolean ("Checks", c.title), global_checks);
+        global_checks = Utils.filter<Check> (c => Config.get_state (c.title) != Config.State.OFF, global_checks);
 
         visitor = new ValaLint.Visitor ();
         visitor.double_semicolon_check = new Checks.DoubleSemicolonCheck ();

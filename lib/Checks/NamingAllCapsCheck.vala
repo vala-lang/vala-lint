@@ -24,12 +24,12 @@ public class ValaLint.Checks.NamingAllCapsCheck : Check {
             description: _("Checks for the all caps naming convention")
         );
 
-        enabled = Config.get_boolean ("Checks", title);
+        state = Config.get_state (title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
-        if (!enabled) {
+        if (state == Config.State.OFF) {
             return;
         }
 

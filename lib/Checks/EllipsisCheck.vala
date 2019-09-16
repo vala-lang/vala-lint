@@ -24,7 +24,7 @@ public class ValaLint.Checks.EllipsisCheck : Check {
             description: _("Checks for ellipsis character instead of three periods")
         );
 
-        enabled = Config.get_boolean ("Checks", title);
+        state = Config.get_state (title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,

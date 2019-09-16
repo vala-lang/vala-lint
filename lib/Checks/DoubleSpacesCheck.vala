@@ -24,7 +24,7 @@ public class ValaLint.Checks.DoubleSpacesCheck : Check {
             description: _("Checks for double spaces")
         );
 
-        enabled = Config.get_boolean ("Checks", title);
+        state = Config.get_state (title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,

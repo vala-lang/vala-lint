@@ -118,8 +118,10 @@ public class ValaLint.Application : GLib.Application {
         print_mistakes (file_data_list);
 
         foreach (FileData file_data in file_data_list) {
-            if (!file_data.mistakes.is_empty) {
-                return 1;
+            foreach (FormatMistake? mistake in file_data.mistakes) {
+                if (mistake.check.state == Config.State.ERROR) {
+                    return 1;
+                }
             }
         }
         return 0;

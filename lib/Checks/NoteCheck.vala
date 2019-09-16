@@ -27,7 +27,7 @@ public class ValaLint.Checks.NoteCheck : Check {
             single_mistake_in_line: true
         );
 
-        enabled = Config.get_boolean ("Checks", title);
+        state = Config.get_state (title);
         keywords = Config.get_string_list (title, "keywords");
     }
 

@@ -24,7 +24,7 @@ public class ValaLint.Checks.DoubleSemicolonCheck : Check {
             description: _("Checks for unnecessary semicolons")
         );
 
-        enabled = Config.get_boolean ("Checks", title);
+        state = Config.get_state (title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
@@ -34,7 +34,7 @@ public class ValaLint.Checks.DoubleSemicolonCheck : Check {
 
     public void check_statement (Vala.CodeNode stmt,
                             ref Vala.ArrayList<FormatMistake?> mistake_list) {
-        if (!enabled) {
+        if (state == Config.State.OFF) {
             return;
         }
 

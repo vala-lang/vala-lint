@@ -24,7 +24,7 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
             description: _("Checks for missing spaces")
         );
 
-        enabled = Config.get_boolean ("Checks", title);
+        state = Config.get_state (title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
@@ -34,7 +34,7 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
 
     public void check_list (Vala.List<Vala.CodeNode?> list,
                             ref Vala.ArrayList<FormatMistake?> mistake_list) {
-        if (!enabled) {
+        if (state == Config.State.OFF) {
             return;
         }
 

@@ -27,7 +27,7 @@ public class ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck : Check {
             single_mistake_in_line: true
         );
 
-        enabled = Config.get_boolean ("Checks", title);
+        state = Config.get_state (title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,

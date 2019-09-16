@@ -50,19 +50,19 @@ The generated file will look like
 
 ```Ini
 [Checks]
-block-opening-brace-space-before=true
-double-semicolon=true
-double-spaces=true
-ellipsis=true
-line-length=true
-naming-convention=true
-no-space=true
-note=true
-space-before-paren=true
-use-of-tabs=true
-trailing-newlines=true
-trailing-whitespace=true
-unnecessary-string-template=true
+block-opening-brace-space-before=error
+double-semicolon=error
+double-spaces=error
+ellipsis=error
+line-length=error
+naming-convention=error
+no-space=error
+note=error
+space-before-paren=error
+use-of-tabs=error
+trailing-newlines=error
+trailing-whitespace=error
+unnecessary-string-template=error
 
 [Disabler]
 disable-by-inline-comments=true
@@ -74,7 +74,7 @@ max-line-length=120
 keywords=TODO,FIXME
 ```
 
-In the *Checks* group, each check can be enabled/disabled individually. The *Disabler* group allows for disabling a single check at a specific line using an inline comment (see Disabling Errors below). Furthermore, each check can have individual, hopefully self-explanatory, settings, which are also listed in the [wiki](https://github.com/elementary/vala-lint/wiki/Vala-Lint-Checks).
+In the *Checks* group, each check can have three states. Using *error* (the default), the rule is displayes in output and triggers an exit code, for *warn* it is shown in output without an exit code and for *off* the rule is completely silent. The *Disabler* group allows for disabling a single check at a specific line using an inline comment (see Disabling Errors below). Furthermore, each check can have individual, hopefully self-explanatory, settings, which are also listed in the [wiki](https://github.com/elementary/vala-lint/wiki/Vala-Lint-Checks).
 
 
 ### Disabling Errors

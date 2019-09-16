@@ -20,24 +20,30 @@
 public class ValaLint.Config {
     static KeyFile? config;
 
+    public enum State {
+        ERROR,
+        WARN,
+        OFF,
+    }
+
     public static KeyFile get_default_config () {
         var default_config = new KeyFile ();
 
         default_config.set_list_separator (',');
 
-        default_config.set_boolean ("Checks", "block-opening-brace-space-before", true);
-        default_config.set_boolean ("Checks", "double-semicolon", true);
-        default_config.set_boolean ("Checks", "double-spaces", true);
-        default_config.set_boolean ("Checks", "ellipsis", true);
-        default_config.set_boolean ("Checks", "line-length", true);
-        default_config.set_boolean ("Checks", "naming-convention", true);
-        default_config.set_boolean ("Checks", "no-space", true);
-        default_config.set_boolean ("Checks", "note", true);
-        default_config.set_boolean ("Checks", "space-before-paren", true);
-        default_config.set_boolean ("Checks", "use-of-tabs", true);
-        default_config.set_boolean ("Checks", "trailing-newlines", true);
-        default_config.set_boolean ("Checks", "trailing-whitespace", true);
-        default_config.set_boolean ("Checks", "unnecessary-string-template", true);
+        default_config.set_string ("Checks", "block-opening-brace-space-before", "error");
+        default_config.set_string ("Checks", "double-semicolon", "error");
+        default_config.set_string ("Checks", "double-spaces", "error");
+        default_config.set_string ("Checks", "ellipsis", "error");
+        default_config.set_string ("Checks", "line-length", "error");
+        default_config.set_string ("Checks", "naming-convention", "error");
+        default_config.set_string ("Checks", "no-space", "error");
+        default_config.set_string ("Checks", "note", "error");
+        default_config.set_string ("Checks", "space-before-paren", "error");
+        default_config.set_string ("Checks", "use-of-tabs", "error");
+        default_config.set_string ("Checks", "trailing-newlines", "error");
+        default_config.set_string ("Checks", "trailing-whitespace", "error");
+        default_config.set_string ("Checks", "unnecessary-string-template", "error");
 
         default_config.set_boolean ("Disabler", "disable-by-inline-comments", true);
 
@@ -74,6 +80,32 @@ public class ValaLint.Config {
         }
     }
 
+    public static State get_state (string check) {
+        if (config == null) {
+            config = get_default_config ();
+        }
+
+        try {
+            switch (config.get_string ("Checks", check)) {
+                case "error":
+                    return ERROR;
+                case "warn":
+                    return WARN;
+                case "off":
+                    return OFF;
+                default:
+                    print ("""Error in config:
+    Unknown state "%s" for check "%s" (should be either "error", "warn", or "off"), using "error" for now.
+
+""", config.get_string ("Checks", check), check);
+                    return ERROR;
+            }
+        } catch (KeyFileError e) {
+            critical ("Error while loading config %s-%s: %s", "Checks", check, e.message);
+            return ERROR;
+        }
+    }
+
     public static bool get_boolean (string group, string key) {
         if (config == null) {
             config = get_default_config ();
@@ -97,6 +129,19 @@ public class ValaLint.Config {
         } catch (KeyFileError e) {
             critical ("Error while loading config %s-%s: %s", group, key, e.message);
             return 0;
+        }
+    }
+
+    public static string get_string (string group, string key) {
+        if (config == null) {
+            config = get_default_config ();
+        }
+
+        try {
+            return config.get_string (group, key);
+        } catch (KeyFileError e) {
+            critical ("Error while loading config %s-%s: %s", group, key, e.message);
+            return "";
         }
     }
 

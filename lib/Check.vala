@@ -39,7 +39,7 @@ public abstract class ValaLint.Check : Object {
     /**
      * Property whether the check is enabled in the current linter config.
      */
-    public bool enabled { get; set; }
+    public Config.State state { get; set; }
 
     /**
      * Checks a given parse result for formatting mistakes.

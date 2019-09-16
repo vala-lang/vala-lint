@@ -24,7 +24,7 @@ public class ValaLint.Checks.TrailingNewlinesCheck : Check {
             description:_("Checks for a single newline at the end of files")
         );
 
-        enabled = Config.get_boolean ("Checks", title);
+        state = Config.get_state (title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
