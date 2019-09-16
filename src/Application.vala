@@ -113,7 +113,7 @@ public class ValaLint.Application : GLib.Application {
                 var error_list = new Vala.ArrayList<FormatMistake?> ();
                 foreach (var mistake in file_data.mistakes) {
                     if (mistake.check.level == "err") {
-                      error_list.add (mistake);
+                        error_list.add (mistake);
                     }
                 }
                 // errors exist
