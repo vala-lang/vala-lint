@@ -21,7 +21,8 @@ public class ValaLint.Checks.NamingUnderscoreCheck : Check {
     public NamingUnderscoreCheck () {
         Object (
             title: _("naming-convention"),
-            description: _("Checks for the underscore naming convention")
+            description: _("Checks for the underscore naming convention"),
+            level: "err"
         );
     }
 

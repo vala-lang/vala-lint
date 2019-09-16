@@ -21,7 +21,8 @@ public class ValaLint.Checks.DoubleSpacesCheck : Check {
     public DoubleSpacesCheck () {
         Object (
             title: _("double-spaces"),
-            description: _("Checks for double spaces")
+            description: _("Checks for double spaces"),
+            level: "err"
         );
     }
 

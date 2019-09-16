@@ -21,7 +21,8 @@ public class ValaLint.Checks.NamingCamelCaseCheck : Check {
     public NamingCamelCaseCheck () {
         Object (
             title: _("naming-convention"),
-            description: _("Checks for the camel case naming convention")
+            description: _("Checks for the camel case naming convention"),
+            level: "err"
         );
     }
 

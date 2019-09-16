@@ -23,7 +23,8 @@ public class ValaLint.Checks.TrailingWhitespaceCheck : Check {
     public TrailingWhitespaceCheck () {
         Object (
             title: _("trailing-whitespace"),
-            description:_("Checks for whitespaces at the end of lines")
+            description: _("Checks for whitespaces at the end of lines"),
+            level: "err"
         );
     }
 

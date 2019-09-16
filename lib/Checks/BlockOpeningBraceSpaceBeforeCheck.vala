@@ -24,7 +24,8 @@ public class ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck : Check {
         Object (
             title: _("block-opening-brace-space-before"),
             description: _("Checks for correct use of opening braces"),
-            single_mistake_in_line: true
+            single_mistake_in_line: true,
+            level: "err"
         );
     }
 

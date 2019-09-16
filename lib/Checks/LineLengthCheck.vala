@@ -24,7 +24,8 @@ public class ValaLint.Checks.LineLengthCheck : Check {
     public LineLengthCheck () {
         Object (
             title: _("line-length"),
-            description: _("Checks for a maxmimum line legnth")
+            description: _("Checks for a maxmimum line legnth"),
+            level: "warn"
         );
     }
 

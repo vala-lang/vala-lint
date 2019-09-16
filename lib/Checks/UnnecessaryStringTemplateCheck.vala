@@ -23,7 +23,8 @@ public class ValaLint.Checks.UnnecessaryStringTemplateCheck : Check {
     public UnnecessaryStringTemplateCheck () {
         Object (
             title: _("unnecessary-string-template"),
-            description:_("Checks for templates that could be replaced by a string literal")
+            description:_("Checks for templates that could be replaced by a string literal"),
+            level: "err"
         );
     }
 

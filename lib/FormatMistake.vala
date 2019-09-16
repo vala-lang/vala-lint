@@ -24,12 +24,14 @@ public struct ValaLint.FormatMistake {
     public Vala.SourceLocation begin;
     public Vala.SourceLocation end;
     public string mistake;
+    public string level;
 
     public bool equal_to (FormatMistake b) {
         return (
             check == b.check
             && begin == b.begin
             && mistake == b.mistake
+            && level == b.level
         );
     }
 }

@@ -21,7 +21,8 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
     public NoSpaceCheck () {
         Object (
             title: _("no-space"),
-            description: _("Checks for missing spaces")
+            description: _("Checks for missing spaces"),
+            level: "err"
         );
     }
 

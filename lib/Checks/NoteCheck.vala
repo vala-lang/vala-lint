@@ -24,7 +24,8 @@ public class ValaLint.Checks.NoteCheck : Check {
         Object (
             single_mistake_in_line: true,
             title: _("note"),
-            description: _("Checks for notes (TODO, FIXME, etc.)")
+            description: _("Checks for notes (TODO, FIXME, etc.)"),
+            level: "warn"
         );
     }
 

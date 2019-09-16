@@ -21,7 +21,8 @@ public class ValaLint.Checks.SpaceBeforeParenCheck : Check {
     public SpaceBeforeParenCheck () {
         Object (
             title: _("space-before-paren"),
-            description: _("Checks for a space before parenthesis.")
+            description: _("Checks for a space before parenthesis."),
+            level: "err"
         );
     }
 

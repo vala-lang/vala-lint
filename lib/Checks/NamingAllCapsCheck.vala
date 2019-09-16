@@ -21,7 +21,8 @@ public class ValaLint.Checks.NamingAllCapsCheck : Check {
     public NamingAllCapsCheck () {
         Object (
             title: _("naming-convention"),
-            description: _("Checks for the all caps naming convention")
+            description: _("Checks for the all caps naming convention"),
+            level: "err"
         );
     }
 

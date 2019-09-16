@@ -109,7 +109,19 @@ public class ValaLint.Application : GLib.Application {
 
         foreach (FileData file_data in file_data_list) {
             if (!file_data.mistakes.is_empty) {
-                return 1;
+                // Iterate through mistakes and see if there are any errors
+                var error_list = new Vala.ArrayList<FormatMistake?> ();
+                foreach (var mistake in file_data.mistakes) {
+                    if (mistake.check.level == "err") {
+                      error_list.add (mistake);
+                    }
+                }
+                // errors exist
+                if (!error_list.is_empty) {
+                    return 1;
+                }
+                // only warnings exist
+                return 0;
             }
         }
         return 0;
@@ -176,11 +188,13 @@ public class ValaLint.Application : GLib.Application {
                 application_command_line.print ("\x001b[1m\x001b[4m" + "%s" + "\x001b[0m\n", path);
 
                 foreach (FormatMistake mistake in file_data.mistakes) {
-                    application_command_line.print ("\x001b[0m%5i.%-3i \x001b[1m%-40s   \x001b[0m%s\n",
+                    application_command_line.print ("\x001b[1m%-4s \x001b[0m%5i.%-3i \x001b[1m%-40s   \x001b[0m%s\n",
+                        mistake.check.level,
                         mistake.begin.line,
                         mistake.begin.column,
                         mistake.mistake,
-                        mistake.check.title);
+                        mistake.check.title
+                        );
                 }
             }
         }

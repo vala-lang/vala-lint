@@ -37,6 +37,11 @@ public abstract class ValaLint.Check : Object {
     public string description { get; construct; }
 
     /**
+     * The default level of the rule.
+     */
+    public string level { get; construct; }
+
+    /**
      * Checks a given parse result for formatting mistakes.
      *
      * @param parse_result The parsed string.

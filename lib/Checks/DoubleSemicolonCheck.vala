@@ -21,7 +21,8 @@ public class ValaLint.Checks.DoubleSemicolonCheck : Check {
     public DoubleSemicolonCheck () {
         Object (
             title: _("double-semicolon"),
-            description: _("Checks for unnecessary semicolons")
+            description: _("Checks for unnecessary semicolons"),
+            level: "err"
         );
     }
 
