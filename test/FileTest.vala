@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2016-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -19,28 +19,42 @@
 
 class FileTest : GLib.Object {
 
-    public static int main (string[] args) {
+    public struct FileTestMistake {
+        string title;
+        int line;
+    }
+
+    public static void check_file_for_mistake (File file, Vala.ArrayList<FileTestMistake?> mistake_list) {
         var linter = new ValaLint.Linter ();
         linter.disable_mistakes = false;
-        Vala.ArrayList<ValaLint.FormatMistake?> mistakes;
 
         try {
-            mistakes = linter.run_checks_for_file (File.new_for_path ("../test/files/pass.vala"));
-            assert (mistakes.size == 0);
-        } catch (Error e) {
-            critical ("Error: %s while linting pass file\n", e.message);
-        }
+            Vala.ArrayList<ValaLint.FormatMistake?> mistakes = linter.run_checks_for_file (file);
 
-        try {
-            mistakes = linter.run_checks_for_file (File.new_for_path ("../test/files/warnings.vala"));
-            assert (mistakes.size == 3);
-            assert (mistakes[0].check.title == "space-before-paren");
-            assert (mistakes[1].check.title == "no-space");
-            assert (mistakes[2].check.title == "double-semicolon");
-            //  assert (mistakes[2].check.title == "trailing-newlines");
+            if (mistakes.size != mistake_list.size) {
+                error ("%s has %d but should have %d mistakes.", file.get_path (), mistakes.size, mistake_list.size);
+            }
+
+            for (int i = 0; i < mistakes.size; i++) {
+                assert (mistakes[i].check.title == mistake_list[i].title);
+                assert (mistakes[i].begin.line == mistake_list[i].line);
+            }
         } catch (Error e) {
-            critical ("Error: %s while linting warnings file\n", e.message);
+            critical ("Error: %s while linting pass file %s\n", e.message, file.get_path ());
         }
+    }
+
+    public static int main (string[] args) {
+        var m_pass = new Vala.ArrayList<FileTestMistake?> ();
+        check_file_for_mistake (File.new_for_path ("../test/files/pass.vala"), m_pass);
+
+        var m_warnings = new Vala.ArrayList<FileTestMistake?> ();
+        m_warnings.add ({ "space-before-paren", 3 });
+        m_warnings.add ({ "no-space", 9 });
+        m_warnings.add ({ "unnecessary-string-template", 10 });
+        m_warnings.add ({ "unnecessary-string-template", 11 });
+        m_warnings.add ({ "double-semicolon", 12 });
+        check_file_for_mistake (File.new_for_path ("../test/files/warnings.vala"), m_warnings);
 
         return 0;
     }

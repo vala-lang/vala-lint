@@ -37,6 +37,7 @@ public class ValaLint.Config {
         default_config.set_boolean ("Checks", "use-of-tabs", true);
         default_config.set_boolean ("Checks", "trailing-newlines", true);
         default_config.set_boolean ("Checks", "trailing-whitespace", true);
+        default_config.set_boolean ("Checks", "unnecessary-string-template", true);
 
         default_config.set_boolean ("Disabler", "disable-by-inline-comments", true);
 

@@ -24,6 +24,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     public Checks.NamingAllCapsCheck naming_all_caps_check;
     public Checks.NamingCamelCaseCheck naming_camel_case_check;
     public Checks.NamingUnderscoreCheck naming_underscore_check;
+    public Checks.UnnecessaryStringTemplateCheck unnecessary_string_template_check;
     public Checks.NoSpaceCheck no_space_check;
 
     public void set_mistake_list (Vala.ArrayList<FormatMistake?> mistake_list) {
@@ -291,6 +292,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_template (Vala.Template tmpl) {
+        unnecessary_string_template_check.check_template (tmpl, ref mistake_list);
         tmpl.accept_children (this);
     }
 

@@ -51,6 +51,7 @@ public class ValaLint.Linter : Object {
         visitor.naming_camel_case_check = new Checks.NamingCamelCaseCheck ();
         visitor.naming_underscore_check = new Checks.NamingUnderscoreCheck ();
         visitor.no_space_check = new Checks.NoSpaceCheck ();
+        visitor.unnecessary_string_template_check = new Checks.UnnecessaryStringTemplateCheck ();
     }
 
     public Vala.ArrayList<FormatMistake?> run_checks_for_file (File file) throws Error, IOError {

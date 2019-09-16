@@ -62,6 +62,7 @@ space-before-paren=true
 use-of-tabs=true
 trailing-newlines=true
 trailing-whitespace=true
+unnecessary-string-template=true
 
 [Disabler]
 disable-by-inline-comments=true
