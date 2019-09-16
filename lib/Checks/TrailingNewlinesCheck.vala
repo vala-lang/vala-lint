@@ -21,7 +21,8 @@ public class ValaLint.Checks.TrailingNewlinesCheck : Check {
     public TrailingNewlinesCheck () {
         Object (
             title: _("trailing-newlines"),
-            description:_("Checks for a single newline at the end of files")
+            description:_("Checks for a single newline at the end of files"),
+            level: "err"
         );
     }
 
