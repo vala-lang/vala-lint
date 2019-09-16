@@ -36,9 +36,18 @@ class UnitTest : GLib.Object {
         assert_warning (double_spaces_check, "int test = {  };", 13, 15);
 
         var ellipsis_check = new ValaLint.Checks.EllipsisCheck ();
-        assert_pass (ellipsis_check, "lorem ipsum");
-        assert_pass (ellipsis_check, "lorem ipsum..."); // vala-lint=ellipsis
-        assert_warning (ellipsis_check, "lorem ipsum\"...\"", 13, 16); // vala-lint=ellipsis
+        Assertion<Vala.StringLiteral>.pass (
+            ellipsis_check.check_string_literal,
+            new Vala.StringLiteral ("lorem ipsum")
+        );
+        Assertion<Vala.StringLiteral>.warning (
+            ellipsis_check.check_string_literal,
+            new Vala.StringLiteral ("lorem [...] ipsum"), 1, 7, 10 // vala-lint=ellipsis
+        );
+        Assertion<Vala.StringLiteral>.warning (
+            ellipsis_check.check_string_literal,
+            new Vala.StringLiteral ("lorem [...] ipsum..."), 2, 7, 10 // vala-lint=ellipsis
+        );
 
         var line_length_check = new ValaLint.Checks.LineLengthCheck ();
         assert_pass (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua."); // vala-lint=line-length
@@ -123,6 +132,39 @@ class UnitTest : GLib.Object {
         }
         if (end > -1 && mistakes[0].end.column != end) {
             error ("%s: end was at %d but should be at %d", input, mistakes[0].end.column, end);
+        }
+    }
+}
+
+
+
+public class Assertion<G> {
+    public delegate void CheckFunction<G> (G input, ref Vala.ArrayList<ValaLint.FormatMistake?> mistakes);
+
+    public static void pass (CheckFunction<G> check_function, G input) {
+        var mistakes = new Vala.ArrayList<ValaLint.FormatMistake?> ();
+
+        check_function (input, ref mistakes);
+        if (mistakes.size != 0) {
+            error ("%s at char %d", mistakes[0].mistake, mistakes[0].begin.column);
+        }
+    }
+
+    public static void warning (CheckFunction<G> check_function, G input, int number_mistakes, int begin, int end) {
+        var mistakes = new Vala.ArrayList<ValaLint.FormatMistake?> ();
+
+        check_function (input, ref mistakes);
+        if (number_mistakes > 0) {
+            assert (mistakes.size == number_mistakes);
+        } else {
+            assert (mistakes.size > 0);
+        }
+
+        if (begin > -1) {
+            assert (mistakes[0].begin.column == begin);
+        }
+        if (end > -1) {
+            assert (mistakes[0].end.column == end);
         }
     }
 }

@@ -51,9 +51,14 @@ class FileTest : GLib.Object {
         var m_warnings = new Vala.ArrayList<FileTestMistake?> ();
         m_warnings.add ({ "space-before-paren", 3 });
         m_warnings.add ({ "no-space", 9 });
-        m_warnings.add ({ "unnecessary-string-template", 10 });
-        m_warnings.add ({ "unnecessary-string-template", 11 });
-        m_warnings.add ({ "double-semicolon", 12 });
+        m_warnings.add ({ "double-semicolon", 10 });
+        m_warnings.add ({ "ellipsis", 12 });
+        m_warnings.add ({ "ellipsis", 13 });
+        m_warnings.add ({ "ellipsis", 14 });
+        m_warnings.add ({ "ellipsis", 14 });
+        m_warnings.add ({ "unnecessary-string-template", 16 });
+        m_warnings.add ({ "unnecessary-string-template", 17 });
+
         check_file_for_mistake (File.new_for_path ("../test/files/warnings.vala"), m_warnings);
 
         return 0;
