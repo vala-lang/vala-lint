@@ -7,7 +7,8 @@ class FileTest : GLib.Object {
     }
 
     public void test (string a,string b) { // vala-lint=no-space
-        var a = @""; // vala-lint=unnecessary-string-template
-        var a = 2;; // vala-lint=double-semicolon
+        var empty_string_template = @""; // vala-lint=unnecessary-string-template
+        var content_string_template = @"Lorem ipsum"; // vala-lint=unnecessary-string-template
+        int number_of_semicolons = 2;; // vala-lint=double-semicolon
     }
 } // vala-lint=trailing-newlines

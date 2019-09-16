@@ -52,7 +52,8 @@ class FileTest : GLib.Object {
         m_warnings.add ({ "space-before-paren", 3 });
         m_warnings.add ({ "no-space", 9 });
         m_warnings.add ({ "unnecessary-string-template", 10 });
-        m_warnings.add ({ "double-semicolon", 11 });
+        m_warnings.add ({ "unnecessary-string-template", 11 });
+        m_warnings.add ({ "double-semicolon", 12 });
         check_file_for_mistake (File.new_for_path ("../test/files/warnings.vala"), m_warnings);
 
         return 0;
