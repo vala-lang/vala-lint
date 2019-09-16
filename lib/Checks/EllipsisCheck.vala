@@ -43,7 +43,7 @@ public class ValaLint.Checks.EllipsisCheck : Check {
                 length += 1;
             }
 
-            var end = Utils.shift_location(begin, length);
+            var end = Utils.shift_location (begin, length);
 
             add_mistake ({ this, begin, end, _("Expected ellipsis instead of periods") }, ref mistake_list);
 
