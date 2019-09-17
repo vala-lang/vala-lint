@@ -21,6 +21,7 @@
 
 public class ValaLint.Application : GLib.Application {
     private static bool print_version = false;
+    private static bool exit_with_zero = false;
     private static bool generate_config_file = false;
     private static string? lint_directory = null;
     private static File? lint_directory_file = null;
@@ -30,10 +31,16 @@ public class ValaLint.Application : GLib.Application {
     private ApplicationCommandLine application_command_line;
 
     private const OptionEntry[] OPTIONS = {
-        { "version", 'v', 0, OptionArg.NONE, ref print_version, "Display version number", null },
-        { "directory", 'd', 0, OptionArg.STRING, ref lint_directory, "Lint all Vala files in the given directory." },
-        { "config", 'c', 0, OptionArg.STRING, ref config_file, "Configuration file." },
-        { "generate-config", 'g', 0, OptionArg.NONE, ref generate_config_file, "Generate a default config file." },
+        { "version", 'v', 0, OptionArg.NONE, ref print_version,
+            "Display version number" },
+        { "directory", 'd', 0, OptionArg.STRING, ref lint_directory,
+            "Lint all Vala files in the given directory." },
+        { "config", 'c', 0, OptionArg.STRING, ref config_file,
+            "Specify a configuration file." },
+        { "exit-zero", 'z', 0, OptionArg.NONE, ref exit_with_zero,
+            "Always return a 0 (non-error) status code, even if lint errors are found." },
+        { "generate-config", 'g', 0, OptionArg.NONE, ref generate_config_file,
+            "Generate a sample configuration file with default values." },
         { null }
     };
 
@@ -116,6 +123,10 @@ public class ValaLint.Application : GLib.Application {
 
         /* 4. Print mistakes */
         print_mistakes (file_data_list);
+
+        if (exit_with_zero) {
+            return 0;
+        }
 
         foreach (FileData file_data in file_data_list) {
             foreach (FormatMistake? mistake in file_data.mistakes) {

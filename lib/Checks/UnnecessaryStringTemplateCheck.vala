@@ -38,7 +38,7 @@ public class ValaLint.Checks.UnnecessaryStringTemplateCheck : Check {
         if (state == Config.State.OFF) {
             return;
         }
-        
+
         if (tmpl.get_expressions ().size <= 1) {
             add_mistake ({ this, tmpl.source_reference.begin, tmpl.source_reference.end, MESSAGE }, ref mistake_list);
         }

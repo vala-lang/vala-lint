@@ -38,7 +38,7 @@ public class ValaLint.Checks.EllipsisCheck : Check {
         if (state == Config.State.OFF) {
             return;
         }
-        
+
         var index = lit.value.index_of (ELLIPSIS);
         while (index > -1) {
             var begin = Utils.get_absolute_location (lit.source_reference.begin, lit.value, index);
