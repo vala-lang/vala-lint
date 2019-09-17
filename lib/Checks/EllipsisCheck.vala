@@ -35,6 +35,10 @@ public class ValaLint.Checks.EllipsisCheck : Check {
     }
 
     public void check_string_literal (Vala.StringLiteral lit, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        if (state == Config.State.OFF) {
+            return;
+        }
+        
         var index = lit.value.index_of (ELLIPSIS);
         while (index > -1) {
             var begin = Utils.get_absolute_location (lit.source_reference.begin, lit.value, index);
