@@ -22,6 +22,8 @@ jobs:
 
   greeter:
     name: greeter
+    runs-on: ubuntu-latest
+    needs: build
 
     container:
       image: elementary/docker:unstable
