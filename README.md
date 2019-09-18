@@ -1,6 +1,7 @@
 # Vala-Lint
 
-[![Build Status](https://action-badges.now.sh/elementary/vala-lint)](https://github.com/elementary/vala-lint/actions)
+[![Build Status](https://github.com/vala-lang/vala-lint/workflows/Vala%20CI/badge.svg)](https://github.com/elementary/vala-lint/actions)
+[![Deploy Status](https://github.com/vala-lang/vala-lint/workflows/Publish%20Docker%20Image/badge.svg)](https://github.com/elementary/vala-lint/actions)
 [![Bountysource](https://www.bountysource.com/badge/tracker?tracker_id=45980444)](https://www.bountysource.com/trackers/45980444-elementary-Vala-lint)
 
 Small command line tool and library for checking Vala code files for code-style errors.
