@@ -14,7 +14,7 @@ jobs:
 
     - name: Install Depedencies
       env:
-        dependency_packages: libvala-dev valac meson git
+        dependency_packages: libvala-dev valac meson
       run: apt-get update && apt-get -y install ${dependency_packages}
 
     - name: Build
@@ -35,6 +35,11 @@ jobs:
       image: elementary/docker:unstable
 
     steps:
+    - name: Install Depedencies
+      env:
+        dependency_packages: libvala-dev valac git
+      run: apt-get update && apt-get -y install ${dependency_packages}
+
     - name: Clone
       run: git clone https://github.com/elementary/greeter.git
 
