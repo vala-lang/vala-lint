@@ -74,7 +74,7 @@ max-line-length=120
 keywords=TODO,FIXME
 ```
 
-In the *Checks* group, each check can have three states. Using *error* (the default), the rule is displayes in output and triggers an exit code, for *warn* it is shown in output without an exit code and for *off* the rule is completely silent. The *Disabler* group allows for disabling a single check at a specific line using an inline comment (see Disabling Errors below). Furthermore, each check can have individual, hopefully self-explanatory, settings, which are also listed in the [wiki](https://github.com/elementary/vala-lint/wiki/Vala-Lint-Checks).
+As this is the default configuration, you only need to specifiy differing settings. In the *Checks* group, each check can have three states. Using *error* (the default), the rule is displayes in output and triggers an exit code, for *warn* it is shown in output without an exit code and for *off* the rule is completely silent. The *Disabler* group allows for disabling a single check at a specific line using an inline comment (see Disabling Errors below). Furthermore, each check can have individual, hopefully self-explanatory, settings, which are also listed in the [wiki](https://github.com/elementary/vala-lint/wiki/Vala-Lint-Checks).
 
 
 ### Disabling Errors
