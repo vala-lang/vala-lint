@@ -8,6 +8,7 @@ class FileTest : GLib.Object {
 
     public void test (string a,string b) { // vala-lint=no-space
         int number_of_semicolons = 2;; // vala-lint=double-semicolon
+        int NUMBER_ALL_CAPS = 3; // vala-lint=naming-convention
 
         var single_ellipsis = "..."; // vala-lint=ellipsis
         var double_ellipsis_single_mistake = "......"; // vala-lint=ellipsis

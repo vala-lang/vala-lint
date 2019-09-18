@@ -56,28 +56,79 @@ class UnitTest : GLib.Object {
         assert_warning (line_length_check, "/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua consectetur */ aliqua.", 120, 132); // vala-lint=line-length
         assert_warning (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", 120, 123); // vala-lint=line-length
 
-        var naming_all_caps_check = new ValaLint.Checks.NamingAllCapsCheck ();
-        assert_pass (naming_all_caps_check, "LOREM");
-        assert_pass (naming_all_caps_check, "LOREM_IPSUM");
-        assert_warning (naming_all_caps_check, "lOREM", 1, 6);
-        assert_warning (naming_all_caps_check, "LOREm", 5, 6);
-        assert_warning (naming_all_caps_check, "LOREM-IPSUM", 6, 12);
-
-        var naming_camel_case_check = new ValaLint.Checks.NamingCamelCaseCheck ();
-        assert_pass (naming_camel_case_check, "Lorem");
-        assert_pass (naming_camel_case_check, "LoremIpsum");
-        assert_pass (naming_camel_case_check, "HTTPConnection");
-        assert_warning (naming_camel_case_check, "lorem", 1, 6);
-        assert_warning (naming_camel_case_check, "loremIpsum", 1, 11);
-        assert_warning (naming_camel_case_check, "lorem_ipsum", 1, 12);
-        assert_warning (naming_camel_case_check, "lorem-ipsum", 1, 12);
-
-        var naming_underscore_check = new ValaLint.Checks.NamingUnderscoreCheck ();
-        assert_pass (naming_underscore_check, "lorem");
-        assert_pass (naming_underscore_check, "lorem_ipsum");
-        assert_warning (naming_underscore_check, "Lorem", 1, 6);
-        assert_warning (naming_underscore_check, "Lorem_Ipsum", 1, 12);
-        assert_warning (naming_underscore_check, "lorem_IPsum", 7, 12);
+        var naming_convention_check = new ValaLint.Checks.NamingConventionCheck ();
+        Assertion<Vala.Class>.pass (
+            naming_convention_check.check_all_caps,
+            new Vala.Class ("LOREM")
+        );
+        Assertion<Vala.Class>.pass (
+            naming_convention_check.check_all_caps,
+            new Vala.Class ("LOREM_IPSUM")
+        );
+        Assertion<Vala.Class>.warning (
+            naming_convention_check.check_all_caps,
+            new Vala.Class ("lOREM"), 1, 0, 5
+        );
+        Assertion<Vala.Class>.warning (
+            naming_convention_check.check_all_caps,
+            new Vala.Class ("LOREm"), 1, 0, 5
+        );
+        Assertion<Vala.Class>.warning (
+            naming_convention_check.check_all_caps,
+            new Vala.Class ("LOREm_IPSUM"), 1, 0, 11
+        );
+        Assertion<Vala.Class>.warning (
+            naming_convention_check.check_all_caps,
+            new Vala.Class ("LOREM-IPSUM"), 1, 0, 11
+        );
+        Assertion<Vala.Class>.pass (
+            naming_convention_check.check_camel_case,
+            new Vala.Class ("Lorem")
+        );
+        Assertion<Vala.Class>.pass (
+            naming_convention_check.check_camel_case,
+            new Vala.Class ("LoremIpsum")
+        );
+        Assertion<Vala.Class>.pass (
+            naming_convention_check.check_camel_case,
+            new Vala.Class ("HTTPConnection")
+        );
+        Assertion<Vala.Class>.warning (
+            naming_convention_check.check_camel_case,
+            new Vala.Class ("lorem"), 1, 0, 5
+        );
+        Assertion<Vala.Class>.warning (
+            naming_convention_check.check_camel_case,
+            new Vala.Class ("loremIpsum"), 1, 0, 10
+        );
+        Assertion<Vala.Class>.warning (
+            naming_convention_check.check_camel_case,
+            new Vala.Class ("lorem_ipsum"), 1, 0, 11
+        );
+        Assertion<Vala.Class>.warning (
+            naming_convention_check.check_camel_case,
+            new Vala.Class ("lorem-ipsum"), 1, 0, 11
+        );
+        Assertion<Vala.Class>.pass (
+            naming_convention_check.check_underscore,
+            new Vala.Class ("lorem")
+        );
+        Assertion<Vala.Class>.pass (
+            naming_convention_check.check_underscore,
+            new Vala.Class ("lorem_ipsum")
+        );
+        Assertion<Vala.Class>.warning (
+            naming_convention_check.check_underscore,
+            new Vala.Class ("Lorem"), 1, 0, 5
+        );
+        Assertion<Vala.Class>.warning (
+            naming_convention_check.check_underscore,
+            new Vala.Class ("Lorem_Ipsum"), 1, 0, 11
+        );
+        Assertion<Vala.Class>.warning (
+            naming_convention_check.check_underscore,
+            new Vala.Class ("lorem_IPsum"), 1, 0, 11
+        );
 
         var note_check = new ValaLint.Checks.NoteCheck ();
         assert_pass (note_check, "lorem");
@@ -135,7 +186,6 @@ class UnitTest : GLib.Object {
         }
     }
 }
-
 
 
 public class Assertion<G> {

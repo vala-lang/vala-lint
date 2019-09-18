@@ -52,12 +52,13 @@ class FileTest : GLib.Object {
         m_warnings.add ({ "space-before-paren", 3 });
         m_warnings.add ({ "no-space", 9 });
         m_warnings.add ({ "double-semicolon", 10 });
-        m_warnings.add ({ "ellipsis", 12 });
+        m_warnings.add ({ "naming-convention", 11 });
         m_warnings.add ({ "ellipsis", 13 });
         m_warnings.add ({ "ellipsis", 14 });
-        m_warnings.add ({ "ellipsis", 14 });
-        m_warnings.add ({ "unnecessary-string-template", 16 });
+        m_warnings.add ({ "ellipsis", 15 });
+        m_warnings.add ({ "ellipsis", 15 });
         m_warnings.add ({ "unnecessary-string-template", 17 });
+        m_warnings.add ({ "unnecessary-string-template", 18 });
 
         check_file_for_mistake (File.new_for_path ("../test/files/warnings.vala"), m_warnings);
 
