@@ -29,7 +29,7 @@ jobs:
   lint:
     strategy:
       matrix:
-        project: [greeter, music]
+        project: [greeter, music, screenshot, calendar, appcenter, switchboard-plug-onlineaccounts]
 
     name: Lint ${{ matrix.project }}
     runs-on: ubuntu-latest
@@ -53,8 +53,8 @@ jobs:
         name: vala-lint
         path: ./build/
 
-    - name: Permissions
+    - name: Set Permissions
       run: chmod +x ./build/src/io.elementary.vala-lint
 
-    - name: Lint
+    - name: Lint With Zero Exit
       run: './build/src/io.elementary.vala-lint -d ${{ matrix.project }}/ || :'
