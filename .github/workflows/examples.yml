@@ -1,0 +1,34 @@
+name: Lint Examples
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container:
+      image: elementary/docker:unstable
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Install Depedencies
+      env:
+        dependency_packages: libvala-dev valac meson
+      run: apt-get update && apt-get -y install ${dependency_packages}
+
+    - name: Build
+      run: meson build && ninja -C build
+
+  greeter:
+    name: greeter
+
+    container:
+      image: elementary/docker:unstable
+
+    steps:
+    - name: Clone
+      run: git clone https://github.com/elementary/greeter.git
+
+    - name: Lint
+      run: ./build/src/io.elementary.vala-lint -d greeter/
