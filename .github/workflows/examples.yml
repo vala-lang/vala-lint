@@ -26,8 +26,12 @@ jobs:
         name: vala-lint
         path: ./build/src/io.elementary.vala-lint
 
-  greeter:
-    name: Greeter
+  lint:
+    strategy:
+      matrix:
+        project: ['greeter']
+
+    name: ${{ matrix.project }}
     runs-on: ubuntu-latest
     needs: build
 
@@ -41,7 +45,7 @@ jobs:
       run: apt-get update && apt-get -y install ${dependency_packages}
 
     - name: Clone
-      run: git clone https://github.com/elementary/greeter.git
+      run: git clone https://github.com/elementary/${{ matrix.project }}.git
 
     - name: Download
       uses: actions/download-artifact@v1
@@ -50,4 +54,4 @@ jobs:
         path: ./build/src/io.elementary.vala-lint
 
     - name: Lint
-      run: './build/src/io.elementary.vala-lint -d greeter/ || :'
+      run: 'sudo ./build/src/io.elementary.vala-lint -d ${{ matrix.project }}/ || :'
