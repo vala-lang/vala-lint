@@ -24,7 +24,7 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: vala-lint
-        path: ./build/src/io.elementary.vala-lint
+        path: ./build/src/
 
   lint:
     strategy:
@@ -51,7 +51,7 @@ jobs:
       uses: actions/download-artifact@v1
       with:
         name: vala-lint
-        path: ./build/src/io.elementary.vala-lint
+        path: ./build/src/
 
     - name: Lint
-      run: 'sudo ./build/src/io.elementary.vala-lint -d ${{ matrix.project }}/ || :'
+      run: './build/src/io.elementary.vala-lint -d ${{ matrix.project }}/'
