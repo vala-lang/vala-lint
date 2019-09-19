@@ -23,11 +23,18 @@ public class ValaLint.Checks.NamingUnderscoreCheck : Check {
             title: _("naming-convention"),
             description: _("Checks for the underscore naming convention")
         );
+
+        state = Config.get_state (title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        if (state == Config.State.OFF) {
+            return;
+        }
+
         foreach (ParseResult r in parse_result) {
+
             add_regex_mistake ("""[A-Z-]""", _("Expected variable name in underscore_convention"), r,
                                ref mistake_list, r.text.length, 0, true);
         }

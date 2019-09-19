@@ -18,14 +18,18 @@
  */
 
 public class ValaLint.Checks.LineLengthCheck : Check {
-    const int MAXIMUM_CHARACTERS = 120;
     const string MESSAGE = "Line exceeds limit of %d characters (currently %d characters)";
+
+    public int maximum_characters { get; set; }
 
     public LineLengthCheck () {
         Object (
             title: _("line-length"),
             description: _("Checks for a maxmimum line legnth")
         );
+
+        state = Config.get_state (title);
+        maximum_characters = Config.get_integer (title, "max-line-length");
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
@@ -37,11 +41,11 @@ public class ValaLint.Checks.LineLengthCheck : Check {
 
         int line_counter = 1;
         foreach (string line in input.split ("\n")) {
-            if (line.char_count () > MAXIMUM_CHARACTERS) {
+            if (line.char_count () > maximum_characters) {
                 int line_length = line.char_count ();
-                string formatted_message = MESSAGE.printf (MAXIMUM_CHARACTERS, line_length);
+                string formatted_message = MESSAGE.printf (maximum_characters, line_length);
 
-                var begin = Vala.SourceLocation ((char *)line + MAXIMUM_CHARACTERS, line_counter, MAXIMUM_CHARACTERS);
+                var begin = Vala.SourceLocation ((char *)line + maximum_characters, line_counter, maximum_characters);
                 var end = Vala.SourceLocation ((char *)line + line_length, line_counter, line_length);
                 add_mistake ({ this, begin, end, formatted_message }, ref mistake_list);
             }
