@@ -56,6 +56,24 @@ public class ValaLint.Utils : Object {
     }
 
     /**
+     * Filter an ArrayList based on a given lambda.
+     * 
+     * @return The filtered array.
+     */
+    public delegate bool<G> FilterFunction<G> (G element);
+    public static Vala.ArrayList<G> filter<G> (FilterFunction<G> func, Vala.ArrayList<G> source) {
+        var result = new Vala.ArrayList<G> ();
+
+        foreach (G elem in source) {
+            if (func (elem)) {
+                result.add (elem);
+            }
+        }
+
+        return result;
+    }
+
+    /**
      * Method to return a new Vala.SourceLocation from a reference shifted by a given offset.
      * 
      * @return The new Vala.SourceLocation

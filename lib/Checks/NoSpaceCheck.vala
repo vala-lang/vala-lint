@@ -23,6 +23,8 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
             title: _("no-space"),
             description: _("Checks for missing spaces")
         );
+
+        state = Config.get_state (title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
@@ -32,6 +34,10 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
 
     public void check_list (Vala.List<Vala.CodeNode?> list,
                             ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        if (state == Config.State.OFF) {
+            return;
+        }
+
         if (list.size > 1) {
             for (int i = 0; i < list.size - 1; i++) {
                 var expr = list[i];

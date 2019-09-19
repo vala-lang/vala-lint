@@ -23,6 +23,8 @@ public class ValaLint.Checks.DoubleSemicolonCheck : Check {
             title: _("double-semicolon"),
             description: _("Checks for unnecessary semicolons")
         );
+
+        state = Config.get_state (title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
@@ -32,6 +34,9 @@ public class ValaLint.Checks.DoubleSemicolonCheck : Check {
 
     public void check_statement (Vala.CodeNode stmt,
                             ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        if (state == Config.State.OFF) {
+            return;
+        }
 
         var reference = stmt.source_reference.end;
         var offset = reference.pos[-1] == ';' ? -1 : 0; // End location can be off by one

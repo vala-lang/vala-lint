@@ -23,10 +23,16 @@ public class ValaLint.Checks.NamingAllCapsCheck : Check {
             title: _("naming-convention"),
             description: _("Checks for the all caps naming convention")
         );
+
+        state = Config.get_state (title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        if (state == Config.State.OFF) {
+            return;
+        }
+
         foreach (ParseResult r in parse_result) {
             add_regex_mistake ("""[a-z-]""", _("Expected variable name in ALL_CAPS_CONVENTION"), r,
                                ref mistake_list, r.text.length, 0, true);
