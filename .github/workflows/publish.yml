@@ -12,6 +12,6 @@ jobs:
     - uses: actions/checkout@v1
     - name: Publish
       run: |
-        docker login -u ${{ secrets.DockerUsername }} -p ${{ secrets.DockerPassword }}
+        docker login -u "${{ secrets.DockerUsername }}" -p "${{ secrets.DockerPassword }}"
         docker build -t valalang/lint:latest .
         docker push valalang/lint:latest
