@@ -22,15 +22,17 @@
 public class ValaLint.Linter : Object {
 
     /* Property whether the mistakes can be disabled by inline comments. */
-    public bool disable_mistakes { get; set; default = true; }
+    public bool disable_mistakes;
 
     /* Checks which work on the result of our own ValaLint.Parser. */
-    public Vala.ArrayList<Check> global_checks { get; set; }
+    public Vala.ArrayList<Check> global_checks;
 
     /* Checks which work on the abstract syntax tree of the offical Vala.Parser */
     ValaLint.Visitor visitor;
 
     public Linter () {
+        disable_mistakes = Config.get_boolean ("Disabler", "disable-by-inline-comments");
+
         global_checks = new Vala.ArrayList<Check> ();
         global_checks.add (new Checks.BlockOpeningBraceSpaceBeforeCheck ());
         global_checks.add (new Checks.DoubleSpacesCheck ());
@@ -41,31 +43,16 @@ public class ValaLint.Linter : Object {
         global_checks.add (new Checks.TrailingNewlinesCheck ());
         global_checks.add (new Checks.TrailingWhitespaceCheck ());
 
+        global_checks = Utils.filter<Check> (c => Config.get_state (c.title) != Config.State.OFF, global_checks);
+
         visitor = new ValaLint.Visitor ();
         visitor.double_semicolon_check = new Checks.DoubleSemicolonCheck ();
         visitor.ellipsis_check = new Checks.EllipsisCheck ();
         visitor.naming_all_caps_check = new Checks.NamingAllCapsCheck ();
         visitor.naming_camel_case_check = new Checks.NamingCamelCaseCheck ();
         visitor.naming_underscore_check = new Checks.NamingUnderscoreCheck ();
-        visitor.unnecessary_string_template_check = new Checks.UnnecessaryStringTemplateCheck ();
         visitor.no_space_check = new Checks.NoSpaceCheck ();
-
-        visitor.checks = new Vala.ArrayList<Check> ();
-        visitor.checks.add (visitor.double_semicolon_check);
-        visitor.checks.add (visitor.naming_all_caps_check);
-        visitor.checks.add (visitor.naming_camel_case_check);
-        visitor.checks.add (visitor.naming_underscore_check);
-        visitor.checks.add (visitor.unnecessary_string_template_check);
-        visitor.checks.add (visitor.no_space_check);
-    }
-
-    public Linter.with_check (Check check) {
-        global_checks = new Vala.ArrayList<Check> ();
-        global_checks.add (check);
-    }
-
-    public Linter.with_checks (Vala.ArrayList<Check> checks) {
-        global_checks = checks;
+        visitor.unnecessary_string_template_check = new Checks.UnnecessaryStringTemplateCheck ();
     }
 
     public Vala.ArrayList<FormatMistake?> run_checks_for_file (File file) throws Error, IOError {
@@ -81,7 +68,7 @@ public class ValaLint.Linter : Object {
 
         // Checks if file is supported by Vala compiler
         if (context.add_source_filename (filename)) {
-            /* This parser builds the abstract syntax tree (AST) */
+            // This parser builds the abstract syntax tree (AST)
             var parser_ast = new Vala.Parser ();
             parser_ast.parse (context);
 
@@ -91,9 +78,9 @@ public class ValaLint.Linter : Object {
             }
 
             string content;
-            FileUtils.get_contents (filename, out content); // Get file content
+            FileUtils.get_contents (filename, out content);
 
-            /* Our parser checks only strings, comments and other code */
+            // Our parser checks only strings, comments and other code
             var parser_code = new ValaLint.Parser ();
             Vala.ArrayList<ParseResult?> parse_result = parser_code.parse (content);
 
