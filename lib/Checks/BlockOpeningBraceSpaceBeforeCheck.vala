@@ -26,6 +26,8 @@ public class ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck : Check {
             description: _("Checks for correct use of opening braces"),
             single_mistake_in_line: true
         );
+
+        state = Config.get_state (title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,

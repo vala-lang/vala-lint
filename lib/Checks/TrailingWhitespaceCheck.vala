@@ -25,6 +25,8 @@ public class ValaLint.Checks.TrailingWhitespaceCheck : Check {
             title: _("trailing-whitespace"),
             description:_("Checks for whitespaces at the end of lines")
         );
+
+        state = Config.get_state (title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,

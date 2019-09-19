@@ -25,6 +25,8 @@ public class ValaLint.Checks.UnnecessaryStringTemplateCheck : Check {
             title: _("unnecessary-string-template"),
             description:_("Checks for templates that could be replaced by a string literal")
         );
+
+        state = Config.get_state (title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
@@ -33,6 +35,10 @@ public class ValaLint.Checks.UnnecessaryStringTemplateCheck : Check {
     }
 
     public void check_template (Vala.Template tmpl, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        if (state == Config.State.OFF) {
+            return;
+        }
+
         if (tmpl.get_expressions ().size <= 1) {
             add_mistake ({ this, tmpl.source_reference.begin, tmpl.source_reference.end, MESSAGE }, ref mistake_list);
         }
