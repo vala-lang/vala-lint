@@ -23,6 +23,8 @@ public class ValaLint.Checks.NamingConventionCheck : Check {
             title: _("naming-convention"),
             description: _("Checks the naming convention")
         );
+
+        state = Config.get_state (title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
@@ -41,6 +43,10 @@ public class ValaLint.Checks.NamingConventionCheck : Check {
     }
 
     public void check_all_caps (Vala.Symbol symbol, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        if (state == Config.State.OFF) {
+            return;
+        }
+
         if (symbol.name != symbol.name.up () || name_is_invalid (symbol.name)) {
             var begin = symbol.source_reference.begin;
             var end = Utils.shift_location (begin, symbol.name.length);
@@ -49,6 +55,10 @@ public class ValaLint.Checks.NamingConventionCheck : Check {
     }
 
     public void check_camel_case (Vala.Symbol symbol, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        if (state == Config.State.OFF) {
+            return;
+        }
+
         if (symbol.name[0].islower () || symbol.name.contains ("_") || name_is_invalid (symbol.name)) {
             var begin = symbol.source_reference.begin;
             var end = Utils.shift_location (begin, symbol.name.length);
@@ -57,6 +67,10 @@ public class ValaLint.Checks.NamingConventionCheck : Check {
     }
 
     public void check_underscore (Vala.Symbol symbol, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        if (state == Config.State.OFF) {
+            return;
+        }
+
         if (symbol.name != symbol.name.down () || name_is_invalid (symbol.name)) {
             var begin = symbol.source_reference.begin;
             var end = Utils.shift_location (begin, symbol.name.length);
