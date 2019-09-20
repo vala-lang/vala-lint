@@ -22,15 +22,29 @@
 public class ValaLint.Application : GLib.Application {
     private static bool print_version = false;
     private static bool print_mistakes_end = false;
+    private static bool exit_with_zero = false;
+    private static bool generate_config_file = false;
+
     private static string? lint_directory = null;
     private static File? lint_directory_file = null;
+    private static string? config_file = null;
+
 
     private ApplicationCommandLine application_command_line;
 
     private const OptionEntry[] OPTIONS = {
-        { "version", 'v', 0, OptionArg.NONE, ref print_version, "Display version number", null },
-        { "directory", 'd', 0, OptionArg.STRING, ref lint_directory, "Lint all Vala files in the given directory." },
-        { "print-end", 'e', 0, OptionArg.NONE, ref print_mistakes_end, "Show end of mistakes", null },
+        { "version", 'v', 0, OptionArg.NONE, ref print_version,
+            "Display version number" },
+        { "directory", 'd', 0, OptionArg.STRING, ref lint_directory,
+            "Lint all Vala files in the given directory." },
+        { "print-end", 'e', 0, OptionArg.NONE, ref print_mistakes_end,
+            "Show end of mistakes" },
+        { "config", 'c', 0, OptionArg.STRING, ref config_file,
+            "Specify a configuration file." },
+        { "exit-zero", 'z', 0, OptionArg.NONE, ref exit_with_zero,
+            "Always return a 0 (non-error) status code, even if lint errors are found." },
+        { "generate-config", 'g', 0, OptionArg.NONE, ref generate_config_file,
+            "Generate a sample configuration file with default values." },
         { null }
     };
 
@@ -52,10 +66,9 @@ public class ValaLint.Application : GLib.Application {
 
     private int handle_command_line (ApplicationCommandLine command_line) {
         string[] args = command_line.get_arguments ();
-        string*[] _args = new string[args.length];
 
         if (args.length == 1) {
-            _args = { args[0], "-d", "." };
+            args = { args[0], "-d", "." };
         }
 
         unowned string[] tmp = args;
@@ -77,6 +90,12 @@ public class ValaLint.Application : GLib.Application {
             return 0;
         }
 
+        if (generate_config_file) {
+            var default_config = ValaLint.Config.get_default_config ();
+            command_line.print (default_config.to_data ());
+            return 0;
+        }
+
         this.application_command_line = command_line;
 
         /* 1. Get list of files */
@@ -92,7 +111,10 @@ public class ValaLint.Application : GLib.Application {
             critical ("Error: %s\n", e.message);
         }
 
-        /* 2. Check files */
+        /* 2. Load config */
+        ValaLint.Config.load_file (config_file);
+
+        /* 3. Check files */
         var linter = new Linter ();
         var file_data_list = new Vala.ArrayList<FileData?> ();
         foreach (File file in files) {
@@ -104,12 +126,18 @@ public class ValaLint.Application : GLib.Application {
             }
         }
 
-        /* 3. Print mistakes */
+        /* 4. Print mistakes */
         print_mistakes (file_data_list);
 
+        if (exit_with_zero) {
+            return 0;
+        }
+
         foreach (FileData file_data in file_data_list) {
-            if (!file_data.mistakes.is_empty) {
-                return 1;
+            foreach (FormatMistake? mistake in file_data.mistakes) {
+                if (mistake.check.state == Config.State.ERROR) {
+                    return 1;
+                }
             }
         }
         return 0;

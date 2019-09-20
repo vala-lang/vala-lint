@@ -20,7 +20,6 @@
 class UnitTest : GLib.Object {
 
     public static int main (string[] args) {
-
         var block_parenthesis_check = new ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck ();
         assert_pass (block_parenthesis_check, "test () {");
         assert_warning (block_parenthesis_check, "test (){", 8, 9);

@@ -23,6 +23,8 @@ public class ValaLint.Checks.SpaceBeforeParenCheck : Check {
             title: _("space-before-paren"),
             description: _("Checks for a space before parenthesis.")
         );
+
+        state = Config.get_state (title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
