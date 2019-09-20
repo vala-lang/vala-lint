@@ -35,10 +35,10 @@ public class ValaLint.Config {
         default_config.set_string ("Checks", "double-semicolon", "error");
         default_config.set_string ("Checks", "double-spaces", "error");
         default_config.set_string ("Checks", "ellipsis", "error");
-        default_config.set_string ("Checks", "line-length", "error");
+        default_config.set_string ("Checks", "line-length", "warn");
         default_config.set_string ("Checks", "naming-convention", "error");
         default_config.set_string ("Checks", "no-space", "error");
-        default_config.set_string ("Checks", "note", "error");
+        default_config.set_string ("Checks", "note", "warn");
         default_config.set_string ("Checks", "space-before-paren", "error");
         default_config.set_string ("Checks", "use-of-tabs", "error");
         default_config.set_string ("Checks", "trailing-newlines", "error");
