@@ -85,6 +85,15 @@ You can disable a single or multiple errors on a given line by adding an inline 
 if(...) { // vala-lint=space-before-paren, line-length
 ```
 
+If you want to skip an entire file, you can use
+
+```vala
+// vala-lint=skip-file
+```
+
+at the beginning of the file.
+
+
 ### Docker and Continuous Integration
 Vala-Lint is primarily intended to be used in Continuous Integration (CI). It's available in a convenient, always up-to-date Docker container `valalang/lint:latest` hosted on Docker Hub.
 
