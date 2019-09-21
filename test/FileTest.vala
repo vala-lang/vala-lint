@@ -22,6 +22,7 @@ class FileTest : GLib.Object {
     public struct FileTestMistake {
         string title;
         int line;
+        string? message;
     }
 
     public static void check_file_for_mistake (File file, Vala.ArrayList<FileTestMistake?> mistake_list) {
@@ -38,6 +39,10 @@ class FileTest : GLib.Object {
             for (int i = 0; i < mistakes.size; i++) {
                 assert (mistakes[i].check.title == mistake_list[i].title);
                 assert (mistakes[i].begin.line == mistake_list[i].line);
+
+                if (mistake_list[i].message != null) {
+                    assert (mistakes[i].mistake == mistake_list[i].message);
+                }
             }
         } catch (Error e) {
             critical ("Error: %s while linting pass file %s\n", e.message, file.get_path ());
@@ -48,17 +53,22 @@ class FileTest : GLib.Object {
         var m_pass = new Vala.ArrayList<FileTestMistake?> ();
         check_file_for_mistake (File.new_for_path ("../test/files/pass.vala"), m_pass);
 
+        int line = 0; // So that new tests can be added without changing every number...
         var m_warnings = new Vala.ArrayList<FileTestMistake?> ();
-        m_warnings.add ({ "space-before-paren", 3 });
-        m_warnings.add ({ "no-space", 9 });
-        m_warnings.add ({ "double-semicolon", 10 });
-        m_warnings.add ({ "naming-convention", 11 });
-        m_warnings.add ({ "ellipsis", 13 });
-        m_warnings.add ({ "ellipsis", 14 });
-        m_warnings.add ({ "ellipsis", 15 });
-        m_warnings.add ({ "ellipsis", 15 });
-        m_warnings.add ({ "unnecessary-string-template", 17 });
-        m_warnings.add ({ "unnecessary-string-template", 18 });
+        m_warnings.add ({ "naming-convention", line += 4 });
+        m_warnings.add ({ "space-before-paren", line += 2 });
+        m_warnings.add ({ "note", line += 1, "TODO" });
+        m_warnings.add ({ "note", line += 1, "TODO: Lorem ipsum" });
+        m_warnings.add ({ "no-space", line += 5 });
+        m_warnings.add ({ "double-semicolon", line += 1 });
+        m_warnings.add ({ "naming-convention", line += 1 });
+        m_warnings.add ({ "ellipsis", line += 2 });
+        m_warnings.add ({ "ellipsis", line += 1 });
+        m_warnings.add ({ "ellipsis", line += 1 });
+        m_warnings.add ({ "ellipsis", line += 0 });
+        m_warnings.add ({ "unnecessary-string-template", line += 2 });
+        m_warnings.add ({ "unnecessary-string-template", line += 1 });
+        m_warnings.add ({ "trailing-newlines", line += 2 });
 
         check_file_for_mistake (File.new_for_path ("../test/files/warnings.vala"), m_warnings);
 
