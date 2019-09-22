@@ -23,7 +23,6 @@ public class ValaLint.Application : GLib.Application {
     private static bool print_version = false;
     private static bool exit_with_zero = false;
     private static bool generate_config_file = false;
-    private static string? lint_directory = null;
     private static File? lint_directory_file = null;
     private static string? config_file = null;
 
@@ -33,8 +32,6 @@ public class ValaLint.Application : GLib.Application {
     private const OptionEntry[] OPTIONS = {
         { "version", 'v', 0, OptionArg.NONE, ref print_version,
             "Display version number" },
-        { "directory", 'd', 0, OptionArg.STRING, ref lint_directory,
-            "Lint all Vala files in the given directory." },
         { "config", 'c', 0, OptionArg.STRING, ref config_file,
             "Specify a configuration file." },
         { "exit-zero", 'z', 0, OptionArg.NONE, ref exit_with_zero,
@@ -64,7 +61,7 @@ public class ValaLint.Application : GLib.Application {
         string[] args = command_line.get_arguments ();
 
         if (args.length == 1) {
-            args = { args[0], "-d", "." };
+            args = { args[0], "." };
         }
 
         unowned string[] tmp = args;
@@ -96,12 +93,7 @@ public class ValaLint.Application : GLib.Application {
         /* 1. Get list of files */
         var files = new Vala.ArrayList<File> ();
         try {
-            if (lint_directory != null) {
-                lint_directory_file = File.new_for_path (lint_directory);
-                files = get_files_from_directory (lint_directory_file);
-            } else {
-                files = get_files_from_globs (command_line, tmp);
-            }
+            files = get_files (command_line, tmp);
         } catch (Error e) {
             critical ("Error: %s\n", e.message);
         }
@@ -138,26 +130,32 @@ public class ValaLint.Application : GLib.Application {
         return 0;
     }
 
-    Vala.ArrayList<File> get_files_from_globs (ApplicationCommandLine command_line,
-                                               string[] patterns) throws Error, IOError {
+    Vala.ArrayList<File> get_files (ApplicationCommandLine command_line, string[] patterns) throws Error, IOError {
         var files = new Vala.ArrayList<File> ();
         foreach (string pattern in patterns) {
             var matcher = Posix.Glob ();
 
             if (matcher.glob (pattern) != 0) {
                 command_line.print (_("No files found for pattern: %s") + "\n", pattern);
-                return files;
+                continue;
             }
 
             foreach (string path in matcher.pathv) {
                 File file = File.new_for_path (path);
                 FileType file_type = file.query_file_type (FileQueryInfoFlags.NONE);
 
-                if (file_type != FileType.REGULAR) {
-                    continue;
-                }
+                switch (file_type) {
+                    case FileType.REGULAR:
+                        files.add (file);
+                        break;
 
-                files.add (file);
+                    case FileType.DIRECTORY:
+                        files.add_all (get_files_from_directory (file));
+                        break;
+
+                    default:
+                        break;
+                }
             }
         }
         return files;
