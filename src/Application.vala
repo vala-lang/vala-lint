@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2016-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -21,8 +21,10 @@
 
 public class ValaLint.Application : GLib.Application {
     private static bool print_version = false;
+    private static bool print_mistakes_end = false;
     private static bool exit_with_zero = false;
     private static bool generate_config_file = false;
+
     private static string? lint_directory = null;
     private static File? lint_directory_file = null;
     private static string? config_file = null;
@@ -35,6 +37,8 @@ public class ValaLint.Application : GLib.Application {
             "Display version number" },
         { "directory", 'd', 0, OptionArg.STRING, ref lint_directory,
             "Lint all Vala files in the given directory." },
+        { "print-end", 'e', 0, OptionArg.NONE, ref print_mistakes_end,
+            "Show end of mistakes" },
         { "config", 'c', 0, OptionArg.STRING, ref config_file,
             "Specify a configuration file." },
         { "exit-zero", 'z', 0, OptionArg.NONE, ref exit_with_zero,
@@ -73,6 +77,7 @@ public class ValaLint.Application : GLib.Application {
             var option_context = new OptionContext ("- Vala-Lint");
             option_context.set_help_enabled (true);
             option_context.add_main_entries (OPTIONS, null);
+
             option_context.parse (ref tmp);
         } catch (OptionError e) {
             command_line.print (_("Error: %s") + "\n", e.message);
@@ -197,13 +202,35 @@ public class ValaLint.Application : GLib.Application {
                 }
 
                 application_command_line.print ("\x001b[1m\x001b[4m" + "%s" + "\x001b[0m\n", path);
-
                 foreach (FormatMistake mistake in file_data.mistakes) {
-                    application_command_line.print ("\x001b[0m%5i.%-3i \x001b[1m%-40s   \x001b[0m%s\n",
+                    string color_state = "%-5s";
+                    string mistakes_end = "";
+                    if (print_mistakes_end) {
+                        mistakes_end = "-%5i.%-3i".printf (mistake.end.line, mistake.end.column);
+                    }
+
+                    switch (mistake.check.state) {
+                        case ERROR:
+                            color_state = "\033[1;31m" + color_state + "\033[0m"; // red
+                            break;
+
+                        case WARN:
+                            color_state = "\033[1;33m" + color_state + "\033[0m";  // yellow
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    application_command_line.print (
+                        "\x001b[0m%5i.%-3i %s  " + color_state + "   %-45s   \033[2m%s\033[0m\n",
                         mistake.begin.line,
                         mistake.begin.column,
+                        mistakes_end,
+                        mistake.check.state.to_string (),
                         mistake.mistake,
-                        mistake.check.title);
+                        mistake.check.title
+                    );
                 }
             }
         }
