@@ -52,7 +52,7 @@ class UnitTest : GLib.Object {
         assert_pass (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua."); // vala-lint=line-length
         // This is 70 characters but 140 bytes, it should still pass.
         assert_pass (line_length_check, "éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé");
-        assert_warning (line_length_check, "/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua consectetur */ aliqua.", 120, 132); // vala-lint=line-length
+        assert_pass (line_length_check, "/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore aliqua consectetur */ aliqua."); // vala-lint=line-length
         assert_warning (line_length_check, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", 120, 123); // vala-lint=line-length
 
         var naming_all_caps_check = new ValaLint.Checks.NamingAllCapsCheck ();
