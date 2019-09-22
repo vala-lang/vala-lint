@@ -36,7 +36,7 @@ you can lint every file in the current directory. Using the directory `d`-flag, 
 
     io.elementary.vala-lint -d ../my-project
 
-For all options, type `io.elementary.vala-lint -h`.
+To list all options, type `io.elementary.vala-lint -h`. Additional command line flags are: `--print-end` for printing not only the start but also the end of a mistake, and `--exit-zero` to always return a 0 (non-error) status code, even if lint mistakes are found.
 
 ### Configuration
 Using a configuration file, you can overwrite the default settings of vala-lint. It can be included via the `config`-option
