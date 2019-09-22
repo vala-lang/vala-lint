@@ -228,11 +228,6 @@ public class ValaLint.Application : GLib.Application {
                         mistake.begin.column,
                         mistakes_end,
                         mistake.check.state.to_string (),
-                    //  application_command_line.print (
-                    //      "\x001b[0m%5i.%-3i%s \x001b[1m%-40s   \x001b[0m%s\n",
-                    //      mistake.begin.line,
-                    //      mistake.begin.column,
-                    //      mistakes_end,
                         mistake.mistake,
                         mistake.check.title
                     );
