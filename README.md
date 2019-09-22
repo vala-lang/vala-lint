@@ -70,6 +70,7 @@ disable-by-inline-comments=true
 
 [line-length]
 max-line-length=120
+ignore-comments=true
 
 [note]
 keywords=TODO,FIXME

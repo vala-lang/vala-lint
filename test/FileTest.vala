@@ -68,6 +68,8 @@ class FileTest : GLib.Object {
         m_warnings.add ({ "ellipsis", line += 0 });
         m_warnings.add ({ "unnecessary-string-template", line += 2 });
         m_warnings.add ({ "unnecessary-string-template", line += 1 });
+        m_warnings.add ({ "line-length", line += 2 });
+        m_warnings.add ({ "line-length", line += 1 });
         m_warnings.add ({ "trailing-newlines", line += 2 });
 
         check_file_for_mistake (File.new_for_path ("../test/files/warnings.vala"), m_warnings);
