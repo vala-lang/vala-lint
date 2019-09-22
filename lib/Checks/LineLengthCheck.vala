@@ -50,20 +50,20 @@ public class ValaLint.Checks.LineLengthCheck : Check {
                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
         string line = "";
         foreach (ParseResult r in parse_result) {
-            if (r.type == ParseType.COMMENT && ignore_comments) {
-                continue;
-            }
-
             var text_split = r.text.split ("\n");
             for (int i = 0; i < text_split.length - 1; i++) {
-                line += text_split[i];
+                if (r.type != ParseType.COMMENT || !ignore_comments) {
+                    line += text_split[i];
+                }
 
                 check_line (line, r.begin.line + i, ref mistake_list);
 
                 line = "";
             }
 
-            line += text_split[text_split.length - 1];
+            if (r.type != ParseType.COMMENT || !ignore_comments) {
+                line += text_split[text_split.length - 1];
+            }
         }
 
         var r = parse_result.last ();
