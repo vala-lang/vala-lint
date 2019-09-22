@@ -202,18 +202,32 @@ public class ValaLint.Application : GLib.Application {
                 }
 
                 application_command_line.print ("\x001b[1m\x001b[4m" + "%s" + "\x001b[0m\n", path);
-
                 foreach (FormatMistake mistake in file_data.mistakes) {
+                    string color_state = "%-5s";
                     string mistakes_end = "";
                     if (print_mistakes_end) {
-                        mistakes_end = "-%4i.%-5i".printf (mistake.end.line, mistake.end.column);
+                        mistakes_end = "-%5i.%-3i".printf (mistake.end.line, mistake.end.column);
+                    }
+
+                    switch (mistake.check.state) {
+                        case ERROR:
+                            color_state = "\033[1;31m" + color_state + "\033[0m"; // red
+                            break;
+
+                        case WARN:
+                            color_state = "\033[1;33m" + color_state + "\033[0m";  // yellow
+                            break;
+
+                        default:
+                            break;
                     }
 
                     application_command_line.print (
-                        "\x001b[0m%5i.%-3i%s \x001b[1m%-40s   \x001b[0m%s\n",
+                        "\x001b[0m%5i.%-3i %s  " + color_state + "   %-45s   \033[2m%s\033[0m\n",
                         mistake.begin.line,
                         mistake.begin.column,
                         mistakes_end,
+                        mistake.check.state.to_string (),
                         mistake.mistake,
                         mistake.check.title
                     );
