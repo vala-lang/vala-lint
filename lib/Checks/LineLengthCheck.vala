@@ -21,6 +21,7 @@ public class ValaLint.Checks.LineLengthCheck : Check {
     const string MESSAGE = "Line exceeds limit of %d characters (currently %d characters)";
 
     public int maximum_characters { get; set; }
+    public bool ignore_comments { get; set; }
 
     public LineLengthCheck () {
         Object (
@@ -30,26 +31,42 @@ public class ValaLint.Checks.LineLengthCheck : Check {
 
         state = Config.get_state (title);
         maximum_characters = Config.get_integer (title, "max-line-length");
+        ignore_comments = Config.get_boolean (title, "ignore-comments");
+    }
+
+    public void check_line (string line, int line_count, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        int line_length = line.char_count ();
+        if (line_length > maximum_characters) {
+            string formatted_message = MESSAGE.printf (maximum_characters, line_length);
+
+            var pos = (char *)line;
+            var begin = Vala.SourceLocation (pos + maximum_characters, line_count, maximum_characters);
+            var end = Vala.SourceLocation (pos + line_length, line_count, line_length);
+            add_mistake ({ this, begin, end, formatted_message }, ref mistake_list);
+        }
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
-        string input = "";
+        string line = "";
         foreach (ParseResult r in parse_result) {
-            input += r.text;
-        }
+            var text_split = r.text.split ("\n");
+            for (int i = 0; i < text_split.length - 1; i++) {
+                if (r.type != ParseType.COMMENT || !ignore_comments) {
+                    line += text_split[i];
+                }
 
-        int line_counter = 1;
-        foreach (string line in input.split ("\n")) {
-            if (line.char_count () > maximum_characters) {
-                int line_length = line.char_count ();
-                string formatted_message = MESSAGE.printf (maximum_characters, line_length);
+                check_line (line, r.begin.line + i, ref mistake_list);
 
-                var begin = Vala.SourceLocation ((char *)line + maximum_characters, line_counter, maximum_characters);
-                var end = Vala.SourceLocation ((char *)line + line_length, line_counter, line_length);
-                add_mistake ({ this, begin, end, formatted_message }, ref mistake_list);
+                line = "";
             }
-            line_counter += 1;
+
+            if (r.type != ParseType.COMMENT || !ignore_comments) {
+                line += text_split[text_split.length - 1];
+            }
         }
+
+        var r = parse_result.last ();
+        check_line (line, r.begin.line, ref mistake_list);
     }
 }

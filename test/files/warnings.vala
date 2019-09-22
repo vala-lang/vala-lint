@@ -18,5 +18,8 @@ class FileTest : GLib.Object {
 
         var empty_string_template = @"";
         var content_string_template = @"Lorem ipsum";
+
+        string this_is_a_very_long_variable_name_to_get_over_the_120_character_line_length_limit = "lorem ipsum dolor amet test"; // despite the comment
+        string this_is_a_very_long_variable_name_to_get_over_the_120_character_line_with_comment /* with comment */ = "lorem ipsum dolor amet test"; // and comment here
     }
 }
