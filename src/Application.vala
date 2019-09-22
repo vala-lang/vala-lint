@@ -204,25 +204,19 @@ public class ValaLint.Application : GLib.Application {
                 application_command_line.print ("\x001b[1m\x001b[4m" + "%s" + "\x001b[0m\n", path);
 
                 foreach (FormatMistake mistake in file_data.mistakes) {
+                    string mistakes_end = "";
                     if (print_mistakes_end) {
-                        application_command_line.print (
-                            "\x001b[0m%5i.%-4i-%4i.%-5i \x001b[1m%-40s   \x001b[0m%s\n",
-                            mistake.begin.line,
-                            mistake.begin.column,
-                            mistake.end.line,
-                            mistake.end.column,
-                            mistake.mistake,
-                            mistake.check.title
-                        );
-                    } else {
-                        application_command_line.print (
-                            "\x001b[0m%5i.%-3i \x001b[1m%-40s   \x001b[0m%s\n",
-                            mistake.begin.line,
-                            mistake.begin.column,
-                            mistake.mistake,
-                            mistake.check.title
-                        );
+                        mistakes_end = "-%4i.%-5i".printf (mistake.end.line, mistake.end.column);
                     }
+
+                    application_command_line.print (
+                        "\x001b[0m%5i.%-3i%s \x001b[1m%-40s   \x001b[0m%s\n",
+                        mistake.begin.line,
+                        mistake.begin.column,
+                        mistakes_end,
+                        mistake.mistake,
+                        mistake.check.title
+                    );
                 }
             }
         }
