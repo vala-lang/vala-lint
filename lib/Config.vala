@@ -61,6 +61,7 @@ public class ValaLint.Config {
         default_config.set_boolean ("Disabler", "disable-by-inline-comments", true);
 
         default_config.set_double ("line-length", "max-line-length", 120);
+        default_config.set_boolean ("line-length", "ignore-comments", true);
 
         default_config.set_string_list ("note", "keywords", {"TODO", "FIXME"});
 
