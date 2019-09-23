@@ -260,7 +260,8 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_expression (Vala.Expression expr) {
-        expr.accept_children (this);
+        // Expression is an abstract class
+        // expr.accept_children (this);
     }
 
     public override void visit_array_creation_expression (Vala.ArrayCreationExpression expr) {
@@ -372,8 +373,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     public override void visit_binary_expression (Vala.BinaryExpression expr) {
         no_space_check.check_binary_expression (expr, ref mistake_list);
 
-        // Can hang linter on many recursive binary expressions
-        // expr.accept_children (this);
+        expr.accept_children (this);
     }
 
     public override void visit_type_check (Vala.TypeCheck expr) {
@@ -395,7 +395,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_end_full_expression (Vala.Expression expr) {
-        expr.accept_children (this);
+        // expr.accept_children (this);
     }
 
     private static Vala.ArrayList<ParseResult?> string_parsed (string? text, Vala.SourceReference source_ref) {
