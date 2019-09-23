@@ -32,10 +32,10 @@ public class ValaLint.Checks.IndentationCheck : Check {
 
     }
 
-    public void check_block (Vala.Block b,
+    public void check_block (Vala.Block b, int level,
                             ref Vala.ArrayList<FormatMistake?> mistake_list) {
 
-        int indent_counter = 1;
+        /* int indent_counter = 1;
         Vala.CodeNode node = b.parent_node;
         while (node != null) {
             if (node is Vala.Block
@@ -69,6 +69,6 @@ public class ValaLint.Checks.IndentationCheck : Check {
             if (indent != indent_should) {
                 add_mistake ({ this, first_character, begin_line, @"Indentation is $indent but should $indent_should" }, ref mistake_list);
             }
-        }
+        } */
     }
 }

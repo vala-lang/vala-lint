@@ -18,6 +18,8 @@
  */
 
 class ValaLint.Visitor : Vala.CodeVisitor {
+    private int level = 0;
+    
     public Vala.ArrayList<FormatMistake?> mistake_list;
 
     public Vala.ArrayList<Check> checks { get; set; }
@@ -150,7 +152,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_block (Vala.Block b) {
-        indentation_check.check_block (b, ref mistake_list);
+        indentation_check.check_block (b, level, ref mistake_list);
 
         b.accept_children (this);
     }
