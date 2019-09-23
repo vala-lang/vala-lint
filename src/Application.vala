@@ -32,15 +32,15 @@ public class ValaLint.Application : GLib.Application {
 
     private const OptionEntry[] OPTIONS = {
         { "version", 'v', 0, OptionArg.NONE, ref print_version,
-            _("Display version number.") },
+            "Display version number." },
         { "print-end", 'e', 0, OptionArg.NONE, ref print_mistakes_end,
-            _("Show end of mistakes.") },
+            "Show end of mistakes." },
         { "config", 'c', 0, OptionArg.STRING, ref config_file,
-            _("Specify a configuration file.") },
+            "Specify a configuration file." },
         { "exit-zero", 'z', 0, OptionArg.NONE, ref exit_with_zero,
-            _("Always return a 0 (non-error) status code, even if lint errors are found.") },
+            "Always return a 0 (non-error) status code, even if lint errors are found." },
         { "generate-config", 'g', 0, OptionArg.NONE, ref generate_config_file,
-            _("Generate a sample configuration file with default values.") },
+            "Generate a sample configuration file with default values." },
         { null }
     };
 
