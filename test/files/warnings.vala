@@ -1,6 +1,7 @@
 // vala-lint=skip-file
 
 class FileTest : GLib.Object {
+    const int underscore_constant = 3;
 
     public static int main(string[] args) {
         test (); // TODO
@@ -11,6 +12,7 @@ class FileTest : GLib.Object {
 
     public void test (string a,string b) {
         int number_of_semicolons = 2;;
+        int NUMBER_ALL_CAPS = 3;
 
         var single_ellipsis = "...";
         var double_ellipsis_single_mistake = "......";
