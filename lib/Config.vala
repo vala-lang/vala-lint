@@ -23,7 +23,20 @@ public class ValaLint.Config {
     public enum State {
         ERROR,
         WARN,
-        OFF,
+        OFF;
+
+        public string to_string () {
+            switch (this) {
+                case ERROR:
+                    return "error";
+
+                case WARN:
+                    return "warn";
+
+                default:
+                    return "off";
+            }
+        }
     }
 
     public static KeyFile get_default_config () {
@@ -31,23 +44,24 @@ public class ValaLint.Config {
 
         default_config.set_list_separator (',');
 
-        default_config.set_string ("Checks", "block-opening-brace-space-before", "error");
-        default_config.set_string ("Checks", "double-semicolon", "error");
-        default_config.set_string ("Checks", "double-spaces", "error");
-        default_config.set_string ("Checks", "ellipsis", "error");
-        default_config.set_string ("Checks", "line-length", "error");
-        default_config.set_string ("Checks", "naming-convention", "error");
-        default_config.set_string ("Checks", "no-space", "error");
-        default_config.set_string ("Checks", "note", "error");
-        default_config.set_string ("Checks", "space-before-paren", "error");
-        default_config.set_string ("Checks", "use-of-tabs", "error");
-        default_config.set_string ("Checks", "trailing-newlines", "error");
-        default_config.set_string ("Checks", "trailing-whitespace", "error");
-        default_config.set_string ("Checks", "unnecessary-string-template", "error");
+        default_config.set_string ("Checks", "block-opening-brace-space-before", State.ERROR.to_string ());
+        default_config.set_string ("Checks", "double-semicolon", State.ERROR.to_string ());
+        default_config.set_string ("Checks", "double-spaces", State.ERROR.to_string ());
+        default_config.set_string ("Checks", "ellipsis", State.ERROR.to_string ());
+        default_config.set_string ("Checks", "line-length", State.WARN.to_string ());
+        default_config.set_string ("Checks", "naming-convention", State.ERROR.to_string ());
+        default_config.set_string ("Checks", "no-space", State.ERROR.to_string ());
+        default_config.set_string ("Checks", "note", State.WARN.to_string ());
+        default_config.set_string ("Checks", "space-before-paren", State.ERROR.to_string ());
+        default_config.set_string ("Checks", "use-of-tabs", State.ERROR.to_string ());
+        default_config.set_string ("Checks", "trailing-newlines", State.ERROR.to_string ());
+        default_config.set_string ("Checks", "trailing-whitespace", State.ERROR.to_string ());
+        default_config.set_string ("Checks", "unnecessary-string-template", State.ERROR.to_string ());
 
         default_config.set_boolean ("Disabler", "disable-by-inline-comments", true);
 
         default_config.set_double ("line-length", "max-line-length", 120);
+        default_config.set_boolean ("line-length", "ignore-comments", true);
 
         default_config.set_string_list ("note", "keywords", {"TODO", "FIXME"});
 

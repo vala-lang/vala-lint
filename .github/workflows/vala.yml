@@ -24,4 +24,4 @@ jobs:
       run: ninja test -C build
 
     - name: Lint
-      run: ./build/src/io.elementary.vala-lint -d .
+      run: ./build/src/io.elementary.vala-lint

@@ -41,7 +41,7 @@ or specify particular files via
     io.elementary.vala-lint ../my-project/test/unit-test.vala
     io.elementary.vala-lint ../my-project/test/*-test.vala
 
-For all options, type `io.elementary.vala-lint -h`.
+To list all options, type `io.elementary.vala-lint -h`. Additional command line flags are: `--print-end` for printing not only the start but also the end of a mistake, and `--exit-zero` to always return a 0 (non-error) status code, even if lint mistakes are found.
 
 ### Configuration
 Using a configuration file, you can overwrite the default settings of vala-lint. It can be included via the `config`-option
@@ -75,6 +75,7 @@ disable-by-inline-comments=true
 
 [line-length]
 max-line-length=120
+ignore-comments=true
 
 [note]
 keywords=TODO,FIXME

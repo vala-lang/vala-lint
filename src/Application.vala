@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2016-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -20,18 +20,21 @@
  */
 
 public class ValaLint.Application : GLib.Application {
+    private const string VERSION = "0.1";
+
     private static bool print_version = false;
+    private static bool print_mistakes_end = false;
     private static bool exit_with_zero = false;
     private static bool generate_config_file = false;
-    private static File? current_directory_file = null;
     private static string? config_file = null;
-
 
     private ApplicationCommandLine application_command_line;
 
     private const OptionEntry[] OPTIONS = {
         { "version", 'v', 0, OptionArg.NONE, ref print_version,
             "Display version number" },
+        { "print-end", 'e', 0, OptionArg.NONE, ref print_mistakes_end,
+            "Show end of mistakes" },
         { "config", 'c', 0, OptionArg.STRING, ref config_file,
             "Specify a configuration file." },
         { "exit-zero", 'z', 0, OptionArg.NONE, ref exit_with_zero,
@@ -70,6 +73,7 @@ public class ValaLint.Application : GLib.Application {
             var option_context = new OptionContext ("- Vala-Lint");
             option_context.set_help_enabled (true);
             option_context.add_main_entries (OPTIONS, null);
+
             option_context.parse (ref tmp);
         } catch (OptionError e) {
             command_line.print (_("Error: %s") + "\n", e.message);
@@ -78,7 +82,7 @@ public class ValaLint.Application : GLib.Application {
         }
 
         if (print_version) {
-            command_line.print(_("Version: %s") + "\n", 0.1);
+            command_line.print (_("Version: %s") + "\n", VERSION);
             return 0;
         }
 
@@ -93,7 +97,7 @@ public class ValaLint.Application : GLib.Application {
         /* 1. Get list of files */
         var file_data_list = new Vala.ArrayList<FileData?> ();
         try {
-            file_data_list = get_files (command_line, tmp);
+            file_data_list = get_files (command_line, tmp[1:tmp.length]);
         } catch (Error e) {
             critical ("Error: %s\n", e.message);
         }
@@ -103,14 +107,10 @@ public class ValaLint.Application : GLib.Application {
 
         /* 3. Check files */
         var linter = new Linter ();
-        //  foreach (FileData data in file_data_list) {
-        for (int i = 0; i < file_data_list.size; i++) {
-            var data = file_data_list[i];
-
+        foreach (FileData data in file_data_list) {
             try {
-                print ("%s\n", data.file.get_path());
-                file_data_list[i].mistakes = linter.run_checks_for_file (data.file);
-                print ("%d\n", file_data_list[i].mistakes.size);
+                var mistakes = linter.run_checks_for_file (data.file);
+                data.mistakes.add_all (mistakes);
             } catch (Error e) {
                 critical (_("Error: %s while linting file %s") + "\n", e.message, data.file.get_path ());
             }
@@ -135,6 +135,7 @@ public class ValaLint.Application : GLib.Application {
 
     Vala.ArrayList<FileData?> get_files (ApplicationCommandLine command_line, string[] patterns) throws Error, IOError {
         var result = new Vala.ArrayList<FileData?> ();
+
         foreach (string pattern in patterns) {
             var matcher = Posix.Glob ();
 
@@ -149,12 +150,13 @@ public class ValaLint.Application : GLib.Application {
 
                 switch (file_type) {
                     case FileType.REGULAR:
-                        result.add ({ file, null, new Vala.ArrayList<FormatMistake?> () });
+                        result.add ({ file, path, new Vala.ArrayList<FormatMistake?> () });
                         break;
 
                     case FileType.DIRECTORY:
                         foreach (File f in get_files_from_directory (file)) {
-                            result.add ({ f, null, new Vala.ArrayList<FormatMistake?> () });
+                            string name = path + file.get_relative_path (f);
+                            result.add ({ f, name, new Vala.ArrayList<FormatMistake?> () });
                         }
                         break;
 
@@ -180,7 +182,7 @@ public class ValaLint.Application : GLib.Application {
                 }
             } else if (info.get_file_type () == FileType.REGULAR) {
                 /* Check only .vala files */
-                if (child_name.length > 5 && child_name.has_suffix (".vala")) {
+                if (child_name.has_suffix (".vala")) {
                     files.add (child_file);
                 }
             }
@@ -192,21 +194,36 @@ public class ValaLint.Application : GLib.Application {
     void print_mistakes (Vala.ArrayList<FileData?> file_data_list) {
         foreach (FileData file_data in file_data_list) {
             if (!file_data.mistakes.is_empty) {
-                string path = "";
-                if (file_data.base_directory != null) {
-                    path = file_data.base_directory.get_relative_path (file_data.file);
-                } else {
-                    path = file_data.file.get_path ();
-                }
-
-                application_command_line.print ("\x001b[1m\x001b[4m" + "%s" + "\x001b[0m\n", path);
-
+                application_command_line.print ("\x001b[1m\x001b[4m" + "%s" + "\x001b[0m\n", file_data.name);
                 foreach (FormatMistake mistake in file_data.mistakes) {
-                    application_command_line.print ("\x001b[0m%5i.%-3i \x001b[1m%-40s   \x001b[0m%s\n",
+                    string color_state = "%-5s";
+                    string mistakes_end = "";
+                    if (print_mistakes_end) {
+                        mistakes_end = "-%5i.%-3i".printf (mistake.end.line, mistake.end.column);
+                    }
+
+                    switch (mistake.check.state) {
+                        case ERROR:
+                            color_state = "\033[1;31m" + color_state + "\033[0m"; // red
+                            break;
+
+                        case WARN:
+                            color_state = "\033[1;33m" + color_state + "\033[0m";  // yellow
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    application_command_line.print (
+                        "\x001b[0m%5i.%-3i %s  " + color_state + "   %-45s   \033[2m%s\033[0m\n",
                         mistake.begin.line,
                         mistake.begin.column,
+                        mistakes_end,
+                        mistake.check.state.to_string (),
                         mistake.mistake,
-                        mistake.check.title);
+                        mistake.check.title
+                    );
                 }
             }
         }
