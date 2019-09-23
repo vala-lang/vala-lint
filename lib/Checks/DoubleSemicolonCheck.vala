@@ -45,7 +45,7 @@ public class ValaLint.Checks.DoubleSemicolonCheck : Check {
             var begin = Utils.shift_location (reference, offset + 2);
             var end = Utils.shift_location (begin, 1);
 
-            add_mistake ({ this, begin, end, "Unnecessary semicolon" }, ref mistake_list);
+            add_mistake ({ this, begin, end, _("Unnecessary semicolon") }, ref mistake_list);
         }
     }
 }
