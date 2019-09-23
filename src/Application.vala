@@ -23,7 +23,7 @@ public class ValaLint.Application : GLib.Application {
     private static bool print_version = false;
     private static bool exit_with_zero = false;
     private static bool generate_config_file = false;
-    private static File? lint_directory_file = null;
+    private static File? current_directory_file = null;
     private static string? config_file = null;
 
 
@@ -78,7 +78,7 @@ public class ValaLint.Application : GLib.Application {
         }
 
         if (print_version) {
-            command_line.print (_("Version: %s") + "\n", 0.1);
+            command_line.print(_("Version: %s") + "\n", 0.1);
             return 0;
         }
 
@@ -91,9 +91,9 @@ public class ValaLint.Application : GLib.Application {
         this.application_command_line = command_line;
 
         /* 1. Get list of files */
-        var files = new Vala.ArrayList<File> ();
+        var file_data_list = new Vala.ArrayList<FileData?> ();
         try {
-            files = get_files (command_line, tmp);
+            file_data_list = get_files (command_line, tmp);
         } catch (Error e) {
             critical ("Error: %s\n", e.message);
         }
@@ -103,13 +103,16 @@ public class ValaLint.Application : GLib.Application {
 
         /* 3. Check files */
         var linter = new Linter ();
-        var file_data_list = new Vala.ArrayList<FileData?> ();
-        foreach (File file in files) {
+        //  foreach (FileData data in file_data_list) {
+        for (int i = 0; i < file_data_list.size; i++) {
+            var data = file_data_list[i];
+
             try {
-                Vala.ArrayList<FormatMistake?> mistakes = linter.run_checks_for_file (file);
-                file_data_list.add ({ file, mistakes });
+                print ("%s\n", data.file.get_path());
+                file_data_list[i].mistakes = linter.run_checks_for_file (data.file);
+                print ("%d\n", file_data_list[i].mistakes.size);
             } catch (Error e) {
-                critical ("Error: %s while linting file %s\n", e.message, file.get_path ());
+                critical (_("Error: %s while linting file %s") + "\n", e.message, data.file.get_path ());
             }
         }
 
@@ -130,8 +133,8 @@ public class ValaLint.Application : GLib.Application {
         return 0;
     }
 
-    Vala.ArrayList<File> get_files (ApplicationCommandLine command_line, string[] patterns) throws Error, IOError {
-        var files = new Vala.ArrayList<File> ();
+    Vala.ArrayList<FileData?> get_files (ApplicationCommandLine command_line, string[] patterns) throws Error, IOError {
+        var result = new Vala.ArrayList<FileData?> ();
         foreach (string pattern in patterns) {
             var matcher = Posix.Glob ();
 
@@ -146,11 +149,13 @@ public class ValaLint.Application : GLib.Application {
 
                 switch (file_type) {
                     case FileType.REGULAR:
-                        files.add (file);
+                        result.add ({ file, null, new Vala.ArrayList<FormatMistake?> () });
                         break;
 
                     case FileType.DIRECTORY:
-                        files.add_all (get_files_from_directory (file));
+                        foreach (File f in get_files_from_directory (file)) {
+                            result.add ({ f, null, new Vala.ArrayList<FormatMistake?> () });
+                        }
                         break;
 
                     default:
@@ -158,7 +163,7 @@ public class ValaLint.Application : GLib.Application {
                 }
             }
         }
-        return files;
+        return result;
     }
 
     Vala.ArrayList<File> get_files_from_directory (File dir) throws Error, IOError {
@@ -188,8 +193,8 @@ public class ValaLint.Application : GLib.Application {
         foreach (FileData file_data in file_data_list) {
             if (!file_data.mistakes.is_empty) {
                 string path = "";
-                if (lint_directory_file != null) {
-                    path = lint_directory_file.get_relative_path (file_data.file);
+                if (file_data.base_directory != null) {
+                    path = file_data.base_directory.get_relative_path (file_data.file);
                 } else {
                     path = file_data.file.get_path ();
                 }
