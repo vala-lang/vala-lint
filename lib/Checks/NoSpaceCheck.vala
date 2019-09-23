@@ -61,7 +61,7 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
                     var begin = Utils.shift_location (reference, offset + 1);
                     var end = Utils.shift_location (begin, 1);
 
-                    add_mistake ({ this, begin, end, "Missing whitespace" }, ref mistake_list);
+                    add_mistake ({ this, begin, end, _("Expected a whitespace in between") }, ref mistake_list);
                 }
             }
         }
@@ -75,7 +75,7 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
             var begin = Utils.shift_location (expr.left.source_reference.end, 1);
             var end = Utils.shift_location (begin, 1);
 
-            add_mistake ({ this, begin, end, "Missing whitespace" }, ref mistake_list);
+            add_mistake ({ this, begin, end, _("Expected spaces around operators") }, ref mistake_list);
         }
 
         char* char_after = expr.right.source_reference.begin.pos - 1;
@@ -83,7 +83,7 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
             var begin = expr.right.source_reference.begin;
             var end = Utils.shift_location (begin, 1);
 
-            add_mistake ({ this, begin, end, "Missing whitespace" }, ref mistake_list);
+            add_mistake ({ this, begin, end, _("Expected spaces around operators") }, ref mistake_list);
         }
     }
 }
