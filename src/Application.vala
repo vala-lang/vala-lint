@@ -32,15 +32,15 @@ public class ValaLint.Application : GLib.Application {
 
     private const OptionEntry[] OPTIONS = {
         { "version", 'v', 0, OptionArg.NONE, ref print_version,
-            "Display version number" },
+            _("Display version number.") },
         { "print-end", 'e', 0, OptionArg.NONE, ref print_mistakes_end,
-            "Show end of mistakes" },
+            _("Show end of mistakes.") },
         { "config", 'c', 0, OptionArg.STRING, ref config_file,
-            "Specify a configuration file." },
+            _("Specify a configuration file.") },
         { "exit-zero", 'z', 0, OptionArg.NONE, ref exit_with_zero,
-            "Always return a 0 (non-error) status code, even if lint errors are found." },
+            _("Always return a 0 (non-error) status code, even if lint errors are found.") },
         { "generate-config", 'g', 0, OptionArg.NONE, ref generate_config_file,
-            "Generate a sample configuration file with default values." },
+            _("Generate a sample configuration file with default values.") },
         { null }
     };
 
@@ -99,7 +99,7 @@ public class ValaLint.Application : GLib.Application {
         try {
             file_data_list = get_files (command_line, tmp[1:tmp.length]);
         } catch (Error e) {
-            critical ("Error: %s\n", e.message);
+            critical (_("Error: %s") + "\n", e.message);
         }
 
         /* 2. Load config */
@@ -195,6 +195,7 @@ public class ValaLint.Application : GLib.Application {
         foreach (FileData file_data in file_data_list) {
             if (!file_data.mistakes.is_empty) {
                 application_command_line.print ("\x001b[1m\x001b[4m" + "%s" + "\x001b[0m\n", file_data.name);
+
                 foreach (FormatMistake mistake in file_data.mistakes) {
                     string color_state = "%-5s";
                     string mistakes_end = "";
