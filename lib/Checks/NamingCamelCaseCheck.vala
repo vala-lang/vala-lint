@@ -23,10 +23,16 @@ public class ValaLint.Checks.NamingCamelCaseCheck : Check {
             title: _("naming-convention"),
             description: _("Checks for the camel case naming convention")
         );
+
+        state = Config.get_state (title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        if (state == Config.State.OFF) {
+            return;
+        }
+
         foreach (ParseResult r in parse_result) {
             add_regex_mistake ("""(^[a-z]|_)""", _("Expected variable name in CamelCaseConvention"), r,
                                ref mistake_list, r.text.length, 0, true);

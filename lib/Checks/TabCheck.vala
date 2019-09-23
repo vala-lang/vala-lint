@@ -20,10 +20,12 @@
 public class ValaLint.Checks.TabCheck : Check {
     public TabCheck () {
         Object (
-            single_mistake_in_line: true,
             title: _("use-of-tabs"),
-            description: _("Checks for tabs instead of spaces")
+            description: _("Checks for tabs instead of spaces"),
+            single_mistake_in_line: true
         );
+
+        state = Config.get_state (title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,

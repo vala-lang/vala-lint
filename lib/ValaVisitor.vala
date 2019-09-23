@@ -19,16 +19,16 @@
 
 class ValaLint.Visitor : Vala.CodeVisitor {
     private int level = 0;
-    
-    public Vala.ArrayList<FormatMistake?> mistake_list;
 
-    public Vala.ArrayList<Check> checks { get; set; }
+    public Vala.ArrayList<FormatMistake?> mistake_list;
 
     public Checks.DoubleSemicolonCheck double_semicolon_check;
     public Checks.IndentationCheck indentation_check;
+    public Checks.EllipsisCheck ellipsis_check;
     public Checks.NamingAllCapsCheck naming_all_caps_check;
     public Checks.NamingCamelCaseCheck naming_camel_case_check;
     public Checks.NamingUnderscoreCheck naming_underscore_check;
+    public Checks.UnnecessaryStringTemplateCheck unnecessary_string_template_check;
     public Checks.NoSpaceCheck no_space_check;
 
     public void set_mistake_list (Vala.ArrayList<FormatMistake?> mistake_list) {
@@ -47,23 +47,39 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_class (Vala.Class cl) {
+        level += 1;
+
         naming_camel_case_check.check (string_parsed (cl.name, cl.source_reference), ref mistake_list);
         cl.accept_children (this);
+
+        level -= 1;
     }
 
     public override void visit_struct (Vala.Struct st) {
+        level += 1;
+
         naming_camel_case_check.check (string_parsed (st.name, st.source_reference), ref mistake_list);
         st.accept_children (this);
+
+        level -= 1;
     }
 
     public override void visit_interface (Vala.Interface iface) {
+        level += 1;
+
         naming_camel_case_check.check (string_parsed (iface.name, iface.source_reference), ref mistake_list);
         iface.accept_children (this);
+
+        level -= 1;
     }
 
     public override void visit_enum (Vala.Enum en) {
+        level += 1;
+
         naming_camel_case_check.check (string_parsed (en.name, en.source_reference), ref mistake_list);
         en.accept_children (this);
+
+        level -= 1;
     }
 
     public override void visit_enum_value (Vala.EnumValue ev) {
@@ -106,11 +122,19 @@ class ValaLint.Visitor : Vala.CodeVisitor {
         //  m.get_error_types (error_types);
         //  no_space_check.check_list (error_types, ref mistake_list);
 
+        level += 1;
+
         m.accept_children (this);
+
+        level -= 1;
     }
 
     public override void visit_creation_method (Vala.CreationMethod m) {
+        level += 1;
+
         m.accept_children (this);
+
+        level -= 1;
     }
 
     public override void visit_formal_parameter (Vala.Parameter p) {
@@ -132,11 +156,19 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_constructor (Vala.Constructor c) {
+        level += 1;
+
         c.accept_children (this);
+
+        level -= 1;
     }
 
     public override void visit_destructor (Vala.Destructor d) {
+        level += 1;
+
         d.accept_children (this);
+
+        level -= 1;
     }
 
     public override void visit_type_parameter (Vala.TypeParameter p) {
@@ -152,9 +184,13 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_block (Vala.Block b) {
+        //  level += 1;
+
         indentation_check.check_block (b, level, ref mistake_list);
 
         b.accept_children (this);
+
+        //  level -= 1;
     }
 
     public override void visit_empty_statement (Vala.EmptyStatement stmt) {
@@ -183,7 +219,14 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_if_statement (Vala.IfStatement stmt) {
+        bool is_parent = (stmt.parent_node.parent_node is Vala.IfStatement);
+        // Check if else if statement
+        level += 1;
+        //  print ("%d %i\n", stmt.source_reference.begin.line, (int)is_parent);
+
         stmt.accept_children (this);
+
+        level -= 1;
     }
 
     public override void visit_switch_statement (Vala.SwitchStatement stmt) {
@@ -203,19 +246,35 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_while_statement (Vala.WhileStatement stmt) {
+        level += 1;
+
         stmt.accept_children (this);
+
+        level -= 1;
     }
 
     public override void visit_do_statement (Vala.DoStatement stmt) {
+        level += 1;
+
         stmt.accept_children (this);
+
+        level -= 1;
     }
 
     public override void visit_for_statement (Vala.ForStatement stmt) {
+        level += 1;
+
         stmt.accept_children (this);
+
+        level -= 1;
     }
 
     public override void visit_foreach_statement (Vala.ForeachStatement stmt) {
+        level += 1;
+
         stmt.accept_children (this);
+
+        level -= 1;
     }
 
     public override void visit_break_statement (Vala.BreakStatement stmt) {
@@ -245,7 +304,11 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_try_statement (Vala.TryStatement stmt) {
+        level += 1;
+
         stmt.accept_children (this);
+
+        level -= 1;
     }
 
     public override void visit_catch_clause (Vala.CatchClause clause) {
@@ -293,11 +356,12 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_string_literal (Vala.StringLiteral lit) {
-        // ellipsis_check.check (string_parsed (lit.value, lit.source_reference, ParseType.STRING), ref mistake_list);
+        ellipsis_check.check_string_literal (lit, ref mistake_list);
         lit.accept_children (this);
     }
 
     public override void visit_template (Vala.Template tmpl) {
+        unnecessary_string_template_check.check_template (tmpl, ref mistake_list);
         tmpl.accept_children (this);
     }
 
@@ -390,7 +454,11 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     public override void visit_lambda_expression (Vala.LambdaExpression expr) {
         no_space_check.check_list (expr.get_parameters (), ref mistake_list);
 
+        level += 1;
+
         expr.accept_children (this);
+
+        level -= 1;
     }
 
     public override void visit_assignment (Vala.Assignment a) {
@@ -401,11 +469,9 @@ class ValaLint.Visitor : Vala.CodeVisitor {
         expr.accept_children (this);
     }
 
-    private static Vala.ArrayList<ParseResult?> string_parsed (string? text, Vala.SourceReference source_ref,
-                                                               ParseType type = ParseType.DEFAULT,
-                                                               ParseDetailType detail_type = ParseDetailType.CODE) {
+    private static Vala.ArrayList<ParseResult?> string_parsed (string? text, Vala.SourceReference source_ref) {
         var parsed = new Vala.ArrayList<ParseResult?> ();
-        parsed.add ({ text == null ? "" : text, type, detail_type, source_ref.begin });
+        parsed.add ({ text == null ? "" : text, ParseType.DEFAULT, ParseDetailType.CODE, source_ref.begin });
         return parsed;
     }
 }

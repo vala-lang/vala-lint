@@ -1,5 +1,6 @@
 vala_linter_files = files(
     'Check.vala',
+    'Config.vala',
     'Disabler.vala',
     'FormatMistake.vala',
     'Linter.vala',
@@ -23,6 +24,7 @@ vala_linter_files = files(
     'Checks/TabCheck.vala',
     'Checks/TrailingNewlinesCheck.vala',
     'Checks/TrailingWhitespaceCheck.vala',
+    'Checks/UnnecessaryStringTemplateCheck.vala',
 )
 
 vala_linter_deps = [

@@ -1,12 +1,25 @@
+// vala-lint=skip-file
+
 class FileTest : GLib.Object {
 
-    public static int main(string[] args) { // vala-lint=space-before-paren
+    public static int main(string[] args) {
+        test (); // TODO
+        test (); // TODO: Lorem ipsum
 
         return 0;
     }
 
-    public void test (string a,string b) { // vala-lint=no-space
-        var a = 2;; // vala-lint=double-semicolon
+    public void test (string a,string b) {
+        int number_of_semicolons = 2;;
 
+        var single_ellipsis = "...";
+        var double_ellipsis_single_mistake = "......";
+        var double_ellipsis_double_mistake = "... lorem ...";
+
+        var empty_string_template = @"";
+        var content_string_template = @"Lorem ipsum";
+
+        string this_is_a_very_long_variable_name_to_get_over_the_120_character_line_length_limit = "lorem ipsum dolor amet test"; // despite the comment
+        string this_is_a_very_long_variable_name_to_get_over_the_120_character_line_with_comment /* with comment */ = "lorem ipsum dolor amet test"; // and comment here
     }
-} // vala-lint=trailing-newlines
+}

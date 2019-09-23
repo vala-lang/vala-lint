@@ -26,6 +26,7 @@ public struct ValaLint.DisableResult {
 
 public class ValaLint.Disabler : Object {
     const string DISABLE_KEY = "vala-lint=";
+    const string SKIP_FILE_KEY = "skip-file";
 
     /**
      * Parses a list of checks to disable at specific lines.
@@ -62,23 +63,20 @@ public class ValaLint.Disabler : Object {
      */
     public Vala.ArrayList<FormatMistake?> filter_mistakes (Vala.ArrayList<FormatMistake?> mistakes,
                                                            Vala.ArrayList<DisableResult?> disable_results) {
-        var result = new Vala.ArrayList<FormatMistake?> ();
+        // Skip mistakes of the entire file and return empty array if 'skip-file' tag exists
+        if (!disable_results.is_empty && disable_results.first ().check_title == SKIP_FILE_KEY) {
+            return new Vala.ArrayList<FormatMistake?> ();
+        }
 
-        foreach (FormatMistake m in mistakes) {
-            bool found_no_disabler = true;
+        return Utils.filter<FormatMistake?> (m => {
             foreach (DisableResult r in disable_results) {
                 /* Find mistakes with same title and line index */
                 if (m.check.title == r.check_title && m.begin.line == r.location.line) {
-                    found_no_disabler = false;
-                    break;
+                    return false;
                 }
             }
 
-            if (found_no_disabler) {
-                result.add (m);
-            }
-        }
-
-        return result;
+            return true;
+        }, mistakes);
     }
 }

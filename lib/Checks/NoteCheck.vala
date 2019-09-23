@@ -18,31 +18,35 @@
  */
 
 public class ValaLint.Checks.NoteCheck : Check {
-    const string[] KEYWORDS = {"FIXME", "TODO"};
+    public string[] keywords { get; set; }
 
     public NoteCheck () {
         Object (
-            single_mistake_in_line: true,
             title: _("note"),
-            description: _("Checks for notes (TODO, FIXME, etc.)")
+            description: _("Checks for notes (TODO, FIXME, etc.)"),
+            single_mistake_in_line: true
         );
+
+        state = Config.get_state (title);
+        keywords = Config.get_string_list (title, "keywords");
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
         foreach (ParseResult r in parse_result) {
             if (r.type == ParseType.COMMENT) {
-                foreach (string keyword in KEYWORDS) {
+                foreach (string keyword in keywords) {
                     int index = r.text.index_of (keyword);
                     if (index > 0) {
                         /* Get message of note */
                         int index_newline = r.text.index_of ("\n", index);
                         int index_end = (index_newline > -1) ? int.min (r.text.length, index_newline) : r.text.length;
-                        string message = r.text.slice (index + keyword.length + 1, index_end).strip ();
+                        string message = r.text.slice (index, index_end).strip ();
 
                         var begin = Utils.get_absolute_location (r.begin, r.text, index);
                         var end = Utils.get_absolute_location (r.begin, r.text, index_end);
-                        mistake_list.add ({ this, begin, end, @"$keyword: $message" });
+
+                        mistake_list.add ({ this, begin, end, message });
                     }
                 }
             }

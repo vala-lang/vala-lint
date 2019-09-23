@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2019 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -17,13 +17,13 @@
  * Boston, MA 02110-1301 USA.
  */
 
-public class ValaLint.Checks.EllipsisCheck : Check {
-    const string ELLIPSIS = "..."; // vala-lint=ellipsis
+public class ValaLint.Checks.UnnecessaryStringTemplateCheck : Check {
+    const string MESSAGE = _("String template can be simplified using a literal");
 
-    public EllipsisCheck () {
+    public UnnecessaryStringTemplateCheck () {
         Object (
-            title: _("ellipsis"),
-            description: _("Checks for ellipsis character instead of three periods")
+            title: _("unnecessary-string-template"),
+            description:_("Checks for templates that could be replaced by a string literal")
         );
 
         state = Config.get_state (title);
@@ -34,26 +34,13 @@ public class ValaLint.Checks.EllipsisCheck : Check {
 
     }
 
-    public void check_string_literal (Vala.StringLiteral lit, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+    public void check_template (Vala.Template tmpl, ref Vala.ArrayList<FormatMistake?> mistake_list) {
         if (state == Config.State.OFF) {
             return;
         }
 
-        var index = lit.value.index_of (ELLIPSIS);
-        while (index > -1) {
-            var begin = Utils.get_absolute_location (lit.source_reference.begin, lit.value, index);
-
-            // Find length and end of periods
-            var length = 0;
-            while (lit.value[index + length] == '.') {
-                length += 1;
-            }
-
-            var end = Utils.shift_location (begin, length);
-
-            add_mistake ({ this, begin, end, _("Expected ellipsis instead of periods") }, ref mistake_list);
-
-            index = lit.value.index_of (ELLIPSIS, index + length);
+        if (tmpl.get_expressions ().size <= 1) {
+            add_mistake ({ this, tmpl.source_reference.begin, tmpl.source_reference.end, MESSAGE }, ref mistake_list);
         }
     }
 }
