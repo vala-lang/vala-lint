@@ -35,7 +35,7 @@ public class ValaLint.Checks.NamingConventionCheck : Check {
     private bool name_is_invalid (string name) {
         unichar c;
         for (int i = 0; name.get_next_char (ref i, out c);) {
-            if (!c.isalpha () && c != '_') {
+            if (!(c.isalpha () || c.isdigit () || c == '_')) {
                 return true;
             }
         }

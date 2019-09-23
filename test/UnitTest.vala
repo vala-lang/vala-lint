@@ -62,6 +62,10 @@ class UnitTest : GLib.Object {
         );
         Assertion<Vala.Class>.pass (
             naming_convention_check.check_all_caps,
+            new Vala.Class ("LOREM100")
+        );
+        Assertion<Vala.Class>.pass (
+            naming_convention_check.check_all_caps,
             new Vala.Class ("LOREM_IPSUM")
         );
         Assertion<Vala.Class>.warning (
@@ -87,6 +91,10 @@ class UnitTest : GLib.Object {
         Assertion<Vala.Class>.pass (
             naming_convention_check.check_camel_case,
             new Vala.Class ("LoremIpsum")
+        );
+        Assertion<Vala.Class>.pass (
+            naming_convention_check.check_camel_case,
+            new Vala.Class ("LoremIpsumÄ12")
         );
         Assertion<Vala.Class>.pass (
             naming_convention_check.check_camel_case,
