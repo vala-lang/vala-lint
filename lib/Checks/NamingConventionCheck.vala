@@ -43,7 +43,7 @@ public class ValaLint.Checks.NamingConventionCheck : Check {
     }
 
     public void check_all_caps (Vala.Symbol symbol, ref Vala.ArrayList<FormatMistake?> mistake_list) {
-        if (state == Config.State.OFF) {
+        if (state == Config.State.OFF || symbol.name == null) {
             return;
         }
 
@@ -55,7 +55,7 @@ public class ValaLint.Checks.NamingConventionCheck : Check {
     }
 
     public void check_camel_case (Vala.Symbol symbol, ref Vala.ArrayList<FormatMistake?> mistake_list) {
-        if (state == Config.State.OFF) {
+        if (state == Config.State.OFF || symbol.name == null) {
             return;
         }
 
@@ -67,7 +67,7 @@ public class ValaLint.Checks.NamingConventionCheck : Check {
     }
 
     public void check_underscore (Vala.Symbol symbol, ref Vala.ArrayList<FormatMistake?> mistake_list) {
-        if (state == Config.State.OFF) {
+        if (state == Config.State.OFF || symbol.name == null) {
             return;
         }
 

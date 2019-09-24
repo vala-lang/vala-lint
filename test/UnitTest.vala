@@ -92,6 +92,10 @@ class UnitTest : GLib.Object {
             naming_convention_check.check_camel_case,
             new Vala.Class ("LoremIpsum")
         );
+        Assertion<Vala.Method>.pass (
+            naming_convention_check.check_camel_case,
+            new Vala.Method (null, new Vala.VoidType())
+        );
         Assertion<Vala.Class>.pass (
             naming_convention_check.check_camel_case,
             new Vala.Class ("LoremIpsumÄ12")
