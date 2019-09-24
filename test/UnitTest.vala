@@ -94,7 +94,7 @@ class UnitTest : GLib.Object {
         );
         Assertion<Vala.Method>.pass (
             naming_convention_check.check_camel_case,
-            new Vala.Method (null, new Vala.VoidType())
+            new Vala.Method (null, new Vala.VoidType ())
         );
         Assertion<Vala.Class>.pass (
             naming_convention_check.check_camel_case,
