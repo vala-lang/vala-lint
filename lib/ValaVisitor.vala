@@ -43,7 +43,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
         /* namespace name may be null */
         naming_camel_case_check.check (string_parsed (ns.name, ns.source_reference), ref mistake_list);
 
-        ns.accept_children (this);
+        //  ns.accept_children (this);
     }
 
     public override void visit_class (Vala.Class cl) {
@@ -184,13 +184,9 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_block (Vala.Block b) {
-        //  level += 1;
-
         indentation_check.check_block (b, level, ref mistake_list);
 
         b.accept_children (this);
-
-        //  level -= 1;
     }
 
     public override void visit_empty_statement (Vala.EmptyStatement stmt) {
@@ -219,22 +215,34 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_if_statement (Vala.IfStatement stmt) {
-        bool is_parent = (stmt.parent_node.parent_node is Vala.IfStatement);
-        // Check if else if statement
+        bool is_else_if = false;
+        if (stmt.parent_node.parent_node is Vala.IfStatement) {
+            Vala.IfStatement a = (Vala.IfStatement)stmt.parent_node.parent_node;
+            is_else_if = (a.false_statement == stmt.parent_node);
+        }
+
+        int level_indent = is_else_if ? 0 : 1;
+        level += level_indent;
+
+        stmt.accept_children (this);
+
+        level -= level_indent;
+    }
+
+    public override void visit_switch_statement (Vala.SwitchStatement stmt) {
         level += 1;
-        //  print ("%d %i\n", stmt.source_reference.begin.line, (int)is_parent);
 
         stmt.accept_children (this);
 
         level -= 1;
     }
 
-    public override void visit_switch_statement (Vala.SwitchStatement stmt) {
-        stmt.accept_children (this);
-    }
-
     public override void visit_switch_section (Vala.SwitchSection section) {
+        level += 1;
+
         section.accept_children (this);
+
+        level -= 1;
     }
 
     public override void visit_switch_label (Vala.SwitchLabel label) {
@@ -328,7 +336,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_expression (Vala.Expression expr) {
-        expr.accept_children (this);
+        //  expr.accept_children (this);
     }
 
     public override void visit_array_creation_expression (Vala.ArrayCreationExpression expr) {
@@ -454,11 +462,12 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     public override void visit_lambda_expression (Vala.LambdaExpression expr) {
         no_space_check.check_list (expr.get_parameters (), ref mistake_list);
 
-        level += 1;
+        int indent = (expr.statement_body != null) ? 1 : 0;
+        level += indent;
 
         expr.accept_children (this);
 
-        level -= 1;
+        level -= indent;
     }
 
     public override void visit_assignment (Vala.Assignment a) {
@@ -466,7 +475,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_end_full_expression (Vala.Expression expr) {
-        expr.accept_children (this);
+        // expr.accept_children (this);
     }
 
     private static Vala.ArrayList<ParseResult?> string_parsed (string? text, Vala.SourceReference source_ref) {
