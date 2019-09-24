@@ -35,12 +35,6 @@ class ValaLint.Visitor : Vala.CodeVisitor {
 
     public override void visit_source_file (Vala.SourceFile sf) {
         sf.accept_children (this);
-        //  foreach (Vala.CodeNode node in sf.get_nodes ()) {
-        //      if (node.parent_node == null) {
-        //          print ("accept %d \n", node.source_reference.begin.line);
-        //          node.accept (this);
-        //      }
-        //  }
     }
 
     public override void visit_namespace (Vala.Namespace ns) {
@@ -49,9 +43,9 @@ class ValaLint.Visitor : Vala.CodeVisitor {
         naming_convention_check.check_camel_case (ns, ref mistake_list);
 
         int indent = indentation_check.is_explicit_namespace (ns) ? 1 : 0;
-        level += indent;
+        //  level += indent;
         ns.accept_children (this);
-        level -= indent;
+        //  level -= indent;
     }
 
     public override void visit_class (Vala.Class cl) {
