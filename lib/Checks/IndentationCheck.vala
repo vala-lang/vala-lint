@@ -54,7 +54,7 @@ public class ValaLint.Checks.IndentationCheck : Check {
                 }
             }
 
-            check_line (s.source_reference.begin, level + offset, ref mistake_list);
+            check_line (s.source_reference, level + offset, ref mistake_list);
         }
     }
 
@@ -63,12 +63,14 @@ public class ValaLint.Checks.IndentationCheck : Check {
             return;
         }
 
-        check_line (s.source_reference.begin, level, ref mistake_list);
+        check_line (s.source_reference, level, ref mistake_list);
     }
 
-    private void check_line (Vala.SourceLocation loc, int level, ref Vala.ArrayList<FormatMistake?> mistake_list) {
-        var line = loc;
-        while (line.pos[0] != '\n') {
+    private void check_line (Vala.SourceReference loc, int level, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        Vala.SourceLocation line = loc.begin;
+        char* file_begin = loc.file.get_mapped_contents ();
+
+        while (line.pos > file_begin && line.pos[0] != '\n') {
             line.pos -= 1;
             line.column -= 1;
         }

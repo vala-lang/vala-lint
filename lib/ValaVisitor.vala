@@ -45,6 +45,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_class (Vala.Class cl) {
+        indentation_check.check_symbol (cl, level, ref mistake_list);
         naming_convention_check.check_camel_case (cl, ref mistake_list);
 
         level += 1;
@@ -62,6 +63,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_interface (Vala.Interface iface) {
+        indentation_check.check_symbol (iface, level, ref mistake_list);
         naming_convention_check.check_camel_case (iface, ref mistake_list);
 
         level += 1;
