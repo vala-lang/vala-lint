@@ -395,6 +395,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_end_full_expression (Vala.Expression expr) {
+        // Expression is an abstract class
         // expr.accept_children (this);
     }
 }
