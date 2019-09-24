@@ -18,7 +18,7 @@
  */
 
 public class ValaLint.Checks.LineLengthCheck : Check {
-    const string MESSAGE = "Line exceeds limit of %d characters (currently %d characters)";
+    const string MESSAGE = _("Line exceeds limit of %d characters (currently %d characters)");
 
     public int maximum_characters { get; set; }
     public bool ignore_comments { get; set; }
