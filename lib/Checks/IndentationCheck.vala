@@ -35,23 +35,28 @@ public class ValaLint.Checks.IndentationCheck : Check {
 
     }
 
+    public bool is_else_if_statement (Vala.IfStatement s) {
+        var b = s.parent_node;
+        if (b != null && b.parent_node is Vala.IfStatement) {
+            Vala.IfStatement if_statement = (Vala.IfStatement)b.parent_node;
+            if (if_statement.false_statement == b && b.source_reference.begin.line == s.source_reference.begin.line) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public void check_block (Vala.Block b, int level, ref Vala.ArrayList<FormatMistake?> mistake_list) {
         if (state == Config.State.OFF) {
             return;
         }
 
-        // Else if statement need to be catched
-        bool parent_is_if_statement = (b.parent_node is Vala.IfStatement);
-
         foreach (var s in b.get_statements ()) {
             int offset = 0;
 
-            if (parent_is_if_statement && s is Vala.IfStatement) {
-                Vala.IfStatement if_statement = (Vala.IfStatement)b.parent_node;
-
-                if (if_statement.false_statement == s.parent_node) {
-                    offset -= 1;
-                }
+            if (s is Vala.IfStatement && is_else_if_statement ((Vala.IfStatement)s)) {
+                offset -= 1;
             }
 
             check_line (s.source_reference, level + offset, ref mistake_list);

@@ -114,15 +114,10 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_method (Vala.Method m) {
-        /* method name may be null */
+        /* Method name may be null */
         indentation_check.check_symbol (m, level, ref mistake_list);
         naming_convention_check.check_underscore (m, ref mistake_list);
         no_space_check.check_list (m.get_parameters (), ref mistake_list);
-
-        /* Error types depend on the vala version. */
-        //  var error_types = new Vala.ArrayList<Vala.DataType?> ();
-        //  m.get_error_types (error_types);
-        //  no_space_check.check_list (error_types, ref mistake_list);
 
         level += 1;
         m.accept_children (this);
@@ -144,11 +139,15 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     public override void visit_property (Vala.Property prop) {
         indentation_check.check_symbol (prop, level, ref mistake_list);
 
+        level += 1;
         prop.accept_children (this);
+        level -= 1;
     }
 
     public override void visit_property_accessor (Vala.PropertyAccessor acc) {
+        level += 1;
         acc.accept_children (this);
+        level -= 1;
     }
 
     public override void visit_signal (Vala.Signal sig) {
@@ -219,13 +218,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_if_statement (Vala.IfStatement stmt) {
-        bool is_else_if = false;
-        if (stmt.parent_node.parent_node is Vala.IfStatement) {
-            Vala.IfStatement if_statement = (Vala.IfStatement)stmt.parent_node.parent_node;
-            is_else_if = (if_statement.false_statement == stmt.parent_node);
-        }
-
-        int level_indent = is_else_if ? 0 : 1;
+        int level_indent = indentation_check.is_else_if_statement (stmt) ? 0 : 1;
         level += level_indent;
         stmt.accept_children (this);
         level -= level_indent;
