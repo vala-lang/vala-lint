@@ -26,6 +26,8 @@ public class ValaLint.Checks.IndentationCheck : Check {
             title: _("indentation"),
             description: _("Checks for correct indentation")
         );
+
+        state = Config.get_state (title);
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
@@ -34,6 +36,10 @@ public class ValaLint.Checks.IndentationCheck : Check {
     }
 
     public void check_block (Vala.Block b, int level, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        if (state == Config.State.OFF) {
+            return;
+        }
+
         // Else if statement need to be catched
         bool parent_is_if_statement = (b.parent_node is Vala.IfStatement);
 
@@ -48,32 +54,20 @@ public class ValaLint.Checks.IndentationCheck : Check {
                 }
             }
 
-            var line = s.source_reference.begin;
-            while (line.pos[0] != '\n') {
-                line.pos -= 1;
-                line.column -= 1;
-            }
-
-            var first_char = line;
-            int indent = 0;
-            while (first_char.pos[0] == ' ' || first_char.pos[0] == '\n' || first_char.pos[0] == '\t') {
-                if (first_char.pos[0] == ' ') {
-                    indent += 1;
-                }
-
-                first_char.pos += 1;
-                first_char.column += 1;
-            }
-
-            int indent_should = (level + offset) * indent_size;
-            if (indent != indent_should) {
-                add_mistake ({ this, first_char, line, MESSAGE.printf (indent, indent_should) }, ref mistake_list);
-            }
+            check_line (s.source_reference.begin, level + offset, ref mistake_list);
         }
     }
 
     public void check_symbol (Vala.Symbol s, int level, ref Vala.ArrayList<FormatMistake?> mistake_list) {
-        var line = s.source_reference.begin;
+        if (state == Config.State.OFF) {
+            return;
+        }
+
+        check_line (s.source_reference.begin, level, ref mistake_list);
+    }
+
+    private void check_line (Vala.SourceLocation loc, int level, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        var line = loc;
         while (line.pos[0] != '\n') {
             line.pos -= 1;
             line.column -= 1;
