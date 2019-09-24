@@ -35,6 +35,14 @@ public class ValaLint.Checks.IndentationCheck : Check {
 
     }
 
+    public bool is_explicit_namespace (Vala.Namespace ns) {
+        if (ns.get_classes ().size == 1 && ns.get_classes ()[0].source_reference.begin.line == ns.source_reference.begin.line) {
+            return false;
+        }
+
+        return true;
+    }
+
     public bool is_else_if_statement (Vala.IfStatement s) {
         var b = s.parent_node;
         if (b != null && b.parent_node is Vala.IfStatement) {
