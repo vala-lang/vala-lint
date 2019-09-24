@@ -33,11 +33,21 @@ public class ValaLint.Checks.IndentationCheck : Check {
 
     }
 
-    public void check_block (Vala.Block b, int level,
-                            ref Vala.ArrayList<FormatMistake?> mistake_list) {
-        int indent_should = level * indent_size;
+    public void check_block (Vala.Block b, int level, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        // Else if statement need to be catched
+        bool parent_is_if_statement = (b.parent_node is Vala.IfStatement);
 
         foreach (var s in b.get_statements ()) {
+            int offset = 0;
+
+            if (parent_is_if_statement && s is Vala.IfStatement) {
+                Vala.IfStatement if_statement = (Vala.IfStatement)b.parent_node;
+
+                if (if_statement.false_statement == s.parent_node) {
+                    offset -= 1;
+                }
+            }
+
             var line = s.source_reference.begin;
             while (line.pos[0] != '\n') {
                 line.pos -= 1;
@@ -55,9 +65,34 @@ public class ValaLint.Checks.IndentationCheck : Check {
                 first_char.column += 1;
             }
 
+            int indent_should = (level + offset) * indent_size;
             if (indent != indent_should) {
                 add_mistake ({ this, first_char, line, MESSAGE.printf (indent, indent_should) }, ref mistake_list);
             }
+        }
+    }
+
+    public void check_symbol (Vala.Symbol s, int level, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        var line = s.source_reference.begin;
+        while (line.pos[0] != '\n') {
+            line.pos -= 1;
+            line.column -= 1;
+        }
+
+        var first_char = line;
+        int indent = 0;
+        while (first_char.pos[0] == ' ' || first_char.pos[0] == '\n' || first_char.pos[0] == '\t') {
+            if (first_char.pos[0] == ' ') {
+                indent += 1;
+            }
+
+            first_char.pos += 1;
+            first_char.column += 1;
+        }
+
+        int indent_should = level * indent_size;
+        if (indent != indent_should) {
+            add_mistake ({ this, first_char, line, MESSAGE.printf (indent, indent_should) }, ref mistake_list);
         }
     }
 }
