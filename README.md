@@ -69,6 +69,9 @@ unnecessary-string-template=error
 [Disabler]
 disable-by-inline-comments=true
 
+[indentation]
+indent-size=4
+
 [line-length]
 max-line-length=120
 ignore-comments=true

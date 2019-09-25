@@ -19,7 +19,7 @@
 
 public class ValaLint.Checks.IndentationCheck : Check {
     const string MESSAGE = _("Indentation is %d but should %d");
-    public int indent_size = 4;
+    public int indent_size;
 
     public IndentationCheck () {
         Object (
@@ -28,6 +28,7 @@ public class ValaLint.Checks.IndentationCheck : Check {
         );
 
         state = Config.get_state (title);
+        indent_size = Config.get_integer (title, "indent-size");
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
