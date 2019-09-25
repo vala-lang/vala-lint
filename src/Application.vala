@@ -22,6 +22,7 @@
 public class ValaLint.Application : GLib.Application {
     private const string VERSION = "0.1";
 
+    private static string? lint_directory = null;
     private static bool print_version = false;
     private static bool print_mistakes_end = false;
     private static bool exit_with_zero = false;
@@ -33,6 +34,8 @@ public class ValaLint.Application : GLib.Application {
     private const OptionEntry[] OPTIONS = {
         { "version", 'v', 0, OptionArg.NONE, ref print_version,
             "Display version number." },
+        { "directory", 'd', 1, OptionArg.STRING, ref lint_directory, // Hidden flag
+            "Specifiy a directory. (DEPRECEATED)" },
         { "print-end", 'e', 0, OptionArg.NONE, ref print_mistakes_end,
             "Show end of mistakes." },
         { "config", 'c', 0, OptionArg.STRING, ref config_file,
@@ -90,6 +93,14 @@ public class ValaLint.Application : GLib.Application {
             var default_config = ValaLint.Config.get_default_config ();
             command_line.print (default_config.to_data ());
             return 0;
+        }
+
+        if (lint_directory != null) {
+            //  command_line.print (_("The directory flag is depreceated, just omit the flag for future versions.") + "\n");
+
+            /* Add directory to tmp array */
+            tmp.resize (tmp.length + 1);
+            tmp[tmp.length - 1] = lint_directory;
         }
 
         this.application_command_line = command_line;
