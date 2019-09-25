@@ -34,6 +34,7 @@ public class ValaLint.Checks.DoubleSpacesCheck : Check {
             if (r.type == ParseType.DEFAULT) {
                 bool next_is_comment = (i + 1 < parse_result.size && parse_result[i + 1].type == ParseType.COMMENT);
 
+                /* Iterate through lines of parsed result */
                 var text_split = r.text.split ("\n");
                 for (int j = 0; j < text_split.length; j++) {
                     unowned string line_string = text_split[j];
@@ -42,6 +43,7 @@ public class ValaLint.Checks.DoubleSpacesCheck : Check {
                         continue;
                     }
 
+                    /* Trim line_string from whitespaces */
                     int trim_start = 0;
                     int trim_end = line_string.length;
                     if (j > 0 || r.begin.column == 1) {
@@ -55,6 +57,7 @@ public class ValaLint.Checks.DoubleSpacesCheck : Check {
                         }
                     }
 
+                    /* Check remaing substring for multiple double whitespaces */
                     int index = line_string[0:trim_end].index_of ("  ", trim_start);
                     while (index > -1) {
                         int line = r.begin.line + j;
