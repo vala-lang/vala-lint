@@ -68,7 +68,9 @@ public class ValaLint.Checks.IndentationCheck : Check {
                 offset -= 1;
             }
 
-            check_line (s.source_reference, level + offset, ref mistake_list);
+            if (s.parent_node == null || s.parent_node.source_reference.begin.line != s.source_reference.begin.line) {
+                check_line (s.source_reference, level + offset, ref mistake_list);
+            }
         }
     }
 
@@ -77,7 +79,9 @@ public class ValaLint.Checks.IndentationCheck : Check {
             return;
         }
 
-        check_line (s.source_reference, level, ref mistake_list);
+        if (s.parent_node == null || s.parent_node.source_reference.begin.line != s.source_reference.begin.line) {
+            check_line (s.source_reference, level, ref mistake_list);
+        }
     }
 
     private void check_line (Vala.SourceReference loc, int level, ref Vala.ArrayList<FormatMistake?> mistake_list) {

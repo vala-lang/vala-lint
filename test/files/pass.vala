@@ -1,9 +1,8 @@
 class FileTest : GLib.Object {
 
     // Property for indentation
-    public int test { get; set; }
-    public int number {
-        get {
+    public int test { get { return this._number; }; set; }
+    public int number { get {
             return this._number;
         }
         set {
