@@ -1,4 +1,10 @@
-class FileTest : GLib.Object {
+namespace NamespaceName {
+    class Test {
+        int a;
+    }
+}
+
+class TestNamespace.FileTest : GLib.Object {
 
     // Property for indentation
     public int test { get { return this._number; }; set; }

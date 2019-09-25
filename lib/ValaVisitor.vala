@@ -34,7 +34,22 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_source_file (Vala.SourceFile sf) {
-        sf.accept_children (this);
+        // Filter nodes which are already visited via Vala.Namespace
+        foreach (var node in sf.get_nodes ()) {
+            bool visit = true;
+
+            foreach (var ns in sf.get_nodes ()) {
+                if (ns is Vala.Namespace && indentation_check.is_node_in_namespace (node, (Vala.Namespace)ns)) {
+                    visit = false;
+                    break;
+                }
+            }
+
+            //  print ("asdf: %d %d\n", node.source_reference.begin.line, (int)visit);
+            if (visit) {
+                node.accept (this);
+            }
+        }
     }
 
     public override void visit_namespace (Vala.Namespace ns) {
@@ -43,9 +58,9 @@ class ValaLint.Visitor : Vala.CodeVisitor {
         naming_convention_check.check_camel_case (ns, ref mistake_list);
 
         int indent = indentation_check.is_explicit_namespace (ns) ? 1 : 0;
-        //  level += indent;
+        level += indent;
         ns.accept_children (this);
-        //  level -= indent;
+        level -= indent;
     }
 
     public override void visit_class (Vala.Class cl) {
@@ -104,6 +119,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_constant (Vala.Constant c) {
+        double_semicolon_check.check_statement (c, ref mistake_list);
         indentation_check.check_symbol (c, level, ref mistake_list);
         naming_convention_check.check_all_caps (c, ref mistake_list);
 
@@ -111,6 +127,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_field (Vala.Field f) {
+        double_semicolon_check.check_statement (f, ref mistake_list);
         indentation_check.check_symbol (f, level, ref mistake_list);
         naming_convention_check.check_underscore (f, ref mistake_list);
 

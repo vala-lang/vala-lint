@@ -35,10 +35,91 @@ public class ValaLint.Checks.IndentationCheck : Check {
 
     }
 
+    public bool is_node_in_namespace (Vala.CodeNode n, Vala.Namespace ns) {
+        if (n is Vala.Class) {
+            return ns.get_classes ().contains ((Vala.Class)n);
+        } else if (n is Vala.Interface) {
+            return ns.get_interfaces ().contains ((Vala.Interface)n);
+        } else if (n is Vala.Struct) {
+            return ns.get_structs ().contains ((Vala.Struct)n);
+        } else if (n is Vala.Enum) {
+            return ns.get_enums ().contains ((Vala.Enum)n);
+        } else if (n is Vala.ErrorDomain) {
+            return ns.get_error_domains ().contains ((Vala.ErrorDomain)n);
+        } else if (n is Vala.Delegate) {
+            return ns.get_delegates ().contains ((Vala.Delegate)n);
+        } else if (n is Vala.Constant) {
+            return ns.get_constants ().contains ((Vala.Constant)n);
+        } else if (n is Vala.Field) {
+            return ns.get_fields ().contains ((Vala.Field)n);
+        } else if (n is Vala.Method) {
+            return ns.get_methods ().contains ((Vala.Method)n);
+        } else if (n is Vala.Namespace) {
+            return ns.get_namespaces ().contains ((Vala.Namespace)n);
+        }
+
+        return false;
+    }
+
     public bool is_explicit_namespace (Vala.Namespace ns) {
-        if (ns.get_classes ().size == 1
-            && ns.get_classes ()[0].source_reference.begin.line == ns.source_reference.begin.line) {
-            return false;
+        foreach (var n in ns.get_classes ()) {
+            if (n.source_reference.begin.line == ns.source_reference.begin.line) {
+                return false;
+            }
+        }
+
+        foreach (var n in ns.get_interfaces ()) {
+            if (n.source_reference.begin.line == ns.source_reference.begin.line) {
+                return false;
+            }
+        }
+
+        foreach (var n in ns.get_structs ()) {
+            if (n.source_reference.begin.line == ns.source_reference.begin.line) {
+                return false;
+            }
+        }
+
+        foreach (var n in ns.get_enums ()) {
+            if (n.source_reference.begin.line == ns.source_reference.begin.line) {
+                return false;
+            }
+        }
+
+        foreach (var n in ns.get_error_domains ()) {
+            if (n.source_reference.begin.line == ns.source_reference.begin.line) {
+                return false;
+            }
+        }
+
+        foreach (var n in ns.get_delegates ()) {
+            if (n.source_reference.begin.line == ns.source_reference.begin.line) {
+                return false;
+            }
+        }
+
+        foreach (var n in ns.get_constants ()) {
+            if (n.source_reference.begin.line == ns.source_reference.begin.line) {
+                return false;
+            }
+        }
+
+        foreach (var n in ns.get_fields ()) {
+            if (n.source_reference.begin.line == ns.source_reference.begin.line) {
+                return false;
+            }
+        }
+
+        foreach (var n in ns.get_methods ()) {
+            if (n.source_reference.begin.line == ns.source_reference.begin.line) {
+                return false;
+            }
+        }
+
+        foreach (var n in ns.get_namespaces ()) {
+            if (n.source_reference.begin.line == ns.source_reference.begin.line) {
+                return false;
+            }
         }
 
         return true;
