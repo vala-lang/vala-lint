@@ -35,7 +35,7 @@ public class ValaLint.Application : GLib.Application {
         { "version", 'v', 0, OptionArg.NONE, ref print_version,
             "Display version number." },
         { "directory", 'd', 1, OptionArg.STRING, ref lint_directory, // Hidden flag
-            "Specifiy a directory. (DEPRECEATED)" },
+            "Lint all Vala files in the given directory. (DEPRECEATED)" },
         { "print-end", 'e', 0, OptionArg.NONE, ref print_mistakes_end,
             "Show end of mistakes." },
         { "config", 'c', 0, OptionArg.STRING, ref config_file,
