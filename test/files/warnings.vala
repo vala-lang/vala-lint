@@ -7,7 +7,8 @@ class FileTest : GLib.Object {
         test (); // TODO
         test (); // TODO: Lorem ipsum
 
-        return 0;
+        int double_space  = 2;
+        return 0;  
     }
 
     public void test (string a,string b) {
