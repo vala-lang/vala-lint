@@ -253,9 +253,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_switch_statement (Vala.SwitchStatement stmt) {
-        level += 1;
         stmt.accept_children (this);
-        level -= 1;
     }
 
     public override void visit_switch_section (Vala.SwitchSection section) {
@@ -425,8 +423,6 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_object_creation_expression (Vala.ObjectCreationExpression expr) {
-
-        
         level += 1;
         expr.accept_children (this);
         level -= 1;

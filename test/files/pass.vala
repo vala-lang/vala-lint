@@ -32,12 +32,13 @@ class TestNamespace.FileTest : GLib.Object {
                 var a = 2;
 
                 switch (a) {
-                    case 2:
-                        a = 3;
-                        break;
+                case 2: {
+                    a = 3;
+                    break;
+                }
 
-                    default:
-                        break;
+                default:
+                    break;
                 }
             }
         }
@@ -63,17 +64,14 @@ class TestNamespace.FileTest : GLib.Object {
         }
 
         new Thread<void*> (null, () => {
-            var dest = get_cover_cache ().get_child (get_hashkey ().to_string ());
-            try {
-                file.copy (dest, GLib.FileCopyFlags.OVERWRITE);
-                Idle.add (() => {
-                    cover_icon = new FileIcon (dest);
-                    return false;
-                });
-            } catch (Error e) {
-                critical (e.message);
+            lock (notifications) {
+                try {
+                    notifications = connection.get_proxy_sync<DBusNotifications> ("org.freedesktop.Notifications",
+                        "/org/freedesktop/Notifications", DBusProxyFlags.NONE);
+                } catch (Error e) {
+                    notifications = null;
+                }
             }
-
             return null;
         });
 

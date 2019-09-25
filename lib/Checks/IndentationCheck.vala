@@ -149,8 +149,13 @@ public class ValaLint.Checks.IndentationCheck : Check {
                 offset -= 1;
             }
 
-            if (b.parent_node != null && b.parent_node is Vala.LockStatement) {
-                offset += 1;
+            var n = b.parent_node;
+            while (n != null) {
+                if (n is Vala.LockStatement) {
+                    offset += 1;
+                }
+
+                n = n.parent_node;
             }
 
             if (s.parent_node == null || s.parent_node.source_reference.begin.line != s.source_reference.begin.line) {
