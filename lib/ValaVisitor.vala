@@ -106,7 +106,12 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_error_domain (Vala.ErrorDomain edomain) {
+        indentation_check.check_symbol (edomain, level, ref mistake_list);
+        naming_convention_check.check_camel_case (edomain, ref mistake_list);
+
+        level += 1;
         edomain.accept_children (this);
+        level -= 1;
     }
 
     public override void visit_error_code (Vala.ErrorCode ecode) {
@@ -328,7 +333,9 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_lock_statement (Vala.LockStatement stmt) {
+        level += 1;
         stmt.accept_children (this);
+        level -= 1;
     }
 
     public override void visit_unlock_statement (Vala.UnlockStatement stmt) {
