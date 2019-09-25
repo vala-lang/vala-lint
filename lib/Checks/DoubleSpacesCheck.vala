@@ -61,7 +61,7 @@ public class ValaLint.Checks.DoubleSpacesCheck : Check {
                     int index = line_string[0:trim_end].index_of ("  ", trim_start);
                     while (index > -1) {
                         int line = r.begin.line + j;
-                        int column = (j == 0) ? r.begin.column + index : index;
+                        int column = (j == 0) ? r.begin.column + index : index + 1;
 
                         var begin = Vala.SourceLocation ((char *)line_string + index, line, column);
                         var end = Utils.shift_location (begin, 2);
