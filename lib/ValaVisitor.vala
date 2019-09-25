@@ -425,7 +425,11 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_object_creation_expression (Vala.ObjectCreationExpression expr) {
+
+        
+        level += 1;
         expr.accept_children (this);
+        level -= 1;
     }
 
     public override void visit_sizeof_expression (Vala.SizeofExpression expr) {

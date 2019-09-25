@@ -62,6 +62,21 @@ class TestNamespace.FileTest : GLib.Object {
             notifications = null;
         }
 
+        new Thread<void*> (null, () => {
+            var dest = get_cover_cache ().get_child (get_hashkey ().to_string ());
+            try {
+                file.copy (dest, GLib.FileCopyFlags.OVERWRITE);
+                Idle.add (() => {
+                    cover_icon = new FileIcon (dest);
+                    return false;
+                });
+            } catch (Error e) {
+                critical (e.message);
+            }
+
+            return null;
+        });
+
         return 0;
     }
 }
