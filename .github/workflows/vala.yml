@@ -27,4 +27,4 @@ jobs:
       run: ./build/src/io.elementary.vala-lint -d .
 
     - name: Check Config File
-      run: diff <(./build/src/io.elementary.vala-lint -g) <(cat vala-lint.conf)
+      run: bash -c 'diff <(./build/src/io.elementary.vala-lint -g) <(cat vala-lint.conf)'
