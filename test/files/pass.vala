@@ -42,6 +42,21 @@ class TestNamespace.FileTest : GLib.Object {
             }
         }
 
+        Bus.own_name (BusType.SESSION, "org.pantheon.greeter", BusNameOwnerFlags.NONE,
+            (connection) => {
+                if (instance == null)
+                    instance = new DBus ();
+
+                try {
+                    connection.register_object ("/org/pantheon/greeter", instance);
+                } catch (Error e) {
+                    warning (e.message);
+                }
+            },
+            () => {},
+            () => warning ("Could not acquire name\n")
+        );
+
         return 0;
     }
 }

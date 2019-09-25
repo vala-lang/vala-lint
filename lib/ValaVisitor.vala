@@ -229,7 +229,9 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     public override void visit_initializer_list (Vala.InitializerList list) {
         no_space_check.check_list (list.get_initializers (), ref mistake_list);
 
+        level += 1;
         list.accept_children (this);
+        level -= 1;
     }
 
     public override void visit_expression_statement (Vala.ExpressionStatement stmt) {
@@ -378,7 +380,9 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     public override void visit_tuple (Vala.Tuple tuple) {
         no_space_check.check_list (tuple.get_expressions (), ref mistake_list);
 
+        level += 1;
         tuple.accept_children (this);
+        level -= 1;
     }
 
     public override void visit_null_literal (Vala.NullLiteral lit) {
@@ -392,7 +396,9 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     public override void visit_method_call (Vala.MethodCall expr) {
         no_space_check.check_list (expr.get_argument_list (), ref mistake_list);
 
+        level += 1;
         expr.accept_children (this);
+        level -= 1;
     }
 
     public override void visit_element_access (Vala.ElementAccess expr) {
@@ -464,7 +470,8 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     public override void visit_lambda_expression (Vala.LambdaExpression expr) {
         no_space_check.check_list (expr.get_parameters (), ref mistake_list);
 
-        int indent = (expr.statement_body != null) ? 1 : 0;
+        bool parent_on_same_line = (expr.source_reference.begin.line != expr.parent_node.source_reference.begin.line);
+        int indent = (expr.statement_body != null && parent_on_same_line) ? 1 : 0;
         level += indent;
         expr.accept_children (this);
         level -= indent;
