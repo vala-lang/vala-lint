@@ -86,13 +86,16 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
     }
 
     public void check_binary_expression (Vala.BinaryExpression expr, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        if (state == Config.State.OFF) {
+            return;
+        }
 
         char* char_before = expr.left.source_reference.end.pos;
         if (char_before[0] != ' ' && char_before[0] != '\n' && char_before[0] != ')') {
             var begin = Utils.shift_location (expr.left.source_reference.end, 1);
             var end = Utils.shift_location (begin, 1);
 
-            add_mistake ({ this, begin, end, _("Expected spaces around operators") }, ref mistake_list);
+            add_mistake ({ this, begin, end, _("Expected spaces around operator") }, ref mistake_list);
         }
 
         char* char_after = expr.right.source_reference.begin.pos - 1;
@@ -100,7 +103,28 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
             var begin = expr.right.source_reference.begin;
             var end = Utils.shift_location (begin, 1);
 
-            add_mistake ({ this, begin, end, _("Expected spaces around operators") }, ref mistake_list);
+            add_mistake ({ this, begin, end, _("Expected spaces around operator") }, ref mistake_list);
+        }
+    }
+
+    public void check_assignment (Vala.CodeNode node, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        if (state == Config.State.OFF) {
+            return;
+        }
+
+        string symbol = (node is Vala.Assignment) ? ((Vala.Assignment)node).operator.to_string () : "=";
+
+        char* pos = node.source_reference.begin.pos;
+        while (pos[0] != symbol[0] && pos[0] != '\0') {
+            pos += 1;
+        }
+
+        if (!pos[-1].isspace () || !pos[symbol.length].isspace ()) {
+            int offset = (int)(pos - node.source_reference.begin.pos);
+            var begin = Utils.shift_location (node.source_reference.begin, offset);
+            var end = Utils.shift_location (begin, 1);
+
+            add_mistake ({ this, begin, end, _("Expected whitespaces around assignment") }, ref mistake_list);
         }
     }
 }

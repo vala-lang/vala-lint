@@ -158,6 +158,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_declaration_statement (Vala.DeclarationStatement stmt) {
+        no_space_check.check_assignment (stmt, ref mistake_list);
         double_semicolon_check.check_statement (stmt, ref mistake_list);
 
         stmt.accept_children (this);
@@ -362,10 +363,14 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_sizeof_expression (Vala.SizeofExpression expr) {
+        no_space_check.check_space_before_paren (expr, ref mistake_list);
+
         expr.accept_children (this);
     }
 
     public override void visit_typeof_expression (Vala.TypeofExpression expr) {
+        no_space_check.check_space_before_paren (expr, ref mistake_list);
+
         expr.accept_children (this);
     }
 
@@ -414,6 +419,8 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_assignment (Vala.Assignment a) {
+        no_space_check.check_assignment (a, ref mistake_list);
+
         a.accept_children (this);
     }
 
