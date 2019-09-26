@@ -43,35 +43,34 @@ public class ValaLint.Checks.DoubleSpacesCheck : Check {
                         continue;
                     }
 
-                    /* Trim line_string from whitespaces */
-                    int trim_start = 0;
-                    int trim_end = line_string.length;
+                    char* pos_start = (char *)line_string;
+                    char* pos_end = pos_start + line_string.length;
                     if (j > 0 || r.begin.column == 1) {
-                        while (line_string[trim_start].isspace () && trim_start < trim_end) {
-                            trim_start += 1;
+                        while (pos_start[0].isspace () && pos_start < pos_end) {
+                            pos_start += 1;
                         }
                     }
                     if (j < text_split.length - 1 || next_is_comment) {
-                        while (line_string[trim_end - 1].isspace () && trim_end > trim_start) {
-                            trim_end -= 1;
+                        while (pos_end[-1].isspace () && pos_end > pos_start) {
+                            pos_end -= 1;
                         }
                     }
 
-                    /* Check remaing substring for multiple double whitespaces */
-                    int index = line_string[0:trim_end].index_of ("  ", trim_start);
-                    while (index > -1) {
-                        int line = r.begin.line + j;
-                        int column = (j == 0) ? r.begin.column + index : index + 1;
-
-                        var begin = Vala.SourceLocation ((char *)line_string + index, line, column);
+                    char* index = Utils.get_pos_of ("  ", pos_start, pos_end);
+                    while (index != null) {
+                        int column = Utils.get_column_of ((char *)line_string, index);
+                        if (j == 0) {
+                            column += r.begin.column - 1;
+                        }
+                        var begin = Vala.SourceLocation (index, r.begin.line + j, column);
                         var end = Utils.shift_location (begin, 2);
                         add_mistake ({ this, begin, end, "Expected single space" }, ref mistake_list);
 
-                        while (line_string[index].isspace () && index < trim_end) {
+                        while (index[0].isspace () && index < pos_end) {
                             index += 1;
                         }
 
-                        index = line_string[0:trim_end].index_of ("  ", index + 1);
+                        index = Utils.get_pos_of ("  ", index + 1, pos_end);
                     }
                 }
 
