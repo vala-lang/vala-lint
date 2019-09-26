@@ -7,6 +7,12 @@ class FileTest : GLib.Object {
         test (); // TODO
         test (); // TODO: Lorem ipsum
 
+        int counter= 0;
+        counter +=1;
+        if(counter == 0) {
+            test();
+        }
+
         return 0;
     }
 

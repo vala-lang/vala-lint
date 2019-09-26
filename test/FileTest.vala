@@ -59,7 +59,11 @@ class FileTest : GLib.Object {
         m_warnings.add ({ "no-space", line += 2 });
         m_warnings.add ({ "note", line += 1, "TODO" });
         m_warnings.add ({ "note", line += 1, "TODO: Lorem ipsum" });
-        m_warnings.add ({ "no-space", line += 5 });
+        m_warnings.add ({ "no-space", line += 2 });
+        m_warnings.add ({ "no-space", line += 1 });
+        m_warnings.add ({ "no-space", line += 1 });
+        m_warnings.add ({ "no-space", line += 1 });
+        m_warnings.add ({ "no-space", line += 6 });
         m_warnings.add ({ "double-semicolon", line += 1 });
         m_warnings.add ({ "naming-convention", line += 1 });
         m_warnings.add ({ "ellipsis", line += 2 });

@@ -8,6 +8,11 @@ class FileTest : GLib.Object {
         string literal = "Lorem ipsum";
         var string_template = @"$literal et al.";
 
+        valid ();
+
+        int counter = 0;
+        counter += 1;
+
         return 0;
     }
 }
