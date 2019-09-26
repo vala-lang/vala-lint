@@ -59,7 +59,6 @@ line-length=error
 naming-convention=error
 no-space=error
 note=error
-space-before-paren=error
 use-of-tabs=error
 trailing-newlines=error
 trailing-whitespace=error

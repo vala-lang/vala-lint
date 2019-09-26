@@ -32,8 +32,26 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
 
     }
 
-    public void check_list (Vala.List<Vala.CodeNode?> list,
-                            ref Vala.ArrayList<FormatMistake?> mistake_list) {
+    public void check_space_before_paren (Vala.CodeNode node, ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        if (state == Config.State.OFF) {
+            return;
+        }
+
+        char* pos = node.source_reference.begin.pos;
+        while (pos[0] != '(' && pos[0] != '\0') {
+            pos += 1;
+        }
+
+        if (!(pos[-1].isspace () || pos[-1] == '_')) {
+            int offset = (int)(pos - node.source_reference.begin.pos);
+            var begin = Utils.shift_location (node.source_reference.begin, offset);
+            var end = Utils.shift_location (begin, 1);
+
+            add_mistake ({ this, begin, end, _("Expected a whitespace before paren") }, ref mistake_list);
+        }
+    }
+
+    public void check_list (Vala.List<Vala.CodeNode?> list, ref Vala.ArrayList<FormatMistake?> mistake_list) {
         if (state == Config.State.OFF) {
             return;
         }
@@ -67,8 +85,7 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
         }
     }
 
-    public void check_binary_expression (Vala.BinaryExpression expr,
-                                         ref Vala.ArrayList<FormatMistake?> mistake_list) {
+    public void check_binary_expression (Vala.BinaryExpression expr, ref Vala.ArrayList<FormatMistake?> mistake_list) {
 
         char* char_before = expr.left.source_reference.end.pos;
         if (char_before[0] != ' ' && char_before[0] != '\n' && char_before[0] != ')') {

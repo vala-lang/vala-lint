@@ -148,14 +148,6 @@ class UnitTest : GLib.Object {
         assert_warning (note_check, "lorem // TODO: nothing to do", 10, 29);
         assert_warning (note_check, "lorem // FIXME: nothing to do", 10, 30);
 
-        var space_before_paren_check = new ValaLint.Checks.SpaceBeforeParenCheck ();
-        assert_pass (space_before_paren_check, "void test ()");
-        assert_pass (space_before_paren_check, "var test = 2 * (3 + 1);");
-        assert_pass (space_before_paren_check, "a = !(true && false);");
-        assert_pass (space_before_paren_check, "actions &= ~(Gdk.DragAction.COPY | Gdk.DragAction.LINK)");
-        assert_warning (space_before_paren_check, "void test()", 10, 11);
-        assert_warning (space_before_paren_check, "void = 2*(2+2)", 10, 11);
-
         var tab_check = new ValaLint.Checks.TabCheck ();
         assert_pass (tab_check, "lorem ipsum");
         assert_warning (tab_check, "lorem	ipsum", 6, 7);

@@ -56,7 +56,7 @@ class FileTest : GLib.Object {
         int line = 0; // So that new tests can be added without changing every number...
         var m_warnings = new Vala.ArrayList<FileTestMistake?> ();
         m_warnings.add ({ "naming-convention", line += 4 });
-        m_warnings.add ({ "space-before-paren", line += 2 });
+        m_warnings.add ({ "no-space", line += 2 });
         m_warnings.add ({ "note", line += 1, "TODO" });
         m_warnings.add ({ "note", line += 1, "TODO: Lorem ipsum" });
         m_warnings.add ({ "no-space", line += 5 });

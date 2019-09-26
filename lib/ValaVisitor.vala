@@ -93,7 +93,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     public override void visit_method (Vala.Method m) {
         /* method name may be null */
         naming_convention_check.check_underscore (m, ref mistake_list);
-
+        no_space_check.check_space_before_paren (m, ref mistake_list);
         no_space_check.check_list (m.get_parameters (), ref mistake_list);
 
         /* Error types depend on the vala version. */
@@ -127,10 +127,14 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_constructor (Vala.Constructor c) {
+        no_space_check.check_space_before_paren (c, ref mistake_list);
+
         c.accept_children (this);
     }
 
     public override void visit_destructor (Vala.Destructor d) {
+        no_space_check.check_space_before_paren (d, ref mistake_list);
+
         d.accept_children (this);
     }
 
@@ -178,10 +182,14 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_if_statement (Vala.IfStatement stmt) {
+        no_space_check.check_space_before_paren (stmt, ref mistake_list);
+
         stmt.accept_children (this);
     }
 
     public override void visit_switch_statement (Vala.SwitchStatement stmt) {
+        no_space_check.check_space_before_paren (stmt, ref mistake_list);
+
         stmt.accept_children (this);
     }
 
@@ -198,18 +206,26 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_while_statement (Vala.WhileStatement stmt) {
+        no_space_check.check_space_before_paren (stmt, ref mistake_list);
+
         stmt.accept_children (this);
     }
 
     public override void visit_do_statement (Vala.DoStatement stmt) {
+        no_space_check.check_space_before_paren (stmt, ref mistake_list);
+
         stmt.accept_children (this);
     }
 
     public override void visit_for_statement (Vala.ForStatement stmt) {
+        no_space_check.check_space_before_paren (stmt, ref mistake_list);
+
         stmt.accept_children (this);
     }
 
     public override void visit_foreach_statement (Vala.ForeachStatement stmt) {
+        no_space_check.check_space_before_paren (stmt, ref mistake_list);
+
         stmt.accept_children (this);
     }
 
@@ -244,14 +260,20 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_catch_clause (Vala.CatchClause clause) {
+        no_space_check.check_space_before_paren (clause, ref mistake_list);
+
         clause.accept_children (this);
     }
 
     public override void visit_lock_statement (Vala.LockStatement stmt) {
+        no_space_check.check_space_before_paren (stmt, ref mistake_list);
+
         stmt.accept_children (this);
     }
 
     public override void visit_unlock_statement (Vala.UnlockStatement stmt) {
+        no_space_check.check_space_before_paren (stmt, ref mistake_list);
+
         stmt.accept_children (this);
     }
 
@@ -313,6 +335,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_method_call (Vala.MethodCall expr) {
+        no_space_check.check_space_before_paren (expr, ref mistake_list);
         no_space_check.check_list (expr.get_argument_list (), ref mistake_list);
 
         expr.accept_children (this);
