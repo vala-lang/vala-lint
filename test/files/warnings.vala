@@ -8,7 +8,8 @@ class FileTest : GLib.Object {
         test (); // TODO: Lorem ipsum
 
         int double_space  = 2;
-        string  double_space_string  =  "";
+        string  double_space_string  =  _("");
+        test  ();
         return 0;  
     }
 

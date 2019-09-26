@@ -63,6 +63,7 @@ class FileTest : GLib.Object {
         m_warnings.add ({ "double-spaces", line += 1 });
         m_warnings.add ({ "double-spaces", line += 0 });
         m_warnings.add ({ "double-spaces", line += 0 });
+        m_warnings.add ({ "double-spaces", line += 1 });
         m_warnings.add ({ "trailing-whitespace", line += 1 });
         m_warnings.add ({ "no-space", line += 3 });
         m_warnings.add ({ "double-semicolon", line += 1 });

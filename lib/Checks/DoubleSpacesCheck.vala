@@ -64,7 +64,7 @@ public class ValaLint.Checks.DoubleSpacesCheck : Check {
                         }
                         var begin = Vala.SourceLocation (index, r.begin.line + j, column);
                         var end = Utils.shift_location (begin, 2);
-                        add_mistake ({ this, begin, end, "Expected single space" }, ref mistake_list);
+                        add_mistake ({ this, begin, end, "Expected a single space" }, ref mistake_list);
 
                         while (index[0].isspace () && index < pos_end) {
                             index += 1;
