@@ -18,6 +18,33 @@
  */
 
 public class ValaLint.Utils : Object {
+
+    /**
+     * Method to get the position within an input string. Similar to index_of, but for non-null terminated strings using char pointers.
+     *
+     * @return The position of first index, otherwise null.
+     */
+    public static char* get_pos_of (string needle, char* begin, char* end) {
+        char* pos = begin;
+        while (pos <= end - needle.length) {
+            bool equal = true;
+            for (int i = 0; i < needle.length; i++) {
+                if (pos[i] != needle[i]) {
+                    equal = false;
+                    break;
+                }
+            }
+
+            if (equal) {
+                return pos;
+            }
+
+            pos += 1;
+        }
+
+        return null;
+    }
+
     /**
      * Method to get the line count of a string.
      *
@@ -34,6 +61,19 @@ public class ValaLint.Utils : Object {
      */
     public static int get_column_in_line (string input, int pos) {
         return pos - input[0:pos].last_index_of_char ('\n') - 1;
+    }
+
+    /**
+     * Method to get the char position in the current line of the input string using char pointers.
+     *
+     * @return The char column.
+     */
+    public static int get_column_of (char* begin, char* pos) {
+        int i = 0;
+        while ((pos - i)[-1] != '\n' && pos - i > begin) {
+            i += 1;
+        }
+        return i + 1;
     }
 
     /**

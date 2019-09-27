@@ -24,7 +24,6 @@ class UnitTest : GLib.Object {
         assert_pass (block_parenthesis_check, "test () {");
         assert_warning (block_parenthesis_check, "test (){", 8, 9);
         assert_warning (block_parenthesis_check, "test ()\n{", 8, 0); // Mistake end in new line
-        assert_warning (block_parenthesis_check, "test ()   {", 8, 9);
 
         var double_spaces_check = new ValaLint.Checks.DoubleSpacesCheck ();
         assert_pass (double_spaces_check, "/*    *//*");
