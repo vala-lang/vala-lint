@@ -32,20 +32,48 @@ public class ValaLint.Checks.DoubleSpacesCheck : Check {
         for (int i = 0; i < parse_result.size; i++) {
             ParseResult r = parse_result[i];
             if (r.type == ParseType.DEFAULT) {
-                bool next_parse_type_is_comment = (i + 1 < parse_result.size
-                                                   && parse_result[i + 1].type == ParseType.COMMENT);
+                bool next_is_comment = (i + 1 < parse_result.size && parse_result[i + 1].type == ParseType.COMMENT);
 
-                /* Should not end with spaces pattern */
-                string no_spaces_pattern = next_parse_type_is_comment ? """(?!(?:$| ))""" : "";
+                /* Iterate through lines of parsed result */
+                var text_split = r.text.split ("\n");
+                for (int j = 0; j < text_split.length; j++) {
+                    unowned string line_string = text_split[j];
 
-                add_regex_mistake ("""\S {2,}""" + no_spaces_pattern, "Expected single space", r,
-                                   ref mistake_list, 2, 1);
+                    if (line_string.length == 0) {
+                        continue;
+                    }
 
-                /* Check for problems at the beginning of strings */
-                if (r.begin.column > 1) {
-                    add_regex_mistake ("""^ {2,}""" + no_spaces_pattern, "Expected single space", r,
-                                       ref mistake_list, 2);
+                    char* pos_start = (char *)line_string;
+                    char* pos_end = pos_start + line_string.length;
+                    if (j > 0 || r.begin.column == 1) {
+                        while (pos_start[0].isspace () && pos_start < pos_end) {
+                            pos_start += 1;
+                        }
+                    }
+                    if (j < text_split.length - 1 || next_is_comment) {
+                        while (pos_end[-1].isspace () && pos_end > pos_start) {
+                            pos_end -= 1;
+                        }
+                    }
+
+                    char* index = Utils.get_pos_of ("  ", pos_start, pos_end);
+                    while (index != null) {
+                        int column = Utils.get_column_of ((char *)line_string, index);
+                        if (j == 0) {
+                            column += r.begin.column - 1;
+                        }
+                        var begin = Vala.SourceLocation (index, r.begin.line + j, column);
+                        var end = Utils.shift_location (begin, 2);
+                        add_mistake ({ this, begin, end, "Expected a single space" }, ref mistake_list);
+
+                        while (index[0].isspace () && index < pos_end) {
+                            index += 1;
+                        }
+
+                        index = Utils.get_pos_of ("  ", index + 1, pos_end);
+                    }
                 }
+
             }
         }
     }

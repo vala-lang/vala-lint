@@ -8,6 +8,8 @@ class FileTest : GLib.Object {
         string literal = "Lorem ipsum";
         var string_template = @"$literal et al.";
 
+        var /* comment */ string_double_space = /* */ "lorem";
+
         return 0;
     }
 }
