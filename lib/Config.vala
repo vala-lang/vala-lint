@@ -63,6 +63,8 @@ public class ValaLint.Config {
         default_config.set_double ("line-length", "max-line-length", 120);
         default_config.set_boolean ("line-length", "ignore-comments", true);
 
+        default_config.set_string_list ("naming-convention", "exceptions", {"UUID"});
+
         default_config.set_string_list ("note", "keywords", {"TODO", "FIXME"});
 
         return default_config;
