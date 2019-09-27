@@ -128,6 +128,10 @@ class UnitTest : GLib.Object {
             naming_convention_check.check_underscore,
             new Vala.Class ("lorem_ipsum")
         );
+        Assertion<Vala.Class>.pass (
+            naming_convention_check.check_underscore,
+            new Vala.Class ("UUID")
+        );
         Assertion<Vala.Class>.warning (
             naming_convention_check.check_underscore,
             new Vala.Class ("Lorem"), 1, 0, 5
