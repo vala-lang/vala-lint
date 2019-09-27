@@ -38,9 +38,6 @@ public class ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck : Check {
                                    ref mistake_list, 1, 1);
                 add_regex_mistake ("""[\w)=]{""", _("Expected whitespace before \"{\""), r,
                                    ref mistake_list, 1, 1);
-                // Check for a tab character or more than one whitespace character before the open parenthesis
-                add_regex_mistake ("""[\w)=](?:\t|\s{2,}){""", _("Expected single space before \"{\""), r,
-                                   ref mistake_list, 1, 1);
             }
         }
     }
