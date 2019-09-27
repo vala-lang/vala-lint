@@ -18,6 +18,8 @@
  */
 
 public class ValaLint.Checks.NamingConventionCheck : Check {
+    public string[] exceptions { get; set; }
+
     public NamingConventionCheck () {
         Object (
             title: _("naming-convention"),
@@ -25,6 +27,7 @@ public class ValaLint.Checks.NamingConventionCheck : Check {
         );
 
         state = Config.get_state (title);
+        exceptions = Config.get_string_list (title, "exceptions");
     }
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
@@ -32,7 +35,7 @@ public class ValaLint.Checks.NamingConventionCheck : Check {
 
     }
 
-    private bool name_is_invalid (string name) {
+    private bool name_has_invalid_char (string name) {
         unichar c;
         for (int i = 0; name.get_next_char (ref i, out c);) {
             if (!(c.isalpha () || c.isdigit () || c == '_')) {
@@ -43,11 +46,11 @@ public class ValaLint.Checks.NamingConventionCheck : Check {
     }
 
     public void check_all_caps (Vala.Symbol symbol, ref Vala.ArrayList<FormatMistake?> mistake_list) {
-        if (state == Config.State.OFF || symbol.name == null) {
+        if (state == Config.State.OFF || symbol.name == null || symbol.name in exceptions) {
             return;
         }
 
-        if (symbol.name != symbol.name.up () || name_is_invalid (symbol.name)) {
+        if (symbol.name != symbol.name.up () || name_has_invalid_char (symbol.name)) {
             var begin = symbol.source_reference.begin;
             var end = Utils.shift_location (begin, symbol.name.length);
             add_mistake ({ this, begin, end, _("Expected variable name in ALL_CAPS_CONVENTION") }, ref mistake_list);
@@ -55,11 +58,11 @@ public class ValaLint.Checks.NamingConventionCheck : Check {
     }
 
     public void check_camel_case (Vala.Symbol symbol, ref Vala.ArrayList<FormatMistake?> mistake_list) {
-        if (state == Config.State.OFF || symbol.name == null) {
+        if (state == Config.State.OFF || symbol.name == null || symbol.name in exceptions) {
             return;
         }
 
-        if (symbol.name[0].islower () || symbol.name.contains ("_") || name_is_invalid (symbol.name)) {
+        if (symbol.name[0].islower () || symbol.name.contains ("_") || name_has_invalid_char (symbol.name)) {
             var begin = symbol.source_reference.begin;
             var end = Utils.shift_location (begin, symbol.name.length);
             add_mistake ({ this, begin, end, _("Expected variable name in CamelCaseConvention") }, ref mistake_list);
@@ -67,11 +70,11 @@ public class ValaLint.Checks.NamingConventionCheck : Check {
     }
 
     public void check_underscore (Vala.Symbol symbol, ref Vala.ArrayList<FormatMistake?> mistake_list) {
-        if (state == Config.State.OFF || symbol.name == null) {
+        if (state == Config.State.OFF || symbol.name == null || symbol.name in exceptions) {
             return;
         }
 
-        if (symbol.name != symbol.name.down () || name_is_invalid (symbol.name)) {
+        if (symbol.name != symbol.name.down () || name_has_invalid_char (symbol.name)) {
             var begin = symbol.source_reference.begin;
             var end = Utils.shift_location (begin, symbol.name.length);
             add_mistake ({ this, begin, end, _("Expected variable name in underscore_convention") }, ref mistake_list);
