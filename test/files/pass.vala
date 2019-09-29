@@ -12,6 +12,7 @@ class FileTest : GLib.Object {
 
         int counter = 0;
         counter += 1;
+        var /* comment */ string_double_space = /* */ "lorem";
 
         return 0;
     }

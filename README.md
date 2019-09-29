@@ -71,6 +71,9 @@ disable-by-inline-comments=true
 max-line-length=120
 ignore-comments=true
 
+[naming-convention]
+exceptions=UUID
+
 [note]
 keywords=TODO,FIXME
 ```
