@@ -74,6 +74,7 @@ class TestNamespace.FileTest : GLib.Object {
             }
             return null;
         });
+        var /* comment */ string_double_space = /* */ "lorem";
 
         return 0;
     }
