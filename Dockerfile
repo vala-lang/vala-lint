@@ -30,4 +30,4 @@ RUN mkdir -p /app
 VOLUME /app
 WORKDIR /app
 
-CMD ["/usr/bin/io.elementary.vala-lint", "**/*.vala"]
+CMD ["/usr/bin/io.elementary.vala-lint"]
