@@ -105,7 +105,7 @@ public class ValaLint.Application : GLib.Application {
                 lint_directory_file = File.new_for_path (lint_directory);
                 files = get_files_from_directory (lint_directory_file);
             } else {
-                files = get_files_from_globs (command_line, tmp);
+                files = get_files_from_globs (command_line, tmp[1:tmp.length]);
             }
         } catch (Error e) {
             critical ("Error: %s\n", e.message);
