@@ -14,6 +14,8 @@ class FileTest : GLib.Object {
         counter += 1;
         var /* comment */ string_double_space = /* */ "lorem";
 
+        var regex = /--pkg[= ](\S+)/;
+
         return 0;
     }
 }
