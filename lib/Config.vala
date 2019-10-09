@@ -57,6 +57,7 @@ public class ValaLint.Config {
         default_config.set_string ("Checks", "trailing-newlines", State.ERROR.to_string ());
         default_config.set_string ("Checks", "trailing-whitespace", State.ERROR.to_string ());
         default_config.set_string ("Checks", "unnecessary-string-template", State.ERROR.to_string ());
+        default_config.set_string ("Checks", "using-directive", State.ERROR.to_string ());
 
         default_config.set_boolean ("Disabler", "disable-by-inline-comments", true);
 

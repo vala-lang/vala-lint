@@ -51,6 +51,7 @@ public class ValaLint.Linter : Object {
         visitor.naming_convention_check = new Checks.NamingConventionCheck ();
         visitor.no_space_check = new Checks.NoSpaceCheck ();
         visitor.unnecessary_string_template_check = new Checks.UnnecessaryStringTemplateCheck ();
+        visitor.using_directive_check = new Checks.UsingDirectiveCheck ();
     }
 
     public Vala.ArrayList<FormatMistake?> run_checks_for_file (File file) throws Error, IOError {
