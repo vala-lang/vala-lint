@@ -25,6 +25,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     public Checks.NamingConventionCheck naming_convention_check;
     public Checks.UnnecessaryStringTemplateCheck unnecessary_string_template_check;
     public Checks.NoSpaceCheck no_space_check;
+    public Checks.UsingDirectiveCheck using_directive_check;
 
     public void set_mistake_list (Vala.ArrayList<FormatMistake?> mistake_list) {
         this.mistake_list = mistake_list;
@@ -139,6 +140,8 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_using_directive (Vala.UsingDirective ns) {
+        using_directive_check.check_using_directive (ns, ref mistake_list);
+
         ns.accept_children (this);
     }
 
