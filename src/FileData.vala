@@ -19,5 +19,6 @@
 
 public struct ValaLint.FileData {
     File file;
+    string name;
     Vala.ArrayList<FormatMistake?> mistakes;
 }

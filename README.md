@@ -28,13 +28,18 @@ To install, use ninja install, then execute with `io.elementary.vala-lint`
 
 
 ## Usage
-You can use the command-line tool to scan files or include the library into your own projects to scan single lines or whole files easily. By default, the command-line tool uses [globs](https://en.wikipedia.org/wiki/Glob_%28programming%29) to match files. For example, by
+You can use vala-lint or its library to scan your files and projects easily. By default, you can lint every Vala file in the current directory and all subdirectories by
 
-    io.elementary.vala-lint *.vala
+    io.elementary.vala-lint
 
-you can lint every file in the current directory. Using the directory `d`-flag, you can lint every Vala file in a given directory and all subdirectories by
+Additionally, vala-lint uses [globs](https://en.wikipedia.org/wiki/Glob_%28programming%29) to match files or directories. For example, you can lint every file in a given directory by
 
-    io.elementary.vala-lint -d ../my-project
+    io.elementary.vala-lint ../my-project/test
+
+or specify particular files via
+
+    io.elementary.vala-lint ../my-project/test/unit-test.vala
+    io.elementary.vala-lint ../my-project/test/*-test.vala
 
 To list all options, type `io.elementary.vala-lint -h`. Additional command line flags are: `--print-end` for printing not only the start but also the end of a mistake, and `--exit-zero` to always return a 0 (non-error) status code, even if lint mistakes are found.
 
