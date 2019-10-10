@@ -22,9 +22,6 @@ jobs:
       - name: Build
         run: meson build && ninja -C build
 
-      - name: Set Permissions
-        run: chmod +x ./build/src/io.elementary.vala-lint
-
       - name: Upload
         uses: actions/upload-artifact@v1
         with:
@@ -32,7 +29,7 @@ jobs:
           path: ./
 
   Test:
-    name: Test
+    name: Test Build
     runs-on: ubuntu-latest
     needs: Build
 
@@ -50,6 +47,9 @@ jobs:
         with:
           name: vala-lint
           path: ./
+
+      - name: Set Permissions
+        run: chmod +x ./build/src/io.elementary.vala-lint
 
       - name: Test
         run: ninja test -C build
@@ -74,11 +74,14 @@ jobs:
           name: vala-lint
           path: ./
 
+      - name: Set Permissions
+        run: chmod +x ./build/src/io.elementary.vala-lint
+
       - name: Check Config File
         run: bash -c 'diff <(./build/src/io.elementary.vala-lint -g) <(cat vala-lint.conf)'
 
   Lint:
-    name: Lint
+    name: Lint Self
     runs-on: ubuntu-latest
     needs: Build
 
@@ -97,11 +100,14 @@ jobs:
           name: vala-lint
           path: ./
 
+      - name: Set Permissions
+        run: chmod +x ./build/src/io.elementary.vala-lint
+
       - name: Lint
         run: ./build/src/io.elementary.vala-lint -d .
 
   Lint_Projects:
-    name: Lint ${{ matrix.project }}
+    name: Lint "${{ matrix.project }}"
     runs-on: ubuntu-latest
     needs: Build
 
@@ -129,6 +135,9 @@ jobs:
         with:
           name: vala-lint
           path: ./
+
+      - name: Set Permissions
+        run: chmod +x ./build/src/io.elementary.vala-lint
 
       - name: Clone
         run: git clone https://github.com/elementary/${{ matrix.project }}.git
