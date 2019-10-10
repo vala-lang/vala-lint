@@ -1,0 +1,137 @@
+name: CI
+
+on: [pull_request, push]
+
+jobs:
+  Build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    container:
+      image: elementary/docker:unstable
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Install Depedencies
+        env:
+          dependency_packages: libvala-dev valac meson
+        run: apt-get update && apt-get -y install ${dependency_packages}
+
+      - name: Build
+        run: meson build && ninja -C build
+
+      - name: Upload
+        uses: actions/upload-artifact@v1
+        with:
+          name: vala-lint
+          path: ./
+
+  Test:
+    name: Test
+    runs-on: ubuntu-latest
+    depends_on: Build
+
+    container:
+      image: elementary/docker:unstable
+
+    steps:
+      - name: Install Depedencies
+        env:
+          dependency_packages: libvala-dev valac meson
+        run: apt-get update && apt-get -y install ${dependency_packages}
+
+      - name: Download
+        uses: actions/download-artifact@v1
+        with:
+          name: vala-lint
+          path: ./
+
+      - name: Test
+        run: ninja test -C build
+
+  Test_Config:
+    name: Test Configuration
+    runs-on: ubuntu-latest
+    depends_on: Build
+
+    container:
+      image: elementary/docker:unstable
+
+    steps:
+      - name: Install Depedencies
+        env:
+          dependency_packages: libvala-dev valac meson
+        run: apt-get update && apt-get -y install ${dependency_packages}
+
+      - name: Download
+        uses: actions/download-artifact@v1
+        with:
+          name: vala-lint
+          path: ./
+
+      - name: Check Config File
+        run: bash -c 'diff <(./build/src/io.elementary.vala-lint -g) <(cat vala-lint.conf)'
+
+  Lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    depends_on: Lint
+
+    container:
+      image: elementary/docker:unstable
+
+    steps:
+      - name: Install Depedencies
+        env:
+          dependency_packages: libvala-dev valac meson
+        run: apt-get update && apt-get -y install ${dependency_packages}
+
+      - name: Download
+        uses: actions/download-artifact@v1
+        with:
+          name: vala-lint
+          path: ./
+
+      - name: Lint
+        run: ./build/src/io.elementary.vala-lint -d .
+
+  Lint_Projects:
+    name: Lint ${{ matrix.project }}
+    runs-on: ubuntu-latest
+    depends_on: Build
+
+    strategy:
+      matrix:
+        project:
+          - appcenter
+          - calendar
+          - greeter
+          - music
+          - screenshot
+          - switchboard-plug-onlineaccounts
+
+    container:
+      image: elementary/docker:unstable
+
+    steps:
+      - name: Install Depedencies
+        env:
+          dependency_packages: libvala-dev valac git
+        run: apt-get update && apt-get -y install ${dependency_packages}
+
+      - name: Download
+        uses: actions/download-artifact@v1
+        with:
+          name: vala-lint
+          path: ./
+
+      - name: Clone
+        run: git clone https://github.com/elementary/${{ matrix.project }}.git
+
+      - name: Set Permissions
+        run: chmod +x ./build/src/io.elementary.vala-lint
+
+      - name: Lint
+        run: ./build/src/io.elementary.vala-lint --exit-zero ${{ matrix.project }}/
