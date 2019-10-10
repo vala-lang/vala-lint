@@ -18,7 +18,7 @@
  */
 
 public class ValaLint.Checks.UsingDirectiveCheck : Check {
-    const string MESSAGE = _("Expected explicit namespace instead of using directives");
+    const string MESSAGE = _("Use explicit namespace instead");
 
     public UsingDirectiveCheck () {
         Object (

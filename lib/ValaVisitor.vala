@@ -33,6 +33,13 @@ class ValaLint.Visitor : Vala.CodeVisitor {
 
     public override void visit_source_file (Vala.SourceFile sf) {
         sf.accept_children (this);
+
+        /* using directives are not accepted by default */
+        foreach (var using_directives in sf.current_using_directives) {
+            if (using_directives.source_reference != null) {
+                using_directives.accept (this);
+            }
+        }
     }
 
     public override void visit_namespace (Vala.Namespace ns) {

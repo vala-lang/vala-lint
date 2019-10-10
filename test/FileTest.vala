@@ -55,7 +55,7 @@ class FileTest : GLib.Object {
 
         int line = 0; // So that new tests can be added without changing every number...
         var m_warnings = new Vala.ArrayList<FileTestMistake?> ();
-        m_warnings.add ({ "using-directive", line += 2 });
+        m_warnings.add ({ "using-directive", line += 3 });
         m_warnings.add ({ "naming-convention", line += 3 });
         m_warnings.add ({ "space-before-paren", line += 2 });
         m_warnings.add ({ "note", line += 1, "TODO" });
