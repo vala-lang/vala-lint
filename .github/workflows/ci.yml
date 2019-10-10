@@ -22,6 +22,9 @@ jobs:
       - name: Build
         run: meson build && ninja -C build
 
+      - name: Set Permissions
+        run: chmod +x ./build/src/io.elementary.vala-lint
+
       - name: Upload
         uses: actions/upload-artifact@v1
         with:
@@ -129,9 +132,6 @@ jobs:
 
       - name: Clone
         run: git clone https://github.com/elementary/${{ matrix.project }}.git
-
-      - name: Set Permissions
-        run: chmod +x ./build/src/io.elementary.vala-lint
 
       - name: Lint
         run: ./build/src/io.elementary.vala-lint --exit-zero ${{ matrix.project }}/
