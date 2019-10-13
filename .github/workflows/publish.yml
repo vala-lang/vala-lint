@@ -1,4 +1,4 @@
-name: Publish Docker Image
+name: Publish
 
 on:
   push:
@@ -6,12 +6,14 @@ on:
       - master
 
 jobs:
-  build:
+  Dockerhub:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Publish
-      run: |
-        docker login -u "${{ secrets.DockerUsername }}" -p "${{ secrets.DockerPassword }}"
-        docker build -t valalang/lint:latest .
-        docker push valalang/lint:latest
+      - name: Clone
+        uses: actions/checkout@v1
+
+      - name: Publish
+        run: |
+          docker login -u "${{ secrets.DockerUsername }}" -p "${{ secrets.DockerPassword }}"
+          docker build -t valalang/lint:latest .
+          docker push valalang/lint:latest
