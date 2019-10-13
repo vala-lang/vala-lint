@@ -1,8 +1,24 @@
-# Vala-Lint
+<div align="center">
+  <h1 align="center"><center>Vala-Lint</center></h1>
+  <h3 align="center"><center>Check Vala code files for code-style errors</center></h3>
+  <br>
+  <br>
+</div>
 
-[![Build Status](https://github.com/vala-lang/vala-lint/workflows/Vala%20CI/badge.svg)](https://github.com/elementary/vala-lint/actions)
-[![Deploy Status](https://github.com/vala-lang/vala-lint/workflows/Publish%20Docker%20Image/badge.svg)](https://github.com/elementary/vala-lint/actions)
-[![Bountysource](https://www.bountysource.com/badge/tracker?tracker_id=45980444)](https://www.bountysource.com/trackers/45980444-elementary-Vala-lint)
+<p align="center">
+  <img src="https://github.com/vala-lang/vala-lint/workflows/CI/badge.svg" alt="CI">
+  <img src="https://github.com/vala-lang/vala-lint/workflows/Publish/badge.svg" alt="Publish">
+
+  <a href="https://hub.docker.com/r/valalang/lint">
+   <img src="https://img.shields.io/docker/stars/valalang/lint" alt="Dockerhub">  
+  </a>
+
+  <a href="https://www.bountysource.com/trackers/45980444-elementary-Vala-lint">
+    <img src="https://www.bountysource.com/badge/tracker?tracker_id=45980444" alt="Bountysource">
+  </a>
+</p>
+
+---
 
 Small command line tool and library for checking Vala code files for code-style errors.
 Based on the [elementary Code-Style guidelines](https://elementary.io/docs/code/reference#code-style).
