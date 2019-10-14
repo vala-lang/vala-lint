@@ -16,5 +16,9 @@ file_test = executable(
     ]
 )
 
-test('vala lint unit test', unit_test)
-test('vala lint file test', file_test)
+test_envars = [
+    'G_DEBUG=fatal-warnings',
+]
+
+test('vala lint unit test', unit_test, env: test_envars)
+test('vala lint file test', file_test, env: test_envars)
