@@ -20,7 +20,7 @@
 public class ValaLint.Checks.DoubleSpacesCheck : Check {
     public DoubleSpacesCheck () {
         Object (
-            title: _("double-spaces"),
+            title: "double-spaces",
             description: _("Checks for double spaces")
         );
 

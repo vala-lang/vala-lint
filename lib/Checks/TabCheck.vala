@@ -20,7 +20,7 @@
 public class ValaLint.Checks.TabCheck : Check {
     public TabCheck () {
         Object (
-            title: _("use-of-tabs"),
+            title: "use-of-tabs",
             description: _("Checks for tabs instead of spaces"),
             single_mistake_in_line: true
         );

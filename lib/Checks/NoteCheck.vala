@@ -22,7 +22,7 @@ public class ValaLint.Checks.NoteCheck : Check {
 
     public NoteCheck () {
         Object (
-            title: _("note"),
+            title: "note",
             description: _("Checks for notes (TODO, FIXME, etc.)"),
             single_mistake_in_line: true
         );

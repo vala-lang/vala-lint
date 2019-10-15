@@ -22,7 +22,7 @@ public class ValaLint.Checks.NamingConventionCheck : Check {
 
     public NamingConventionCheck () {
         Object (
-            title: _("naming-convention"),
+            title: "naming-convention",
             description: _("Checks the naming convention")
         );
 

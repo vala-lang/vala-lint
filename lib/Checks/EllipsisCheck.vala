@@ -22,7 +22,7 @@ public class ValaLint.Checks.EllipsisCheck : Check {
 
     public EllipsisCheck () {
         Object (
-            title: _("ellipsis"),
+            title: "ellipsis",
             description: _("Checks for ellipsis character instead of three periods")
         );
 

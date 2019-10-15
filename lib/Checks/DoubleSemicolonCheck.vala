@@ -20,7 +20,7 @@
 public class ValaLint.Checks.DoubleSemicolonCheck : Check {
     public DoubleSemicolonCheck () {
         Object (
-            title: _("double-semicolon"),
+            title: "double-semicolon",
             description: _("Checks for unnecessary semicolons")
         );
 
