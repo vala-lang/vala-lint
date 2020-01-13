@@ -20,25 +20,24 @@
  */
 
 public class ValaLint.Application : GLib.Application {
+    private const string VERSION = "0.1";
+
+    private static string? lint_directory = null;
     private static bool print_version = false;
     private static bool print_mistakes_end = false;
     private static bool exit_with_zero = false;
     private static bool generate_config_file = false;
-
-    private static string? lint_directory = null;
-    private static File? lint_directory_file = null;
     private static string? config_file = null;
-
 
     private ApplicationCommandLine application_command_line;
 
     private const OptionEntry[] OPTIONS = {
         { "version", 'v', 0, OptionArg.NONE, ref print_version,
-            "Display version number" },
-        { "directory", 'd', 0, OptionArg.STRING, ref lint_directory,
-            "Lint all Vala files in the given directory." },
+            "Display version number." },
+        { "directory", 'd', 1, OptionArg.STRING, ref lint_directory, // Hidden flag
+            "Lint all Vala files in the given directory. (DEPRECEATED)" },
         { "print-end", 'e', 0, OptionArg.NONE, ref print_mistakes_end,
-            "Show end of mistakes" },
+            "Show end of mistakes." },
         { "config", 'c', 0, OptionArg.STRING, ref config_file,
             "Specify a configuration file." },
         { "exit-zero", 'z', 0, OptionArg.NONE, ref exit_with_zero,
@@ -68,7 +67,7 @@ public class ValaLint.Application : GLib.Application {
         string[] args = command_line.get_arguments ();
 
         if (args.length == 1) {
-            args = { args[0], "-d", "." };
+            args = { args[0], "." };
         }
 
         unowned string[] tmp = args;
@@ -86,7 +85,7 @@ public class ValaLint.Application : GLib.Application {
         }
 
         if (print_version) {
-            command_line.print (_("Version: %s") + "\n", 0.1);
+            command_line.print (_("Version: %s") + "\n", VERSION);
             return 0;
         }
 
@@ -96,19 +95,22 @@ public class ValaLint.Application : GLib.Application {
             return 0;
         }
 
+        if (lint_directory != null) {
+            //  command_line.print (_("The directory flag is depreceated, just omit the flag for future versions.") + "\n");
+
+            /* Add directory to tmp array */
+            tmp.resize (tmp.length + 1);
+            tmp[tmp.length - 1] = lint_directory;
+        }
+
         this.application_command_line = command_line;
 
         /* 1. Get list of files */
-        var files = new Vala.ArrayList<File> ();
+        var file_data_list = new Vala.ArrayList<FileData?> ();
         try {
-            if (lint_directory != null) {
-                lint_directory_file = File.new_for_path (lint_directory);
-                files = get_files_from_directory (lint_directory_file);
-            } else {
-                files = get_files_from_globs (command_line, tmp[1:tmp.length]);
-            }
+            file_data_list = get_files (command_line, tmp[1:tmp.length]);
         } catch (Error e) {
-            critical ("Error: %s\n", e.message);
+            critical (_("Error: %s") + "\n", e.message);
         }
 
         /* 2. Load config */
@@ -116,13 +118,12 @@ public class ValaLint.Application : GLib.Application {
 
         /* 3. Check files */
         var linter = new Linter ();
-        var file_data_list = new Vala.ArrayList<FileData?> ();
-        foreach (File file in files) {
+        foreach (FileData data in file_data_list) {
             try {
-                Vala.ArrayList<FormatMistake?> mistakes = linter.run_checks_for_file (file);
-                file_data_list.add ({ file, mistakes });
+                var mistakes = linter.run_checks_for_file (data.file);
+                data.mistakes.add_all (mistakes);
             } catch (Error e) {
-                critical ("Error: %s while linting file %s\n", e.message, file.get_path ());
+                critical (_("Error: %s while linting file %s") + "\n", e.message, data.file.get_path ());
             }
         }
 
@@ -143,29 +144,39 @@ public class ValaLint.Application : GLib.Application {
         return 0;
     }
 
-    Vala.ArrayList<File> get_files_from_globs (ApplicationCommandLine command_line,
-                                               string[] patterns) throws Error, IOError {
-        var files = new Vala.ArrayList<File> ();
+    Vala.ArrayList<FileData?> get_files (ApplicationCommandLine command_line, string[] patterns) throws Error, IOError {
+        var result = new Vala.ArrayList<FileData?> ();
+
         foreach (string pattern in patterns) {
             var matcher = Posix.Glob ();
 
             if (matcher.glob (pattern) != 0) {
                 command_line.print (_("No files found for pattern: %s") + "\n", pattern);
-                return files;
+                continue;
             }
 
             foreach (string path in matcher.pathv) {
                 File file = File.new_for_path (path);
                 FileType file_type = file.query_file_type (FileQueryInfoFlags.NONE);
 
-                if (file_type != FileType.REGULAR) {
-                    continue;
-                }
+                switch (file_type) {
+                    case FileType.REGULAR:
+                        result.add ({ file, path, new Vala.ArrayList<FormatMistake?> () });
+                        break;
 
-                files.add (file);
+                    case FileType.DIRECTORY:
+                        foreach (File f in get_files_from_directory (file)) {
+                            string name = path + file.get_relative_path (f);
+                            result.add ({ f, name, new Vala.ArrayList<FormatMistake?> () });
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
             }
         }
-        return files;
+        return result;
     }
 
     Vala.ArrayList<File> get_files_from_directory (File dir) throws Error, IOError {
@@ -182,7 +193,7 @@ public class ValaLint.Application : GLib.Application {
                 }
             } else if (info.get_file_type () == FileType.REGULAR) {
                 /* Check only .vala files */
-                if (child_name.length > 5 && child_name.has_suffix (".vala")) {
+                if (child_name.has_suffix (".vala")) {
                     files.add (child_file);
                 }
             }
@@ -194,14 +205,8 @@ public class ValaLint.Application : GLib.Application {
     void print_mistakes (Vala.ArrayList<FileData?> file_data_list) {
         foreach (FileData file_data in file_data_list) {
             if (!file_data.mistakes.is_empty) {
-                string path = "";
-                if (lint_directory_file != null) {
-                    path = lint_directory_file.get_relative_path (file_data.file);
-                } else {
-                    path = file_data.file.get_path ();
-                }
+                application_command_line.print ("\x001b[1m\x001b[4m" + "%s" + "\x001b[0m\n", file_data.name);
 
-                application_command_line.print ("\x001b[1m\x001b[4m" + "%s" + "\x001b[0m\n", path);
                 foreach (FormatMistake mistake in file_data.mistakes) {
                     string color_state = "%-5s";
                     string mistakes_end = "";
