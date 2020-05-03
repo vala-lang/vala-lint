@@ -28,13 +28,13 @@ class FileTest : GLib.Object {
         Vala.ArrayList<FileTestMistake?> list;
         int line;
 
-        public FileTestMistakeList() {
+        public FileTestMistakeList () {
             list = new Vala.ArrayList<FileTestMistake?> ();
             line = 0;
         }
 
-        public void add(string title, int line_diff, string? message = null) {
-            list.add({ title, line += line_diff, message });
+        public void add (string title, int line_diff, string? message = null) {
+            list.add ({ title, line += line_diff, message });
         }
     }
 
@@ -57,13 +57,11 @@ class FileTest : GLib.Object {
                     error ("Mistake %d: Title is '%s' but should be '%s'", i, is_mistake.check.title, should_mistake.title);
                 }
                 if (is_mistake.begin.line != should_mistake.line) {
-                    error ("Mistake %d: Line is '%d' but should be '%d'", i, is_mistake.begin.line, should_mistake.line);
+                    error ("Mistake %d: Line '%d' but should be '%d'", i, is_mistake.begin.line, should_mistake.line);
                 }
 
-                if (should_mistake.message != null) {
-                    if (is_mistake.mistake != should_mistake.message) {
-                        error ("Mistake %d: Message is '%s' but should be '%s'", i, is_mistake.mistake, should_mistake.message);
-                    }
+                if (should_mistake.message != null && is_mistake.mistake != should_mistake.message) {
+                    error ("Mistake %d: Message is '%s' but should be '%s'", i, is_mistake.mistake, should_mistake.message);
                 }
             }
         } catch (Error e) {
@@ -76,25 +74,25 @@ class FileTest : GLib.Object {
     }
 
     public static int main (string[] args) {
-        var block_opening_brace_space_before_warnings = FileTestMistakeList();
-        block_opening_brace_space_before_warnings.add ("block-opening-brace-space-before", 5);
-        check_file_for_mistake (get_test_file ("block-opening-brace-space-before-check.vala"), block_opening_brace_space_before_warnings);
+        var block_opening_warnings = FileTestMistakeList ();
+        block_opening_warnings.add ("block-opening-brace-space-before", 5);
+        check_file_for_mistake (get_test_file ("block-opening-brace-space-before-check.vala"), block_opening_warnings);
 
-        var double_spaces_warnings = FileTestMistakeList();
+        var double_spaces_warnings = FileTestMistakeList ();
         double_spaces_warnings.add ("double-spaces", 6);
         double_spaces_warnings.add ("double-spaces", 1);
         check_file_for_mistake (get_test_file ("double-spaces-check.vala"), double_spaces_warnings);
 
-        var ellipsis_warnings = FileTestMistakeList();
+        var ellipsis_warnings = FileTestMistakeList ();
         ellipsis_warnings.add ("ellipsis", 3);
         ellipsis_warnings.add ("ellipsis", 1);
         ellipsis_warnings.add ("ellipsis", 0);
         check_file_for_mistake (get_test_file ("ellipsis-check.vala"), ellipsis_warnings);
 
-        var empty_list = FileTestMistakeList();
+        var empty_list = FileTestMistakeList ();
         check_file_for_mistake (get_test_file ("general-pass.vala"), empty_list);
 
-        var general_warnings = FileTestMistakeList();
+        var general_warnings = FileTestMistakeList ();
         general_warnings.add ("naming-convention", 4);
         general_warnings.add ("space-before-paren", 2);
         general_warnings.add ("note", 1, "TODO");
@@ -119,11 +117,11 @@ class FileTest : GLib.Object {
         general_warnings.add ("trailing-newlines", 2);
         check_file_for_mistake (get_test_file ("general-warnings.vala"), general_warnings);
 
-        var line_length_warnings = FileTestMistakeList();
+        var line_length_warnings = FileTestMistakeList ();
         line_length_warnings.add ("line-length", 6);
         check_file_for_mistake (get_test_file ("line-length-check.vala"), line_length_warnings);
 
-        var naming_convention_warnings = FileTestMistakeList();
+        var naming_convention_warnings = FileTestMistakeList ();
         naming_convention_warnings.add ("naming-convention", 5);
         naming_convention_warnings.add ("naming-convention", 1);
         naming_convention_warnings.add ("naming-convention", 1);
@@ -132,12 +130,12 @@ class FileTest : GLib.Object {
         naming_convention_warnings.add ("naming-convention", 1);
         check_file_for_mistake (get_test_file ("naming-convention-check.vala"), naming_convention_warnings);
 
-        var note_warnings = FileTestMistakeList();
+        var note_warnings = FileTestMistakeList ();
         note_warnings.add ("note", 5);
         note_warnings.add ("note", 1);
         check_file_for_mistake (get_test_file ("note-check.vala"), note_warnings);
 
-        var space_before_paren_warnings = FileTestMistakeList();
+        var space_before_paren_warnings = FileTestMistakeList ();
         space_before_paren_warnings.add ("space-before-paren", 2);
         space_before_paren_warnings.add ("no-space", 5);
         space_before_paren_warnings.add ("space-before-paren", 0);
@@ -146,21 +144,21 @@ class FileTest : GLib.Object {
         space_before_paren_warnings.add ("no-space", 0);
         check_file_for_mistake (get_test_file ("space-before-paren-check.vala"), space_before_paren_warnings);
 
-        var tab_warnings = FileTestMistakeList();
+        var tab_warnings = FileTestMistakeList ();
         tab_warnings.add ("use-of-tabs", 3);
         check_file_for_mistake (get_test_file ("tab-check.vala"), tab_warnings);
 
         check_file_for_mistake (get_test_file ("trailing-whitespace-check-1.vala"), empty_list);
-        
-        var trailing_whitespace_2_warnings = FileTestMistakeList();
+
+        var trailing_whitespace_2_warnings = FileTestMistakeList ();
         //  trailing_whitespace_2_warnings.add ("trailing-whitespace", 5);
         check_file_for_mistake (get_test_file ("trailing-whitespace-check-2.vala"), trailing_whitespace_2_warnings);
 
-        var trailing_whitespace_3_warnings = FileTestMistakeList();
+        var trailing_whitespace_3_warnings = FileTestMistakeList ();
         //  trailing_whitespace_3_warnings.add ("trailing-whitespace", 5);
         check_file_for_mistake (get_test_file ("trailing-whitespace-check-3.vala"), trailing_whitespace_3_warnings);
 
-        var trailing_whitespace_4_warnings = FileTestMistakeList();
+        var trailing_whitespace_4_warnings = FileTestMistakeList ();
         //  trailing_whitespace_4_warnings.add ("trailing-whitespace", 5);
         check_file_for_mistake (get_test_file ("trailing-whitespace-check-4.vala"), trailing_whitespace_4_warnings);
 
