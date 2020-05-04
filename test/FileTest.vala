@@ -35,9 +35,18 @@ class FileTest : GLib.Object {
             line = 0;
         }
 
-        public void add (string title, int line_diff, int? column_begin = null, int? column_end = null, string? message = null) {
+        public void add (string title,
+                         int line_diff,
+                         int? column_begin = null,
+                         int? column_end = null,
+                         string? message = null) {
+
             list.add ({ title, line += line_diff, column_begin, column_end, message });
         }
+    }
+
+    public static void error_mistake (string message, int number, File file) {
+        error (@"Mistake #$(number) in $(file.get_path ()): $(message)");
     }
 
     public static void check_file_for_mistake (File file, FileTestMistakeList mistake_list) {
@@ -49,31 +58,31 @@ class FileTest : GLib.Object {
 
             if (mistakes.size != mistake_list.list.size) {
                 for (int i = 0; i < mistakes.size; i++) {
-                    var is_mistake = mistakes[i];
-                    print ("Mistake %d: Title '%s', line '%d', pos '%d'\n", i, is_mistake.check.title, is_mistake.begin.line, is_mistake.begin.column);
+                    var real = mistakes[i];
+                    print (@"Mistake #$(i) at ($(real.begin.line):$(real.begin.column)): '$(real.check.title)'\n");
                 }
 
-                error ("%s has %d but should have %d mistakes. Found mistakes are listed above.", file.get_path (), mistakes.size, mistake_list.list.size);
+                error (@"$(file.get_path ()) has $(mistakes.size), should have $(mistake_list.list.size) mistakes.");
             }
 
             for (int i = 0; i < mistakes.size; i++) {
-                var is_mistake = mistakes[i];
-                var should_mistake = mistake_list.list[i];
+                var real = mistakes[i];
+                var should = mistake_list.list[i];
 
-                if (is_mistake.check.title != should_mistake.title) {
-                    error ("Mistake %d of file %s: Title is '%s' but should be '%s'.", i, file.get_path (), is_mistake.check.title, should_mistake.title);
+                if (real.check.title != should.title) {
+                    error_mistake (@"Title is '$(real.check.title)', should be '$(should.title)'.", i, file);
                 }
-                if (is_mistake.begin.line != should_mistake.line) {
-                    error ("Mistake %d of file %s: Line is '%d' but should be '%d'.", i, file.get_path (), is_mistake.begin.line, should_mistake.line);
+                if (real.begin.line != should.line) {
+                    error_mistake (@"Line is '$(real.begin.line)', should be '$(should.line)'.", i, file);
                 }
-                if (should_mistake.column_begin != null && is_mistake.begin.column != should_mistake.column_begin) {
-                    error ("Mistake %d of file %s: Begin column is '%d' but should be '%d'.", i, file.get_path (), is_mistake.begin.column, should_mistake.column_begin);
+                if (should.column_begin != null && real.begin.column != should.column_begin) {
+                    error_mistake (@"Column is '$(real.begin.column)', should be '$(should.column_begin)'.", i, file);
                 }
-                if (should_mistake.column_end != null && is_mistake.end.column != should_mistake.column_end) {
-                    error ("Mistake %d of file %s: End column is '%d' but should be '%d'.", i, file.get_path (), is_mistake.end.column, should_mistake.column_end);
+                if (should.column_end != null && real.end.column != should.column_end) {
+                    error_mistake (@"End column is '$(real.end.column)', should be '$(should.column_end)'.", i, file);
                 }
-                if (should_mistake.message != null && is_mistake.mistake != should_mistake.message) {
-                    error ("Mistake %d of file %s: Message is '%s' but should be '%s'.", i, file.get_path (), is_mistake.mistake, should_mistake.message);
+                if (should.message != null && real.mistake != should.message) {
+                    error_mistake (@"Message is '$(real.mistake)', should be '$(should.message)'.", i, file);
                 }
             }
         } catch (Error e) {
