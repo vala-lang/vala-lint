@@ -149,26 +149,30 @@ class FileTest : GLib.Object {
         space_before_paren_warnings.add ("space-before-paren", 0);
         space_before_paren_warnings.add ("no-space", 0);
         space_before_paren_warnings.add ("no-space", 0);
-        //  space_before_paren_warnings.add ("no-space", 0);
         check_file_for_mistake (get_test_file ("space-before-paren-check.vala"), space_before_paren_warnings);
 
         var tab_warnings = FileTestMistakeList ();
         tab_warnings.add ("use-of-tabs", 5);
         check_file_for_mistake (get_test_file ("tab-check.vala"), tab_warnings);
 
-        check_file_for_mistake (get_test_file ("trailing-whitespace-check-1.vala"), empty_list);
+        check_file_for_mistake (get_test_file ("trailing-newlines-check-1.vala"), empty_list);
 
-        var trailing_whitespace_2_warnings = FileTestMistakeList ();
-        //  trailing_whitespace_2_warnings.add ("trailing-whitespace", 5);
-        check_file_for_mistake (get_test_file ("trailing-whitespace-check-2.vala"), trailing_whitespace_2_warnings);
+        var trailing_newlines_2_warnings = FileTestMistakeList ();
+        trailing_newlines_2_warnings.add ("trailing-newlines", 5);
+        check_file_for_mistake (get_test_file ("trailing-newlines-check-2.vala"), trailing_newlines_2_warnings);
 
-        var trailing_whitespace_3_warnings = FileTestMistakeList ();
-        //  trailing_whitespace_3_warnings.add ("trailing-whitespace", 5);
-        check_file_for_mistake (get_test_file ("trailing-whitespace-check-3.vala"), trailing_whitespace_3_warnings);
+        var trailing_newlines_3_warnings = FileTestMistakeList ();
+        trailing_newlines_3_warnings.add ("trailing-newlines", 5);
+        trailing_newlines_3_warnings.add ("trailing-whitespace", 0);
+        check_file_for_mistake (get_test_file ("trailing-newlines-check-3.vala"), trailing_newlines_3_warnings);
 
-        var trailing_whitespace_4_warnings = FileTestMistakeList ();
-        //  trailing_whitespace_4_warnings.add ("trailing-whitespace", 5);
-        check_file_for_mistake (get_test_file ("trailing-whitespace-check-4.vala"), trailing_whitespace_4_warnings);
+        var trailing_newlines_4_warnings = FileTestMistakeList ();
+        trailing_newlines_4_warnings.add ("trailing-newlines", 5);
+        check_file_for_mistake (get_test_file ("trailing-newlines-check-4.vala"), trailing_newlines_4_warnings);
+
+        var trailing_whitespace_warnings = FileTestMistakeList ();
+        trailing_whitespace_warnings.add ("trailing-whitespace", 4);
+        check_file_for_mistake (get_test_file ("trailing-whitespace-check.vala"), trailing_whitespace_warnings);
 
         return 0;
     }
