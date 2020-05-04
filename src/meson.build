@@ -3,7 +3,7 @@ app_files = files (
     'FileData.vala'
 )
 
-executable(
+vala_lint = executable(
     meson.project_name(),
     app_files,
     dependencies: [
