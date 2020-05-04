@@ -22,7 +22,7 @@ public class ValaLint.Checks.UsingDirectiveCheck : Check {
 
     public UsingDirectiveCheck () {
         Object (
-            title: _("using-directive"),
+            title: "using-directive",
             description: _("Checks for undesirable using directives")
         );
 
