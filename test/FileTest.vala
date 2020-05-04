@@ -149,7 +149,7 @@ class FileTest : GLib.Object {
         space_before_paren_warnings.add ("space-before-paren", 0);
         space_before_paren_warnings.add ("no-space", 0);
         space_before_paren_warnings.add ("no-space", 0);
-        space_before_paren_warnings.add ("no-space", 0);
+        //  space_before_paren_warnings.add ("no-space", 0);
         check_file_for_mistake (get_test_file ("space-before-paren-check.vala"), space_before_paren_warnings);
 
         var tab_warnings = FileTestMistakeList ();
