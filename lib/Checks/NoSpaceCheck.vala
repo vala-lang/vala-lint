@@ -70,10 +70,12 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
     public void check_binary_expression (Vala.BinaryExpression expr,
                                          ref Vala.ArrayList<FormatMistake?> mistake_list) {
         char* char_before = expr.left.source_reference.end.pos;
+        
         if (char_before[0] != ' ' && char_before[0] != '\n' && char_before[0] != ')') {
             var begin = Utils.shift_location (expr.left.source_reference.end, 1);
             var end = Utils.shift_location (begin, 1);
 
+            print("char_before 1 %c\n", *char_before);
             add_mistake ({ this, begin, end, _("Expected spaces around operators") }, ref mistake_list);
         }
 
@@ -82,6 +84,7 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
             var begin = expr.right.source_reference.begin;
             var end = Utils.shift_location (begin, 1);
 
+            print("char_before 2 %c\n", *char_before);
             add_mistake ({ this, begin, end, _("Expected spaces around operators") }, ref mistake_list);
         }
     }
