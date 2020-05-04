@@ -84,7 +84,8 @@ public class ValaLint.Checks.NoSpaceCheck : Check {
             var begin = expr.right.source_reference.begin;
             var end = Utils.shift_location (begin, 1);
 
-            print ("char_before 2 %c\n", char_after[0]);
+            print ("char_after 2-1 %c\n", char_after[0]);
+            print ("char_after 2-2 %c\n", char_after[1]);
             add_mistake ({ this, begin, end, _("Expected spaces around operators") }, ref mistake_list);
         }
     }
