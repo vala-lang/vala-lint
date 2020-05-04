@@ -48,7 +48,7 @@ class FileTest : GLib.Object {
             if (mistakes.size != mistake_list.list.size) {
                 for (int i = 0; i < mistakes.size; i++) {
                     var is_mistake = mistakes[i];
-                    print ("Mistake %d: Title '%s', line '%d'\n", i, is_mistake.check.title, is_mistake.begin.line);
+                    print ("Mistake %d: Title '%s', line '%d', pos '%d'\n", i, is_mistake.check.title, is_mistake.begin.line, is_mistake.begin.column);
                 }
 
                 error ("%s has %d but should have %d mistakes. Found mistakes are listed above.", file.get_path (), mistakes.size, mistake_list.list.size);
@@ -149,6 +149,7 @@ class FileTest : GLib.Object {
         space_before_paren_warnings.add ("space-before-paren", 0);
         space_before_paren_warnings.add ("no-space", 0);
         space_before_paren_warnings.add ("no-space", 0);
+        //  space_before_paren_warnings.add ("no-space", 0);
         check_file_for_mistake (get_test_file ("space-before-paren-check.vala"), space_before_paren_warnings);
 
         var tab_warnings = FileTestMistakeList ();
