@@ -2,7 +2,7 @@
 
 struct Lorem {}
 struct LoremIpsum {}
-struct LoremIpsumÄ12 {}
+struct LoremIpsum12 {}
 struct HTTPConnection {}
 struct lorem {}
 struct loremIpsum {}
