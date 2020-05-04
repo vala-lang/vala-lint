@@ -1,3 +1,5 @@
+// vala-lint=skip-file
+
 int main (string[] args) {
     int a;
     int b = 0;

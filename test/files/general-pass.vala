@@ -1,3 +1,5 @@
+// vala-lint=skip-file
+
 class FileTest : GLib.Object {
 
     public static int main (string[] args) {

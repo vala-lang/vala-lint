@@ -1,3 +1,5 @@
+// vala-lint=skip-file
+
 struct Lorem {}
 struct LoremIpsum {}
 struct LoremIpsumÄ12 {}

@@ -1,3 +1,5 @@
+// vala-lint=skip-file
+
 void test () { }
 void test() { }
 
