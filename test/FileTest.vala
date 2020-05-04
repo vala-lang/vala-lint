@@ -46,7 +46,12 @@ class FileTest : GLib.Object {
             Vala.ArrayList<ValaLint.FormatMistake?> mistakes = linter.run_checks_for_file (file);
 
             if (mistakes.size != mistake_list.list.size) {
-                error ("%s has %d but should have %d mistakes.", file.get_path (), mistakes.size, mistake_list.list.size);
+                for (int i = 0; i < mistakes.size; i++) {
+                    var is_mistake = mistakes[i];
+                    print ("Mistake %d: Title '%s', line '%d'\n", i, is_mistake.check.title, is_mistake.begin.line);
+                }
+
+                error ("%s has %d but should have %d mistakes. Found mistakes are listed above.", file.get_path (), mistakes.size, mistake_list.list.size);
             }
 
             for (int i = 0; i < mistakes.size; i++) {
@@ -123,6 +128,9 @@ class FileTest : GLib.Object {
 
         var naming_convention_warnings = FileTestMistakeList ();
         naming_convention_warnings.add ("naming-convention", 7);
+        naming_convention_warnings.add ("naming-convention", 1);
+        naming_convention_warnings.add ("naming-convention", 1);
+        naming_convention_warnings.add ("naming-convention", 6);
         naming_convention_warnings.add ("naming-convention", 1);
         naming_convention_warnings.add ("naming-convention", 1);
         naming_convention_warnings.add ("naming-convention", 7);

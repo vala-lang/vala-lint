@@ -8,6 +8,14 @@ struct lorem {}
 struct loremIpsum {}
 struct lorem_ipsum {}
 
+struct Test {
+    int lorem;
+    int lorem_ipsum;
+    int UUID;
+    int Lorem;
+    int Lorem_Ipsum;
+    int lorem_IPsum;
+}
 
 int main (string[] args) {
     const int LOREM;
@@ -17,13 +25,6 @@ int main (string[] args) {
     const int LOREm;
     const int LOREm_IPSUM;
     const int LOREM-IPSUM;
-
-    int lorem;
-    int lorem_ipsum;
-    int UUID;
-    int Lorem;
-    int Lorem_Ipsum;
-    int lorem_IPsum;
 
     return 0;
 }
