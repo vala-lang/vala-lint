@@ -35,7 +35,7 @@ class FileTest : GLib.Object {
             line = 0;
         }
 
-        public void add (string title, int line_diff, int? column_begin = null, int? column_end = null,string? message = null) {
+        public void add (string title, int line_diff, int? column_begin = null, int? column_end = null, string? message = null) {
             list.add ({ title, line += line_diff, column_begin, column_end, message });
         }
     }
