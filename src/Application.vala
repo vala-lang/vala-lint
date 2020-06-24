@@ -95,20 +95,18 @@ public class ValaLint.Application : GLib.Application {
             return 0;
         }
 
-        if (lint_directory != null) {
-            //  command_line.print (_("The directory flag is depreceated, just omit the flag for future versions.") + "\n");
-
-            /* Add directory to tmp array */
-            tmp.resize (tmp.length + 1);
-            tmp[tmp.length - 1] = lint_directory;
-        }
-
         this.application_command_line = command_line;
 
         /* 1. Get list of files */
         var file_data_list = new Vala.ArrayList<FileData?> ();
         try {
-            file_data_list = get_files (command_line, tmp[1:tmp.length]);
+            string[] file_name_list = tmp[1:tmp.length];
+            if (lint_directory != null) {
+                //  command_line.print (_("The directory flag is depreceated, just omit the flag for future versions.") + "\n");
+                file_name_list += lint_directory;
+            }
+
+            file_data_list = get_files (command_line, file_name_list);
         } catch (Error e) {
             critical (_("Error: %s") + "\n", e.message);
         }
