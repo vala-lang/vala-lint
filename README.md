@@ -80,7 +80,6 @@ line-length=warn
 naming-convention=error
 no-space=error
 note=warn
-space-before-paren=error
 use-of-tabs=error
 trailing-newlines=error
 trailing-whitespace=error

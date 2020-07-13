@@ -8,7 +8,13 @@ class FileTest : GLib.Object {
         string literal = "Lorem ipsum";
         var string_template = @"$literal et al.";
 
+        valid ();
+
+        int counter = 0;
+        counter += 1;
         var /* comment */ string_double_space = /* */ "lorem";
+
+        var regex = /--pkg[= ](\S+)/;
 
         return 0;
     }
