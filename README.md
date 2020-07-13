@@ -76,6 +76,7 @@ block-opening-brace-space-before=error
 double-semicolon=error
 double-spaces=error
 ellipsis=error
+indentation=error
 line-length=warn
 naming-convention=error
 no-space=error
@@ -88,6 +89,9 @@ unnecessary-string-template=error
 
 [Disabler]
 disable-by-inline-comments=true
+
+[indentation]
+indent-size=4
 
 [line-length]
 max-line-length=120

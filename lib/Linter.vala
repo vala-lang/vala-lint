@@ -47,6 +47,7 @@ public class ValaLint.Linter : Object {
 
         visitor = new ValaLint.Visitor ();
         visitor.double_semicolon_check = new Checks.DoubleSemicolonCheck ();
+        visitor.indentation_check = new Checks.IndentationCheck ();
         visitor.ellipsis_check = new Checks.EllipsisCheck ();
         visitor.naming_convention_check = new Checks.NamingConventionCheck ();
         visitor.no_space_check = new Checks.NoSpaceCheck ();

@@ -56,6 +56,7 @@ class FileTest : GLib.Object {
         int line = 0; // So that new tests can be added without changing every number...
         var m_warnings = new Vala.ArrayList<FileTestMistake?> ();
         m_warnings.add ({ "naming-convention", line += 4 });
+        m_warnings.add ({ "indentation", line += 1 });
         m_warnings.add ({ "space-before-paren", line += 2 });
         m_warnings.add ({ "note", line += 1, "TODO" });
         m_warnings.add ({ "note", line += 1, "TODO: Lorem ipsum" });
@@ -76,7 +77,8 @@ class FileTest : GLib.Object {
         m_warnings.add ({ "unnecessary-string-template", line += 1 });
         m_warnings.add ({ "line-length", line += 2 });
         m_warnings.add ({ "line-length", line += 1 });
-        m_warnings.add ({ "trailing-newlines", line += 2 });
+        m_warnings.add ({ "indentation", line += 3 });
+        m_warnings.add ({ "trailing-newlines", line += 3 });
 
         check_file_for_mistake (File.new_for_path ("../test/files/warnings.vala"), m_warnings);
 

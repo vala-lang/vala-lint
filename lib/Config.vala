@@ -48,6 +48,7 @@ public class ValaLint.Config {
         default_config.set_string ("Checks", "double-semicolon", State.ERROR.to_string ());
         default_config.set_string ("Checks", "double-spaces", State.ERROR.to_string ());
         default_config.set_string ("Checks", "ellipsis", State.ERROR.to_string ());
+        default_config.set_string ("Checks", "indentation", State.ERROR.to_string ());
         default_config.set_string ("Checks", "line-length", State.WARN.to_string ());
         default_config.set_string ("Checks", "naming-convention", State.ERROR.to_string ());
         default_config.set_string ("Checks", "no-space", State.ERROR.to_string ());
@@ -59,6 +60,8 @@ public class ValaLint.Config {
         default_config.set_string ("Checks", "unnecessary-string-template", State.ERROR.to_string ());
 
         default_config.set_boolean ("Disabler", "disable-by-inline-comments", true);
+
+        default_config.set_integer ("indentation", "indent-size", 4);
 
         default_config.set_double ("line-length", "max-line-length", 120);
         default_config.set_boolean ("line-length", "ignore-comments", true);

@@ -13,6 +13,7 @@ vala_linter_files = files(
     'Checks/DoubleSemicolonCheck.vala',
     'Checks/DoubleSpacesCheck.vala',
     'Checks/EllipsisCheck.vala',
+    'Checks/IndentationCheck.vala',
     'Checks/LineLengthCheck.vala',
     'Checks/NamingConventionCheck.vala',
     'Checks/NoSpaceCheck.vala',

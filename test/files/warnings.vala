@@ -2,6 +2,7 @@
 
 class FileTest : GLib.Object {
     const int underscore_constant = 3;
+        int wrong_indentation;
 
     public static int main(string[] args) {
         test (); // TODO
@@ -26,5 +27,9 @@ class FileTest : GLib.Object {
 
         string this_is_a_very_long_variable_name_to_get_over_the_120_character_line_length_limit = "lorem ipsum dolor amet test"; // despite the comment
         string this_is_a_very_long_variable_name_to_get_over_the_120_character_line_with_comment /* with comment */ = "lorem ipsum dolor amet test"; // and comment here
+
+        if (empty_string_template == "") {
+                wrong_indentation = 3;
+        }
     }
 }
