@@ -1,5 +1,6 @@
 project(
     'io.elementary.vala-lint', 'vala', 'c',
+    version: '0.1.0',
     meson_version : '>= 0.43'
 )
 
