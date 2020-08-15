@@ -59,6 +59,8 @@ vala_linter_library = shared_library(
 	]
 )
 
+vala_linter_source_dir = meson.current_source_dir ()
+vala_linter_build_dir = meson.current_build_dir ()
 vala_linter_dep = declare_dependency(
     dependencies: vala_linter_deps,
     link_with : vala_linter_library,
