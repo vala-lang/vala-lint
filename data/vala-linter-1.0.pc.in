@@ -1,0 +1,13 @@
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=@libdir@
+datadir=${prefix}/share
+includedir=${prefix}/include
+
+Name: @PROJECT_NAME@
+Description: GTK+ widget library for SVG objects using GSVG
+URL: www.pwmc.mx/gsvgtk
+Version: @VERSION@
+Requires: gsvg-0.8 >= 0.7.0 librsvg-2.0 >= 2.40.16
+Libs: -L${libdir} -lvala-linter-1.0
+Cflags: -I${includedir}/vala-linter-1.0
