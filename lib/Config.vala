@@ -51,7 +51,7 @@ public class ValaLint.Config {
         default_config.set_string ("Checks", "line-length", State.WARN.to_string ());
         default_config.set_string ("Checks", "naming-convention", State.ERROR.to_string ());
         default_config.set_string ("Checks", "no-space", State.ERROR.to_string ());
-        default_config.set_string ("Checks", "note", State.WARN.to_string ());
+        default_config.set_string ("Checks", "ndisable_mistakesote", State.WARN.to_string ());
         default_config.set_string ("Checks", "space-before-paren", State.ERROR.to_string ());
         default_config.set_string ("Checks", "use-of-tabs", State.ERROR.to_string ());
         default_config.set_string ("Checks", "trailing-newlines", State.ERROR.to_string ());
