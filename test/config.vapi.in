@@ -1,0 +1,7 @@
+[CCode (cheader_filename = "config.h")]
+namespace TestConfig {
+	[CCode (cname = "TEST_SRC_DIR")]
+	public const string SRC_DIR;
+	[CCode (cname = "TEST_BUILD_DIR")]
+	public const string BUILD_DIR;
+}
