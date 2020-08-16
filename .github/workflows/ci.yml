@@ -104,7 +104,7 @@ jobs:
         run: chmod +x ./build/src/io.elementary.vala-lint
 
       - name: Lint
-        run: ./build/src/io.elementary.vala-lint -d .
+        run: ./build/src/io.elementary.vala-lint
 
   Lint_Projects:
     name: Lint "${{ matrix.project }}"
