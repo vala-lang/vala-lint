@@ -1,6 +1,8 @@
 // vala-lint=skip-file
 
-class FileTest : GLib.Object {
+using GLib;
+
+class FileTest : Object {
     const int underscore_constant = 3;
 
     public static int main(string[] args) {

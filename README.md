@@ -85,6 +85,7 @@ use-of-tabs=error
 trailing-newlines=error
 trailing-whitespace=error
 unnecessary-string-template=error
+using-directive=error
 
 [Disabler]
 disable-by-inline-comments=true
