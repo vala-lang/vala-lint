@@ -20,7 +20,7 @@
 public class ValaLint.Checks.TrailingNewlinesCheck : Check {
     public TrailingNewlinesCheck () {
         Object (
-            title: _("trailing-newlines"),
+            title: "trailing-newlines",
             description:_("Checks for a single newline at the end of files")
         );
 
