@@ -26,6 +26,6 @@ test_envars = [
     'G_DEBUG=fatal-warnings',
 ]
 
-test('vala lint file test', file_test, env: test_envars)
+test('file', file_test, env: test_envars)
 
-test('vala lint self test', vala_lint, workdir: meson.source_root(), env: test_envars)
+test('self', vala_lint, workdir: meson.source_root(), env: test_envars)
