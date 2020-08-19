@@ -4,10 +4,10 @@ libdir=@libdir@
 datadir=${prefix}/share
 includedir=${prefix}/include
 
-Name: @PROJECT_NAME@
-Description: GTK+ widget library for SVG objects using GSVG
-URL: www.pwmc.mx/gsvgtk
+Name: vala-linter-1.0
+Description: Lqibrary prividing a Vala code files checker for code-style errors
+URL: https://github.com/vala-lang/vala-lint
 Version: @VERSION@
-Requires: gsvg-0.8 >= 0.7.0 librsvg-2.0 >= 2.40.16
+Requires: gio-2.0>=2.56.4 @LIBVALA@
 Libs: -L${libdir} -lvala-linter-1.0
 Cflags: -I${includedir}/vala-linter-1.0

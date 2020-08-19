@@ -91,7 +91,7 @@ class FileTest : GLib.Object {
     }
 
     public static File get_test_file (string name) {
-        return File.new_for_path (TestConfig.SRC_DIR+"/files/" + name);
+        return File.new_for_path (TestConfig.SRC_DIR + "/files/" + name);
     }
 
     public static int main (string[] args) {
