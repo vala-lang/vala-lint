@@ -5,9 +5,9 @@ datadir=${prefix}/share
 includedir=${prefix}/include
 
 Name: vala-linter-1.0
-Description: Lqibrary prividing a Vala code files checker for code-style errors
+Description: Library prividing a Vala code files checker for code-style errors
 URL: https://github.com/vala-lang/vala-lint
 Version: @VERSION@
-Requires: gio-2.0>=2.56.4 @LIBVALA@
+Requires: gio-2.0>=2.56.4 @LIBVALA@ >= 0.40.4
 Libs: -L${libdir} -lvala-linter-1.0
 Cflags: -I${includedir}/vala-linter-1.0
