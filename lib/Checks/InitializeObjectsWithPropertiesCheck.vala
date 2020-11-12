@@ -43,18 +43,25 @@ public class ValaLint.Checks.InitializeObjectsWithPropertiesCheck : Check {
                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
         foreach (ParseResult r in parse_result) {
             if (regex != null) {
+                int index = 0;
                 GLib.MatchInfo mi;
-                if (regex.match (r.text, 0, out mi)) {
-                    int start_pos, end_pos;
-                    if (mi.fetch_pos (0, out start_pos, out end_pos)) {
-                        var begin = Utils.get_absolute_location (r.begin, r.text, start_pos);
-                        var end = Utils.get_absolute_location (r.begin, r.text, end_pos);
-
-                        var name = mi.fetch_named ("name");
-                        var message = "\"%s\" should be initialized with properties".printf (name);
-
-                        mistake_list.add ({ this, begin, end, message });
+                try {
+                    while (regex.match_full (r.text, -1, index, 0, out mi)) {
+                        int start_pos, end_pos;
+                        if (mi.fetch_pos (0, out start_pos, out end_pos)) {
+                            var begin = Utils.get_absolute_location (r.begin, r.text, start_pos);
+                            var end = Utils.get_absolute_location (r.begin, r.text, end_pos);
+    
+                            var name = mi.fetch_named ("name");
+                            var message = "\"%s\" should be initialized with properties".printf (name);
+    
+                            mistake_list.add ({ this, begin, end, message });
+    
+                            index = end_pos + 1;
+                        }
                     }
+                }  catch (RegexError e) {
+                    stderr.printf (e.message);
                 }
             }
         }
