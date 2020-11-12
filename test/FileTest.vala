@@ -138,6 +138,10 @@ class FileTest : GLib.Object {
         general_warnings.add ("trailing-newlines", 2);
         check_file_for_mistake (get_test_file ("general-warnings.vala"), general_warnings);
 
+        var initialize_objects_with_properties_warnings = FileTestMistakeList ();
+        initialize_objects_with_properties_warnings.add ("initialize-objects-with-properties", 4, 0, 0);
+        check_file_for_mistake (get_test_file ("initialize-objects-with-properties.vala"), initialize_objects_with_properties_warnings);
+
         var line_length_warnings = FileTestMistakeList ();
         line_length_warnings.add ("line-length", 8, 120, 141);
         check_file_for_mistake (get_test_file ("line-length-check.vala"), line_length_warnings);
