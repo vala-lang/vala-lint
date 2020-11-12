@@ -32,8 +32,9 @@ public class ValaLint.Checks.InitializeObjectsWithPropertiesCheck : Check {
 
         try {
             regex = new Regex (
-                "(?P<space>[ \t]*)(?P<init>[\\w,.]+ (?P<name>\\w+) = new [\\w,.]+ \\([^;]+);\n" +
-                "(?:[ \t]*(?P=name).(?P<props>\\w+\\s?=\\s?[^;]+);\n)+");
+                "(?P<init>[\\w,.]+ (?P<name>\\w+) = new [\\w,.]+ \\([^;]+);\n" +
+                "(?:[ \t]*(?P=name).(?P<props>\\w+\\s?=\\s?[^;]+);[\n])*" +
+                "(?:[ \t]*(?P=name).(\\w+\\s?=\\s?[^;]+);)");
         } catch (RegexError e) {
             stderr.printf (e.message);
         }
@@ -41,28 +42,33 @@ public class ValaLint.Checks.InitializeObjectsWithPropertiesCheck : Check {
 
     public override void check (Vala.ArrayList<ParseResult?> parse_result,
                                 ref Vala.ArrayList<FormatMistake?> mistake_list) {
+        string content = "";
         foreach (ParseResult r in parse_result) {
-            if (regex != null) {
-                int index = 0;
-                GLib.MatchInfo mi;
-                try {
-                    while (regex.match_full (r.text, -1, index, 0, out mi)) {
-                        int start_pos, end_pos;
-                        if (mi.fetch_pos (0, out start_pos, out end_pos)) {
-                            var begin = Utils.get_absolute_location (r.begin, r.text, start_pos);
-                            var end = Utils.get_absolute_location (r.begin, r.text, end_pos);
-    
-                            var name = mi.fetch_named ("name");
-                            var message = "\"%s\" should be initialized with properties".printf (name);
-    
-                            mistake_list.add ({ this, begin, end, message });
-    
-                            index = end_pos + 1;
-                        }
+            content += r.text;
+        }
+
+        if (parse_result.size > 0 && regex != null) {
+            ParseResult r = parse_result[0];
+            int index = 0;
+            GLib.MatchInfo mi;
+            try {
+                while (regex.match_full (content, -1, index, 0, out mi)) {
+                    int name_start_pos, start_pos, end_pos;
+                    if ((mi.fetch_named_pos ("name", out name_start_pos, out end_pos)) &&
+                        (mi.fetch_pos (0, out start_pos, out end_pos))) {
+                        var begin = Utils.get_absolute_location (r.begin, content, name_start_pos);
+                        var end = Utils.get_absolute_location (r.begin, content, end_pos);
+
+                        var name = mi.fetch_named ("name");
+                        var message = "\"%s\" should be initialized with properties".printf (name);
+
+                        mistake_list.add ({ this, begin, end, message });
+
+                        index = end_pos;
                     }
-                }  catch (RegexError e) {
-                    stderr.printf (e.message);
                 }
+            } catch (RegexError e) {
+                stderr.printf (e.message);
             }
         }
     }
