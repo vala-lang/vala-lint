@@ -76,6 +76,7 @@ block-opening-brace-space-before=error
 double-semicolon=error
 double-spaces=error
 ellipsis=error
+initialize-objects-with-properites=warn
 line-length=warn
 naming-convention=error
 no-space=error
