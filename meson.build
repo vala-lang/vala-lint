@@ -11,7 +11,7 @@ libvala_version = run_command(valac.cmd_array()[0], '--api-version').stdout().st
 
 gio_dep = dependency('gio-2.0', version: '>=2.56.4')
 posix_dep = valac.find_library('posix')
-libvala_required_version = '>=0.40.0'
+libvala_required_version = '>= 0.40.4'
 libvala_dep = dependency('libvala-@0@'.format(libvala_version), version: libvala_required_version)
 
 subdir('lib')

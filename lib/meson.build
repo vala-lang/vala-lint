@@ -49,8 +49,8 @@ vala_linter_library = shared_library(
     vala_linter_files,
     version : LT_VERSION,
 	soversion : LT_VERSION+'.'+LT_AGE+'.'+LT_REVISION,
-	vala_header : 'vala-lint.h',
-	vala_vapi : 'vala-lint-1.0.vapi',
+	vala_header : 'vala-linter.h',
+	vala_vapi : 'vala-linter-1.vapi',
     dependencies : vala_linter_deps,
     install : true,
 	install_dir : [
