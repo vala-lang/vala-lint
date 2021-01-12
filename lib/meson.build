@@ -27,6 +27,7 @@ vala_linter_files = files(
 )
 
 vala_linter_deps = [
+    gee_dep,
     gio_dep,
     libvala_dep,
 ]
