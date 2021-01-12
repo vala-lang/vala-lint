@@ -27,6 +27,7 @@ public class ValaLint.Application : GLib.Application {
     private static bool print_mistakes_end = false;
     private static bool exit_with_zero = false;
     private static bool generate_config_file = false;
+    private static bool auto_fix = false;
     private static string? config_file = null;
 
     private ApplicationCommandLine application_command_line;
@@ -44,6 +45,8 @@ public class ValaLint.Application : GLib.Application {
             "Always return a 0 (non-error) status code, even if lint errors are found." },
         { "generate-config", 'g', 0, OptionArg.NONE, ref generate_config_file,
             "Generate a sample configuration file with default values." },
+        { "fix", 'f', 0, OptionArg.NONE, ref auto_fix,
+            "Fix any auto-fixable mistakes." },
         { null }
     };
 
