@@ -119,10 +119,14 @@ public class ValaLint.Application : GLib.Application {
 
         /* 3. Check files */
         var linter = new Linter ();
+        var fixer = new Fixer ();
         foreach (FileData data in file_data_list) {
             try {
                 var mistakes = linter.run_checks_for_file (data.file);
                 data.mistakes.add_all (mistakes);
+                if (auto_fix) {
+                    fixer.apply_fixes_for_file (data.file, ref mistakes);
+                }
             } catch (Error e) {
                 critical (_("Error: %s while linting file %s") + "\n", e.message, data.file.get_path ());
             }

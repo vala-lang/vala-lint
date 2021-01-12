@@ -108,4 +108,8 @@ public abstract class ValaLint.Check : Object {
             mistakes.add (mistake);
         }
     }
+
+    // TODO: docstring
+    public virtual void apply_fix (Vala.SourceLocation begin, Vala.SourceLocation end, ref string contents) {
+    }
 }
