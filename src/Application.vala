@@ -35,7 +35,7 @@ public class ValaLint.Application : GLib.Application {
     private const OptionEntry[] OPTIONS = {
         { "version", 'v', 0, OptionArg.NONE, ref print_version,
             "Display version number." },
-        { "directory", 'd', 1, OptionArg.STRING, ref lint_directory, // Hidden flag
+        { "directory", 'd', OptionFlags.HIDDEN, OptionArg.STRING, ref lint_directory, // Hidden flag
             "Lint all Vala files in the given directory. (DEPRECEATED)" },
         { "print-end", 'e', 0, OptionArg.NONE, ref print_mistakes_end,
             "Show end of mistakes." },
