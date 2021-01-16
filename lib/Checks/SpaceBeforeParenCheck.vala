@@ -36,4 +36,15 @@ public class ValaLint.Checks.SpaceBeforeParenCheck : Check {
             }
         }
     }
+
+    public override bool apply_fix (Vala.SourceLocation begin, Vala.SourceLocation end, ref string contents) {
+        var lines = contents.split ("\n");
+
+        var line = lines[begin.line - 1];
+        line = line[0:begin.column] + " " + line[begin.column:line.length];
+        lines[begin.line - 1] = line;
+
+        contents = string.joinv ("\n", lines);
+        return true;
+    }
 }
