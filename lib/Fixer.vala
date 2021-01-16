@@ -25,11 +25,18 @@ public class ValaLint.Fixer : Object {
         string contents;
         FileUtils.get_contents (filename, out contents);
 
+        var remaining_mistakes = new Vala.ArrayList<FormatMistake?> ((a, b) => a.equal_to (b));
+
         foreach (FormatMistake? mistake in mistakes) {
-            mistake.check.apply_fix (mistake.begin, mistake.end, ref contents);
-            stdout.printf (@"Fix: $contents\n");
-            // TODO: write contents to file
-            // TODO: remove mistake from list
+            var applied = mistake.check.apply_fix (mistake.begin, mistake.end, ref contents);
+
+            if (!applied) {
+                remaining_mistakes.add (mistake);
+            }
         }
+
+        mistakes = remaining_mistakes;
+
+        FileUtils.set_contents (filename, contents);
     }
 }

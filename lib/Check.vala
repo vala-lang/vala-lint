@@ -110,6 +110,7 @@ public abstract class ValaLint.Check : Object {
     }
 
     // TODO: docstring
-    public virtual void apply_fix (Vala.SourceLocation begin, Vala.SourceLocation end, ref string contents) {
+    public virtual bool apply_fix (Vala.SourceLocation begin, Vala.SourceLocation end, ref string contents) {
+        return false;
     }
 }
