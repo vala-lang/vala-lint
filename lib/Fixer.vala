@@ -27,7 +27,9 @@ public class ValaLint.Fixer : Object {
 
         var remaining_mistakes = new Vala.ArrayList<FormatMistake?> ((a, b) => a.equal_to (b));
 
-        foreach (FormatMistake? mistake in mistakes) {
+        // Fix mistakes in reverse, so that the begin/end locations of subsequent mistakes are not affected
+        for (int index = mistakes.size - 1; index >= 0; index--) {
+            var mistake = mistakes.@get (index);
             var applied = mistake.check.apply_fix (mistake.begin, mistake.end, ref contents);
 
             if (!applied) {
@@ -36,6 +38,13 @@ public class ValaLint.Fixer : Object {
         }
 
         mistakes = remaining_mistakes;
+
+        mistakes.sort ((a, b) => {
+            if (a.begin.line == b.begin.line) {
+                return a.begin.column - b.begin.column;
+            }
+            return a.begin.line - b.begin.line;
+        });
 
         FileUtils.set_contents (filename, contents);
     }
