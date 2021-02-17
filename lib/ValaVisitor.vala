@@ -193,7 +193,11 @@ class ValaLint.Visitor : Vala.CodeVisitor {
         label.accept_children (this);
     }
 
+#if VALA_0_52
+    public override void visit_loop_statement (Vala.LoopStatement stmt) {
+#else
     public override void visit_loop (Vala.Loop stmt) {
+#endif
         stmt.accept_children (this);
     }
 
@@ -254,6 +258,12 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     public override void visit_unlock_statement (Vala.UnlockStatement stmt) {
         stmt.accept_children (this);
     }
+
+#if VALA_0_50
+    public override void visit_with_statement (Vala.WithStatement stmt) {
+        stmt.accept_children (this);
+    }
+#endif
 
     public override void visit_delete_statement (Vala.DeleteStatement stmt) {
         stmt.accept_children (this);
