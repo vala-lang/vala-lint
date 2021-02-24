@@ -190,6 +190,8 @@ class FileTest : GLib.Object {
         trailing_whitespace_warnings.add ("trailing-whitespace", 4, 14, 15);
         check_file_for_mistake (get_test_file ("trailing-whitespace-check.vala"), trailing_whitespace_warnings);
 
+        check_file_for_mistake (get_test_file ("empty-file.vala"), empty_list);
+
         return 0;
     }
 }
