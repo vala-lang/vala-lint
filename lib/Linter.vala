@@ -81,7 +81,13 @@ public class ValaLint.Linter : Object {
 
             // Our parser checks only strings, comments and other code
             var parser_code = new ValaLint.Parser ();
+
             Vala.ArrayList<ParseResult?> parse_result = parser_code.parse (content);
+
+            if (parse_result.size == 0) {
+                debug ("No ParseResults after parsing %s.  Ignoring this file", filename);
+                return mistake_list;
+            }
 
             foreach (Check check in global_checks) {
                 check.check (parse_result, ref mistake_list);
