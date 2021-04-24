@@ -108,4 +108,17 @@ public abstract class ValaLint.Check : Object {
             mistakes.add (mistake);
         }
     }
+
+    /**
+     * Updates the content with the fixed version.
+     *
+     * @param begin the source location where the mistake begins
+     * @param end the source location where the mistake ends
+     * @param contents the contents of the file containing the mistake
+     *
+     * @return whether the mistake was fixed
+     */
+    public virtual bool apply_fix (Vala.SourceLocation begin, Vala.SourceLocation end, ref string contents) {
+        return false;
+    }
 }

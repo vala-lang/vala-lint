@@ -27,6 +27,7 @@ public class ValaLint.Application : GLib.Application {
     private static bool print_mistakes_end = false;
     private static bool exit_with_zero = false;
     private static bool generate_config_file = false;
+    private static bool auto_fix = false;
     private static string? config_file = null;
 
     private ApplicationCommandLine application_command_line;
@@ -44,6 +45,8 @@ public class ValaLint.Application : GLib.Application {
             "Always return a 0 (non-error) status code, even if lint errors are found." },
         { "generate-config", 'g', 0, OptionArg.NONE, ref generate_config_file,
             "Generate a sample configuration file with default values." },
+        { "fix", 'f', 0, OptionArg.NONE, ref auto_fix,
+            "Fix any auto-fixable mistakes." },
         { null }
     };
 
@@ -116,9 +119,13 @@ public class ValaLint.Application : GLib.Application {
 
         /* 3. Check files */
         var linter = new Linter ();
+        var fixer = new Fixer ();
         foreach (FileData data in file_data_list) {
             try {
                 var mistakes = linter.run_checks_for_file (data.file);
+                if (auto_fix) {
+                    fixer.apply_fixes_for_file (data.file, ref mistakes);
+                }
                 data.mistakes.add_all (mistakes);
             } catch (Error e) {
                 critical (_("Error: %s while linting file %s") + "\n", e.message, data.file.get_path ());

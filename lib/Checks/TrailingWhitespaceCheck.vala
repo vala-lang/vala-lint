@@ -43,4 +43,11 @@ public class ValaLint.Checks.TrailingWhitespaceCheck : Check {
             add_regex_mistake ("""\h$""", _("Unexpected whitespace at end of last line"), r_last, ref mistake_list);
         }
     }
+
+    public override bool apply_fix (Vala.SourceLocation begin, Vala.SourceLocation end, ref string contents) {
+        var lines = contents.split ("\n");
+        lines[begin.line - 1]._chomp ();
+        contents = string.joinv ("\n", lines);
+        return true;
+    }
 }

@@ -35,4 +35,9 @@ public class ValaLint.Checks.TrailingNewlinesCheck : Check {
             add_regex_mistake ("""\n{2,}\z""", _("Multiple newlines at the end of file"), r_last, ref mistake_list);
         }
     }
+
+    public override bool apply_fix (Vala.SourceLocation begin, Vala.SourceLocation end, ref string contents) {
+        contents._chomp ();
+        return true;
+    }
 }
