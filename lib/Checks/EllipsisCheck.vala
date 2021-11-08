@@ -19,6 +19,7 @@
 
 public class ValaLint.Checks.EllipsisCheck : Check {
     const string ELLIPSIS = "..."; // vala-lint=ellipsis
+    const string REAL_ELLIPSIS = "…";
 
     public EllipsisCheck () {
         Object (
@@ -55,5 +56,16 @@ public class ValaLint.Checks.EllipsisCheck : Check {
 
             index = lit.value.index_of (ELLIPSIS, index + length);
         }
+    }
+
+    public override bool apply_fix (Vala.SourceLocation begin, Vala.SourceLocation end, ref string contents) {
+        var lines = contents.split ("\n");
+
+        var line = lines[begin.line - 1];
+        line = line[0:begin.column - 1] + REAL_ELLIPSIS + line[end.column - 1: line.length];
+        lines[begin.line - 1] = line;
+
+        contents = string.joinv ("\n", lines);
+        return true;
     }
 }
