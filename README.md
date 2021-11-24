@@ -57,6 +57,10 @@ or specify particular files via
     io.elementary.vala-lint ../my-project/test/unit-test.vala
     io.elementary.vala-lint ../my-project/test/*-test.vala
 
+You can automatically fix a certain class of issues by
+
+    io.elementary.vala-lint --fix ../my-project/test/*-test.vala
+
 To list all options, type `io.elementary.vala-lint -h`. Additional command line flags are: `--print-end` for printing not only the start but also the end of a mistake, and `--exit-zero` to always return a 0 (non-error) status code, even if lint mistakes are found.
 
 ### Configuration
