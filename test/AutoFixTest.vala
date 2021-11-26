@@ -26,7 +26,6 @@ class AutoFixTest : GLib.Object {
 
     public struct AutoFixFileData {
         File file;
-        string name;
         Vala.ArrayList<ValaLint.FormatMistake?> mistakes;
     }
 
