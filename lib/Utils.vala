@@ -100,7 +100,7 @@ public class ValaLint.Utils : Object {
      * 
      * @return The filtered array.
      */
-    public delegate bool<G> FilterFunction<G> (G element);
+    public delegate bool FilterFunction<G> (G element);
     public static Vala.ArrayList<G> filter<G> (FilterFunction<G> func, Vala.ArrayList<G> source) {
         var result = new Vala.ArrayList<G> ();
 
