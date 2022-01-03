@@ -86,8 +86,16 @@ class AutoFixTest : GLib.Object {
     }
 
     public Vala.ArrayList<AutoFixFileData?> prepare_files_for_test () {
-        File output_dir = File.new_for_path (TestConfig.SRC_DIR + "/auto-fix/output");
-        assert (output_dir.query_exists ());
+        File output_dir = File.new_for_path (TestConfig.SRC_DIR + "/auto-fix/output/");
+
+        try {
+            output_dir.make_directory ();
+        } catch (Error e) {
+            if (e is GLib.IOError.EXISTS == false) {
+                error ("%s", e.message);
+            }
+        }
+
         assert (inital_auto_fix_files_dir.query_exists ());
 
         try {
