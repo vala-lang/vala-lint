@@ -107,6 +107,64 @@ public class ValaLint.Linter : Object {
             });
         }
 
+        Vala.CodeContext.pop ();
+
+        return mistake_list;
+    }
+
+
+    public Vala.ArrayList<FormatMistake?> run_checks_for_content (string content, string uri) throws Error, IOError {
+        var f = GLib.File.new_for_uri (uri);
+        var mistake_list = new Vala.ArrayList<FormatMistake?> ((a, b) => a.equal_to (b));
+
+        var context = new Vala.CodeContext ();
+        var reporter = new Reporter (mistake_list);
+
+        context.report = reporter;
+        Vala.CodeContext.push (context);
+
+        Vala.SourceFile file = new Vala.SourceFile (context, Vala.SourceFileType.SOURCE, f.get_path (), content, false);
+        context.add_source_file (file);
+
+        // This parser builds the abstract syntax tree (AST)
+        var parser_ast = new Vala.Parser ();
+        parser_ast.parse (context);
+
+        visitor.set_mistake_list (mistake_list);
+        foreach (var vala_source_file in context.get_source_files ()) {
+            vala_source_file.accept (visitor);
+        }
+
+        // Our parser checks only strings, comments and other code
+        var parser_code = new ValaLint.Parser ();
+
+        Vala.ArrayList<ParseResult?> parse_result = parser_code.parse (content);
+
+        if (parse_result.size == 0) {
+            debug ("No ParseResults after parsing %s.  Ignoring this file", uri);
+            return mistake_list;
+        }
+
+        foreach (Check check in global_checks) {
+            check.check (parse_result, ref mistake_list);
+        }
+
+        var disabler = new ValaLint.Disabler ();
+        Vala.ArrayList<ValaLint.DisableResult?> disable_results = disabler.parse (parse_result);
+
+        if (disable_mistakes) {
+            mistake_list = disabler.filter_mistakes (mistake_list, disable_results);
+        }
+
+        mistake_list.sort ((a, b) => {
+            if (a.begin.line == b.begin.line) {
+                return a.begin.column - b.begin.column;
+            }
+            return a.begin.line - b.begin.line;
+        });
+
+        Vala.CodeContext.pop ();
+
         return mistake_list;
     }
 }
