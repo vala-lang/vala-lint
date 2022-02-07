@@ -9,9 +9,13 @@ confht.set_quoted ('TEST_BUILD_DIR', meson.current_build_dir())
 configure_file(output : 'config.h',
 	configuration : confht)
 
+file_test_files = files([
+    'checks.vala',
+    'FileTest.vala'
+])
 file_test = executable(
     'file-test',
-    'FileTest.vala',
+    file_test_files,
     vala_args: [
         '--vapidir', meson.current_build_dir(),
 		'--pkg', 'config'
