@@ -38,6 +38,7 @@
                 Vlint.Position end = new Vlint.Position.from_values (fm.end.line - 1, fm.end.column - 1);
                 mt.start = start;
                 mt.end = end;
+                mt.uri = file.get_uri ();
                 _mistakes.append (mt);
         }
      }
@@ -56,6 +57,7 @@
                 Vlint.Position end = new Vlint.Position.from_values (fm.end.line - 1, fm.end.column - 1);
                 mt.start = start;
                 mt.end = end;
+                mt.uri = uri;
                 _mistakes.append (mt);
         }
      }
