@@ -26,10 +26,29 @@ file_test = executable(
     ]
 )
 
+
+content_test_files = files([
+    'checks.vala',
+    'ContentTest.vala'
+])
+content_test = executable(
+    'content-test',
+    content_test_files,
+    vala_args: [
+        '--vapidir', meson.current_build_dir(),
+		'--pkg', 'config'
+    ],
+    dependencies: [
+        vala_linter_dep,
+        posix_dep
+    ]
+)
+
 test_envars = [
     'G_DEBUG=fatal-warnings',
 ]
 
 test('file', file_test, env: test_envars)
+test('content', content_test, env: test_envars)
 
 test('self', vala_lint, workdir: meson.source_root(), env: test_envars)
