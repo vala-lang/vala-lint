@@ -14,6 +14,8 @@ posix_dep = valac.find_library('posix')
 libvala_required_version = '>= 0.40.4'
 libvala_dep = dependency('libvala-@0@'.format(libvala_version), version: libvala_required_version)
 
+g_ir_compiler = find_program('g-ir-compiler', required: false)
+
 subdir('lib')
 subdir('src')
 subdir('test')

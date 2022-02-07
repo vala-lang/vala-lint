@@ -1,0 +1,13 @@
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=@libdir@
+datadir=${prefix}/share
+includedir=${prefix}/include
+
+Name: vlint-1
+Description: Library prividing a Vala code checker for format code-style errors
+URL: https://github.com/vala-lang/vala-lint
+Version: @VERSION@
+Requires: gio-2.0 >= 2.56.4 @LIBVALA@
+Libs: -L${libdir} -lvlint-1
+Cflags: -I${includedir}/vlint-1
