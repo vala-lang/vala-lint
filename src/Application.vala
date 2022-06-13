@@ -29,6 +29,11 @@ public class ValaLint.Application : GLib.Application {
     private static bool generate_config_file = false;
     private static bool auto_fix = false;
     private static string? config_file = null;
+    private static string? ignorefile_path = null;
+    private static string? ignore_pattern = null;
+    private static string ignore_pattern_list = "";
+    private static int fnmatch_flags = Posix.FNM_EXTMATCH | Posix.FNM_PERIOD | Posix.FNM_PATHNAME;
+    private static File root_dir;
 
     private ApplicationCommandLine application_command_line;
 
@@ -41,6 +46,10 @@ public class ValaLint.Application : GLib.Application {
             "Show end of mistakes." },
         { "config", 'c', 0, OptionArg.STRING, ref config_file,
             "Specify a configuration file." },
+        { "ignore", 'x', 0, OptionArg.STRING, ref ignore_pattern,
+            "Specify a glob pattern to ignore." },
+        { "ignore-file", 'X', 0, OptionArg.STRING, ref ignorefile_path,
+            "Specify a file containing glob patterns to ignore, one pattern per line" },
         { "exit-zero", 'z', 0, OptionArg.NONE, ref exit_with_zero,
             "Always return a 0 (non-error) status code, even if lint errors are found." },
         { "generate-config", 'g', 0, OptionArg.NONE, ref generate_config_file,
@@ -100,16 +109,51 @@ public class ValaLint.Application : GLib.Application {
 
         this.application_command_line = command_line;
 
-        /* 1. Get list of files */
+        /* Get ignore patterns. Ignore patterns are glob patterns relative to the scanned directory */
+        string[] ignore_patterns = {};
+        if (ignore_pattern != null) {
+            ignore_patterns += ignore_pattern;
+        } else {
+            if (ignorefile_path == null) {
+                ignorefile_path = ".gitignore"; //TODO Allow config file to specify default ignore file
+            }
+
+            if (ignorefile_path.has_prefix ("~/")) {
+                ignorefile_path = Environment.get_home_dir () + ignorefile_path[1:ignorefile_path.length];
+            }
+
+            string contents;
+            size_t size;
+            try {
+                FileUtils.get_contents (ignorefile_path, out contents, out size);
+            } catch (Error e) {
+                warning ("Error loading ignore file contents: %s", e.message);
+            }
+
+            if (size > 10000UL) {
+                ///TRANSLATORS %s is a placeholder for a file path
+                command_line.print (_("%s is too large and will not be used.") + "\n", ignorefile_path);
+            } else {
+                var ignore_split = contents.split ("\n", -1);
+                foreach (string ignore in ignore_split) {
+                    if (ignore != "" && ignore.length <= 255) {
+                        ignore_patterns += ignore;
+                    } else if (ignore.length > 255) {
+                        command_line.print (_("The pattern %s is too long and will not be used.") + "\n", ignore);
+                    }
+                }
+            }
+        }
+
+        /* Get list of files */
         var file_data_list = new Vala.ArrayList<FileData?> ();
         try {
             string[] file_name_list = tmp[1:tmp.length];
             if (lint_directory != null) {
-                //  command_line.print (_("The directory flag is depreceated, just omit the flag for future versions.") + "\n");
                 file_name_list += lint_directory;
             }
 
-            file_data_list = get_files (command_line, file_name_list);
+            file_data_list = get_files (command_line, file_name_list, ignore_patterns);
         } catch (Error e) {
             critical (_("Error: %s") + "\n", e.message);
         }
@@ -146,12 +190,23 @@ public class ValaLint.Application : GLib.Application {
                 }
             }
         }
+
         return 0;
     }
 
-    Vala.ArrayList<FileData?> get_files (ApplicationCommandLine command_line, string[] patterns) throws Error, IOError {
-        var result = new Vala.ArrayList<FileData?> ();
+    Vala.ArrayList<FileData?> get_files (
+        ApplicationCommandLine command_line, string[] patterns, string[] ignore_patterns ) throws Error, IOError {
 
+        foreach (string pattern in ignore_patterns) {
+            ignore_pattern_list += ("|" + pattern);
+        }
+
+        debug ("Ignore pattern list: %s", ignore_pattern_list);
+        if (ignore_pattern_list.length > 0) {
+            ignore_pattern_list = "+(" + ignore_pattern_list[1: ignore_pattern_list.length] + ")";
+        }
+
+        var result = new Vala.ArrayList<FileData?> ();
         foreach (string pattern in patterns) {
             var matcher = Posix.Glob ();
 
@@ -170,6 +225,7 @@ public class ValaLint.Application : GLib.Application {
                         break;
 
                     case FileType.DIRECTORY:
+                        root_dir = file;
                         foreach (File f in get_files_from_directory (file)) {
                             string name = path + file.get_relative_path (f);
                             result.add ({ f, name, new Vala.ArrayList<FormatMistake?> () });
@@ -190,18 +246,24 @@ public class ValaLint.Application : GLib.Application {
         var info = enumerator.next_file (null);
         while (info != null) {
             string child_name = info.get_name ();
-            File child_file = dir.resolve_relative_path (child_name);
-            if (info.get_file_type () == FileType.DIRECTORY) {
-                if (!info.get_is_hidden ()) {
-                    var sub_files = get_files_from_directory (child_file);
-                    files.add_all (sub_files);
+            var child_file = dir.resolve_relative_path (child_name);
+            var rel_path = root_dir.get_relative_path (child_file);
+            if (Posix.fnmatch (ignore_pattern_list, rel_path, fnmatch_flags) != 0) {
+                if (info.get_file_type () == FileType.DIRECTORY) {
+                    if (!info.get_is_hidden ()) {
+                        var sub_files = get_files_from_directory (child_file);
+                        files.add_all (sub_files);
+                    }
+                } else if (info.get_file_type () == FileType.REGULAR) {
+                    /* Check only .vala files */
+                    if (child_name.has_suffix (".vala")) {
+                        files.add (child_file);
+                    }
                 }
-            } else if (info.get_file_type () == FileType.REGULAR) {
-                /* Check only .vala files */
-                if (child_name.has_suffix (".vala")) {
-                    files.add (child_file);
-                }
+            } else {
+                debug ("%s ignored", rel_path);
             }
+
             info = enumerator.next_file (null);
         }
         return files;
