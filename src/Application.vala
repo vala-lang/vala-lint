@@ -19,7 +19,7 @@
  * Authored by: Marcus Wichelmann <marcus.wichelmann@hotmail.de>
  */
 
- public class ValaLint.Application : GLib.Application {
+public class ValaLint.Application : GLib.Application {
     private const string VERSION = "0.1";
 
     private static string? lint_directory = null;
