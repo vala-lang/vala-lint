@@ -135,11 +135,11 @@ public class ValaLint.Application : GLib.Application {
         /* 4. Print mistakes */
         bool has_errors = print_mistakes (file_data_list);
 
-        if (exit_with_zero) {
+        if (exit_with_zero || !has_errors) {
             return 0;
+        } else {
+            return 1;
         }
-
-        return (int) has_errors;
     }
 
     Vala.ArrayList<FileData?> get_files (ApplicationCommandLine command_line, string[] patterns) throws Error, IOError {
