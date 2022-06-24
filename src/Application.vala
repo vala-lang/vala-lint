@@ -243,15 +243,12 @@ public class ValaLint.Application : GLib.Application {
             }
         }
 
-        int total_mistakes = num_errors + num_warnings;
-        if (total_mistakes == 0) {
-            application_command_line.print (_("No mistakes found") + "\n");
+        if (num_errors + num_warnings == 0) {
+            application_command_line.print ("\033[1;32m" + _("No mistakes found") + "\033[0m\n");
             return false;
         }
 
-        string summary = ("\n" + _("%d %s (%d %s, %d %s)") + "\n").printf (
-            total_mistakes,
-            total_mistakes == 1 ? _("mistake") : _("mistakes"),
+        string summary = ("\n" + _("%d %s, %d %s") + "\n").printf (
             num_errors,
             num_errors == 1 ? _("error") : _("errors"),
             num_warnings,
