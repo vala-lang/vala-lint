@@ -21,7 +21,7 @@
 ---
 
 Small command line tool and library for checking Vala code files for code-style errors.
-Based on the [elementary Code-Style guidelines](https://elementary.io/docs/code/reference#code-style).
+Based on the [elementary Code-Style guidelines](https://docs.elementary.io/develop/writing-apps/code-style).
 
 
 ## Building, Testing, and Installation
