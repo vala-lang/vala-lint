@@ -29,8 +29,6 @@ public class ValaLint.Application : GLib.Application {
     private static bool generate_config_file = false;
     private static bool auto_fix = false;
     private static string? config_file = null;
-    private static string? ignorefile_path = null;
-    private static string? ignore_pattern = null;
     private static string ignore_pattern_list = "";
     private static int fnmatch_flags = Posix.FNM_EXTMATCH | Posix.FNM_PERIOD | Posix.FNM_PATHNAME;
     private static File root_dir;
@@ -46,10 +44,6 @@ public class ValaLint.Application : GLib.Application {
             "Show end of mistakes." },
         { "config", 'c', 0, OptionArg.STRING, ref config_file,
             "Specify a configuration file." },
-        { "ignore", 'x', 0, OptionArg.STRING, ref ignore_pattern,
-            "Specify a glob pattern to ignore." },
-        { "ignore-file", 'X', 0, OptionArg.STRING, ref ignorefile_path,
-            "Specify a file containing glob patterns to ignore, one pattern per line" },
         { "exit-zero", 'z', 0, OptionArg.NONE, ref exit_with_zero,
             "Always return a 0 (non-error) status code, even if lint errors are found." },
         { "generate-config", 'g', 0, OptionArg.NONE, ref generate_config_file,
@@ -108,39 +102,67 @@ public class ValaLint.Application : GLib.Application {
         }
 
         this.application_command_line = command_line;
-
         /* Get ignore patterns. Ignore patterns are glob patterns relative to the scanned directory */
         string[] ignore_patterns = {};
-        if (ignore_pattern != null) {
-            ignore_patterns += ignore_pattern;
-        } else {
-            if (ignorefile_path == null) {
-                ignorefile_path = ".gitignore"; //TODO Allow config file to specify default ignore file
-            }
+        string ignore_root = lint_directory != null ? lint_directory : args[1];
+        if (ignore_root.has_suffix (Path.DIR_SEPARATOR_S)) {
+            ignore_root = ignore_root[0 : -1];
+        }
 
-            if (ignorefile_path.has_prefix ("~/")) {
-                ignorefile_path = Environment.get_home_dir () + ignorefile_path[1:ignorefile_path.length];
-            }
+        var ignore_filepath = Path.build_filename (
+            ignore_root, ".valalintignore"
+        );
 
-            string contents;
-            size_t size;
+        var fallback_path = Path.build_filename (
+            Environment.get_home_dir (), ".valalintignore"
+        );
+
+        if (!Path.is_absolute (ignore_filepath)) {
+            var ignore_file = File.new_for_commandline_arg_and_cwd (
+                ignore_filepath, application_command_line.get_cwd ()
+            );
+
+            ignore_filepath = ignore_file.get_path ();
+        }
+
+        debug ("Absolute ignore file path %s", ignore_filepath);
+
+        string contents;
+        size_t size = 0;
+        try {
+            FileUtils.get_contents (ignore_filepath, out contents, out size);
+        } catch (Error e) {
+            debug ("Error loading ignore file contents: %s", e.message);
+            contents = "";
+            size = 0;
+        }
+
+        if (size == 0) {
             try {
-                FileUtils.get_contents (ignorefile_path, out contents, out size);
+                FileUtils.get_contents (fallback_path, out contents, out size);
             } catch (Error e) {
-                warning ("Error loading ignore file contents: %s", e.message);
+                debug ("Error loading ignore file contents: %s", e.message);
+                contents = "";
+                size = 0;
             }
+        }
 
-            if (size > 10000UL) {
-                ///TRANSLATORS %s is a placeholder for a file path
-                command_line.print (_("%s is too large and will not be used.") + "\n", ignorefile_path);
-            } else {
-                var ignore_split = contents.split ("\n", -1);
-                foreach (string ignore in ignore_split) {
-                    if (ignore != "" && ignore.length <= 255) {
-                        ignore_patterns += ignore;
-                    } else if (ignore.length > 255) {
-                        command_line.print (_("The pattern %s is too long and will not be used.") + "\n", ignore);
+        // Basic sanity check
+        if (size > 10000UL) {
+            ///TRANSLATORS %s is a placeholder for a file path
+            command_line.print (_("%s is too large and will not be used.") + "\n", ignore_filepath);
+        } else if (size > 0) {
+            var ignore_split = contents.split ("\n", -1);
+            foreach (string ignore in ignore_split) {
+                if (ignore != "" && ignore.length <= 255) {
+                    // Remove any trailing dir separator
+                    if (ignore.has_suffix (Path.DIR_SEPARATOR_S)) {
+                        ignore = ignore[0 : -1];
                     }
+
+                    ignore_patterns += ignore;
+                } else if (ignore.length > 255) {
+                    command_line.print (_("The pattern %s is too long and will not be used.") + "\n", ignore);
                 }
             }
         }
@@ -203,7 +225,7 @@ public class ValaLint.Application : GLib.Application {
 
         debug ("Ignore pattern list: %s", ignore_pattern_list);
         if (ignore_pattern_list.length > 0) {
-            ignore_pattern_list = "+(" + ignore_pattern_list[1: ignore_pattern_list.length] + ")";
+            ignore_pattern_list = "+(" + ignore_pattern_list[1 : ] + ")";
         }
 
         var result = new Vala.ArrayList<FileData?> ();
@@ -237,35 +259,40 @@ public class ValaLint.Application : GLib.Application {
                 }
             }
         }
+
         return result;
     }
 
     Vala.ArrayList<File> get_files_from_directory (File dir) throws Error, IOError {
         var files = new Vala.ArrayList<File> ();
-        FileEnumerator enumerator = dir.enumerate_children (FileAttribute.STANDARD_NAME, 0, null);
+        FileEnumerator enumerator = dir.enumerate_children (
+            FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_IS_HIDDEN, 0, null
+        );
         var info = enumerator.next_file (null);
         while (info != null) {
             string child_name = info.get_name ();
             var child_file = dir.resolve_relative_path (child_name);
             var rel_path = root_dir.get_relative_path (child_file);
-            if (Posix.fnmatch (ignore_pattern_list, rel_path, fnmatch_flags) != 0) {
+            if (!info.get_is_hidden () &&
+                Posix.fnmatch (ignore_pattern_list, rel_path, fnmatch_flags) != 0) {
+
                 if (info.get_file_type () == FileType.DIRECTORY) {
-                    if (!info.get_is_hidden ()) {
-                        var sub_files = get_files_from_directory (child_file);
-                        files.add_all (sub_files);
-                    }
-                } else if (info.get_file_type () == FileType.REGULAR) {
-                    /* Check only .vala files */
-                    if (child_name.has_suffix (".vala")) {
-                        files.add (child_file);
-                    }
+                    var sub_files = get_files_from_directory (child_file);
+                    files.add_all (sub_files);
+                } else if (info.get_file_type () == FileType.REGULAR &&
+                           child_name.has_suffix (".vala")) {
+
+                    files.add (child_file);
+                } else {
+                    debug ("%s ignored - not regular Vala file", child_name);
                 }
             } else {
-                debug ("%s ignored", rel_path);
+                debug ("%s ignored - hidden or matches ignore pattern", rel_path);
             }
 
             info = enumerator.next_file (null);
         }
+
         return files;
     }
 
