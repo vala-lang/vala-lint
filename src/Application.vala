@@ -225,7 +225,7 @@ public class ValaLint.Application : GLib.Application {
 
         debug ("Ignore pattern list: %s", ignore_pattern_list);
         if (ignore_pattern_list.length > 0) {
-            ignore_pattern_list = "+(" + ignore_pattern_list[1 : ] + ")";
+            ignore_pattern_list = "+(" + ignore_pattern_list[1 : ignore_pattern_list.length] + ")";
         }
 
         var result = new Vala.ArrayList<FileData?> ();
