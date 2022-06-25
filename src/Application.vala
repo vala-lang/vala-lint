@@ -259,6 +259,7 @@ public class ValaLint.Application : GLib.Application {
         } else {
             application_command_line.print (apply_color_for_state (summary, Config.State.WARN));
         }
+
         return num_errors > 0;
     }
 
