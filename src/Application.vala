@@ -133,20 +133,13 @@ public class ValaLint.Application : GLib.Application {
         }
 
         /* 4. Print mistakes */
-        print_mistakes (file_data_list);
+        bool has_errors = print_mistakes (file_data_list);
 
-        if (exit_with_zero) {
+        if (exit_with_zero || !has_errors) {
             return 0;
+        } else {
+            return 1;
         }
-
-        foreach (FileData file_data in file_data_list) {
-            foreach (FormatMistake? mistake in file_data.mistakes) {
-                if (mistake.check.state == Config.State.ERROR) {
-                    return 1;
-                }
-            }
-        }
-        return 0;
     }
 
     Vala.ArrayList<FileData?> get_files (ApplicationCommandLine command_line, string[] patterns) throws Error, IOError {
@@ -207,30 +200,35 @@ public class ValaLint.Application : GLib.Application {
         return files;
     }
 
-    void print_mistakes (Vala.ArrayList<FileData?> file_data_list) {
+    bool print_mistakes (Vala.ArrayList<FileData?> file_data_list) {
+        int num_errors = 0;
+        int num_warnings = 0;
+
         foreach (FileData file_data in file_data_list) {
             if (!file_data.mistakes.is_empty) {
                 application_command_line.print ("\x001b[1m\x001b[4m" + "%s" + "\x001b[0m\n", file_data.name);
 
                 foreach (FormatMistake mistake in file_data.mistakes) {
+                    switch (mistake.check.state) {
+                        case ERROR:
+                            num_errors++;
+                            break;
+
+                        case WARN:
+                            num_warnings++;
+                            break;
+
+                        default:
+                            break;
+                    }
+
                     string color_state = "%-5s";
                     string mistakes_end = "";
                     if (print_mistakes_end) {
                         mistakes_end = "-%5i.%-3i".printf (mistake.end.line, mistake.end.column);
                     }
 
-                    switch (mistake.check.state) {
-                        case ERROR:
-                            color_state = "\033[1;31m" + color_state + "\033[0m"; // red
-                            break;
-
-                        case WARN:
-                            color_state = "\033[1;33m" + color_state + "\033[0m";  // yellow
-                            break;
-
-                        default:
-                            break;
-                    }
+                    color_state = apply_color_for_state (color_state, mistake.check.state);
 
                     application_command_line.print (
                         "\x001b[0m%5i.%-3i %s  " + color_state + "   %-45s   \033[2m%s\033[0m\n",
@@ -243,6 +241,38 @@ public class ValaLint.Application : GLib.Application {
                     );
                 }
             }
+        }
+
+        if (num_errors + num_warnings == 0) {
+            application_command_line.print ("\033[1;32m" + _("No mistakes found") + "\033[0m\n");
+            return false;
+        }
+
+        string summary = ("\n" + _("%d %s, %d %s") + "\n").printf (
+            num_errors,
+            num_errors == 1 ? _("error") : _("errors"),
+            num_warnings,
+            num_warnings == 1 ? _("warning") : _("warnings")
+        );
+        if (num_errors > 0) {
+            application_command_line.print (apply_color_for_state (summary, Config.State.ERROR));
+        } else {
+            application_command_line.print (apply_color_for_state (summary, Config.State.WARN));
+        }
+
+        return num_errors > 0;
+    }
+
+    string apply_color_for_state (string str, Config.State state) {
+        switch (state) {
+            case ERROR:
+                return "\033[1;31m" + str + "\033[0m"; // red
+
+            case WARN:
+                return "\033[1;33m" + str + "\033[0m"; // yellow
+
+            default:
+                return str;
         }
     }
 
