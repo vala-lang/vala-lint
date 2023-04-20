@@ -17,3 +17,20 @@ jobs:
           docker login -u "${{ secrets.DockerUsername }}" -p "${{ secrets.DockerPassword }}"
           docker build -t valalang/lint:latest .
           docker push valalang/lint:latest
+  PortableBuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone
+        uses: actions/checkout@v1
+      - name: Install Depedencies
+        env:
+          dependency_packages: libvala-dev valac git
+        run: apt-get update && apt-get -y install ${dependency_packages}
+      - name: Setup meson
+        run: meson build --prefix=/usr
+      - name: Build
+        run: cd build && ninja
+      - name: Install
+        env:
+          DEST_DIR: ./bin
+        run: ninja install
