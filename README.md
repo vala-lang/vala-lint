@@ -37,40 +37,40 @@ Run meson build to configure the build environment. Change to the build director
     cd build
     ninja test
 
-To install, use ninja install, then execute with `io.elementary.vala-lint`
+To install, use ninja install, then execute with `vala-lint`
 
     sudo ninja install
-    io.elementary.vala-lint
+    vala-lint
 
 
 ## Usage
 You can use vala-lint or its library to scan your files and projects easily. By default, you can lint every Vala file in the current directory and all subdirectories by
 
-    io.elementary.vala-lint
+    vala-lint
 
 Additionally, vala-lint uses [globs](https://en.wikipedia.org/wiki/Glob_%28programming%29) to match files or directories. For example, you can lint every file in a given directory by
 
-    io.elementary.vala-lint ../my-project/test
+    vala-lint ../my-project/test
 
 or specify particular files via
 
-    io.elementary.vala-lint ../my-project/test/unit-test.vala
-    io.elementary.vala-lint ../my-project/test/*-test.vala
+    vala-lint ../my-project/test/unit-test.vala
+    vala-lint ../my-project/test/*-test.vala
 
 You can automatically fix a certain class of issues by
 
-    io.elementary.vala-lint --fix ../my-project/test/*-test.vala
+    vala-lint --fix ../my-project/test/*-test.vala
 
-To list all options, type `io.elementary.vala-lint -h`. Additional command line flags are: `--print-end` for printing not only the start but also the end of a mistake, and `--exit-zero` to always return a 0 (non-error) status code, even if lint mistakes are found.
+To list all options, type `vala-lint -h`. Additional command line flags are: `--print-end` for printing not only the start but also the end of a mistake, and `--exit-zero` to always return a 0 (non-error) status code, even if lint mistakes are found.
 
 ### Configuration
 Using a configuration file, you can overwrite the default settings of vala-lint. It can be included via the `config`-option
 
-    io.elementary.vala-lint -c vala-lint.conf
+    vala-lint -c vala-lint.conf
 
 A file of the default configuration can be generated and saved by
 
-    io.elementary.vala-lint --generate-config >> vala-lint.conf
+    vala-lint --generate-config >> vala-lint.conf
 
 The generated file will look like
 

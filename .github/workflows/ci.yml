@@ -49,7 +49,7 @@ jobs:
           path: ./
 
       - name: Set Permissions
-        run: chmod +x ./build/src/io.elementary.vala-lint
+        run: chmod +x ./build/src/vala-lint
 
       - name: Test
         run: ninja test -C build
@@ -75,10 +75,10 @@ jobs:
           path: ./
 
       - name: Set Permissions
-        run: chmod +x ./build/src/io.elementary.vala-lint
+        run: chmod +x ./build/src/vala-lint
 
       - name: Check Config File
-        run: bash -c 'diff <(./build/src/io.elementary.vala-lint -g) <(cat vala-lint.conf)'
+        run: bash -c 'diff <(./build/src/vala-lint -g) <(cat vala-lint.conf)'
 
   Lint:
     name: Lint Self
@@ -101,10 +101,10 @@ jobs:
           path: ./
 
       - name: Set Permissions
-        run: chmod +x ./build/src/io.elementary.vala-lint
+        run: chmod +x ./build/src/vala-lint
 
       - name: Lint
-        run: ./build/src/io.elementary.vala-lint
+        run: ./build/src/vala-lint
 
   Lint_Projects:
     name: Lint "${{ matrix.project }}"
@@ -137,10 +137,10 @@ jobs:
           path: ./
 
       - name: Set Permissions
-        run: chmod +x ./build/src/io.elementary.vala-lint
+        run: chmod +x ./build/src/vala-lint
 
       - name: Clone
         run: git clone https://github.com/elementary/${{ matrix.project }}.git
 
       - name: Lint
-        run: ./build/src/io.elementary.vala-lint --exit-zero ${{ matrix.project }}/
+        run: ./build/src/vala-lint --exit-zero ${{ matrix.project }}/
