@@ -31,6 +31,4 @@ jobs:
       - name: Build
         run: cd build && ninja
       - name: Install
-        env:
-          DEST_DIR: ./bin
-        run: ninja install
+        run: ninja meson-dist
