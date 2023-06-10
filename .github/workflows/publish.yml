@@ -32,3 +32,13 @@ jobs:
         run: cd build && ninja
       - name: Install
         run: ninja meson-dist
+      - name: io.elementary.vala-lint.tar.xz.sha256sum
+        uses: actions/upload-artifact@v3
+        with:
+          name: io.elementary.vala-lint.tar.xz.sha256sum
+          path: build/meson-dist/io.elementary.vala-lint.tar.xz.sha256sum
+      - name: io.elementary.vala-lint.tar.xz
+        uses: actions/upload-artifact@v3
+        with:
+          name: io.elementary.vala-lint.tar.xz
+          path: build/meson-dist/io.elementary.vala-lint.tar.xz
