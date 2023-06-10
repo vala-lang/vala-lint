@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v1
       - name: Install Depedencies
         env:
-          dependency_packages: libvala-dev valac git
+          dependency_packages: libvala-dev valac git meson
         run: apt-get update && apt-get -y install ${dependency_packages}
       - name: Setup meson
         run: meson build --prefix=/usr
