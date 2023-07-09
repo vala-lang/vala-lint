@@ -268,7 +268,9 @@ public class ValaLint.Application : GLib.Application {
     Vala.ArrayList<File> get_files_from_directory (File dir) throws Error, IOError {
         var files = new Vala.ArrayList<File> ();
         FileEnumerator enumerator = dir.enumerate_children (
-            FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_IS_HIDDEN, 0, null
+            FileAttribute.STANDARD_NAME + "," +
+            FileAttribute.STANDARD_IS_HIDDEN + "," +
+            FileAttribute.STANDARD_TYPE, 0, null
         );
         var info = enumerator.next_file (null);
         while (info != null) {
