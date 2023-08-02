@@ -28,6 +28,7 @@ public class ValaLint.Application : GLib.Application {
     private static bool exit_with_zero = false;
     private static bool generate_config_file = false;
     private static bool auto_fix = false;
+    private static bool parser_friendly_output = false;
     private static string? config_file = null;
     private static string ignore_pattern_list = "";
     private static int fnmatch_flags = Posix.FNM_EXTMATCH | Posix.FNM_PERIOD | Posix.FNM_PATHNAME;
@@ -50,6 +51,9 @@ public class ValaLint.Application : GLib.Application {
             "Generate a sample configuration file with default values." },
         { "fix", 'f', 0, OptionArg.NONE, ref auto_fix,
             "Fix any auto-fixable mistakes." },
+        { "parser-friendly-output", 'p', 0, OptionArg.NONE, ref parser_friendly_output,
+            "Generate output that is easier for command line parsers to use "
+            + "(no colors, character delimited instead of padded by spaces, etc.)"},
         { null }
     };
 
@@ -199,7 +203,12 @@ public class ValaLint.Application : GLib.Application {
         }
 
         /* 4. Print mistakes */
-        bool has_errors = print_mistakes (file_data_list);
+        bool has_errors = false;
+        if (parser_friendly_output) {
+            has_errors = print_mistakes_parser_friendly (file_data_list);
+        } else {
+            has_errors = print_mistakes (file_data_list);
+        }
 
         if (exit_with_zero || !has_errors) {
             return 0;
@@ -359,6 +368,62 @@ public class ValaLint.Application : GLib.Application {
         } else {
             application_command_line.print (apply_color_for_state (summary, Config.State.WARN));
         }
+
+        return num_errors > 0;
+    }
+
+    bool print_mistakes_parser_friendly (Vala.ArrayList<FileData?> file_data_list) {
+        int num_errors = 0;
+        int num_warnings = 0;
+
+        foreach (FileData file_data in file_data_list) {
+            if (!file_data.mistakes.is_empty) {
+                application_command_line.print ("%s\n", file_data.name);
+
+                foreach (FormatMistake mistake in file_data.mistakes) {
+                    switch (mistake.check.state) {
+                        case ERROR:
+                            num_errors++;
+                            break;
+
+                        case WARN:
+                            num_warnings++;
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    string mistakes_end = "";
+                    if (print_mistakes_end) {
+                        mistakes_end = "-%i.%i".printf (mistake.end.line, mistake.end.column);
+                    }
+
+                    application_command_line.print (
+                        "%i.%i%s|%s|%s|%s\n",
+                        mistake.begin.line,
+                        mistake.begin.column,
+                        mistakes_end,
+                        mistake.check.state.to_string (),
+                        mistake.mistake,
+                        mistake.check.title
+                    );
+                }
+            }
+        }
+
+        if (num_errors + num_warnings == 0) {
+            application_command_line.print (_("No mistakes found") + "\n");
+            return false;
+        }
+
+        string summary = ("\n" + _("%d %s, %d %s") + "\n").printf (
+            num_errors,
+            num_errors == 1 ? _("error") : _("errors"),
+            num_warnings,
+            num_warnings == 1 ? _("warning") : _("warnings")
+        );
+        application_command_line.print (summary);
 
         return num_errors > 0;
     }
