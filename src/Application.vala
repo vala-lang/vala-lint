@@ -374,17 +374,14 @@ public class ValaLint.Application : GLib.Application {
     bool print_mistakes_json (Vala.ArrayList<FileData?> file_data_list) {
         int num_errors = 0;
         int num_warnings = 0;
-        bool first_mistake = true;
-        application_command_line.print ("{\"mistakes\": [");
+        Json.Builder builder = new Json.Builder ();
+        builder.begin_object ();
+        builder.set_member_name ("mistakes");
+        builder.begin_array ();
 
         foreach (FileData file_data in file_data_list) {
             if (!file_data.mistakes.is_empty) {
                 foreach (FormatMistake mistake in file_data.mistakes) {
-                    if (first_mistake) {
-                        first_mistake = false;
-                    } else {
-                        application_command_line.print (",");
-                    }
                     switch (mistake.check.state) {
                         case ERROR:
                             num_errors++;
@@ -398,30 +395,37 @@ public class ValaLint.Application : GLib.Application {
                             break;
                     }
 
-                    string mistakes_end = "";
+                    builder.begin_object ();
+                    builder.set_member_name ("filename");
+                    builder.add_string_value (file_data.name);
+                    builder.set_member_name ("line");
+                    builder.add_int_value (mistake.begin.line);
+                    builder.set_member_name ("column");
+                    builder.add_int_value (mistake.begin.column);
                     if (print_mistakes_end) {
-                        mistakes_end = "\"endLine\":%i,\"endColumn\":%i,".printf (mistake.end.line, mistake.end.column);
+                        builder.set_member_name ("endLine");
+                        builder.add_int_value (mistake.end.line);
+                        builder.set_member_name ("endColumn");
+                        builder.add_int_value (mistake.end.column);
                     }
-
-                    application_command_line.print (
-                        "{\"filename\":\"%s\"," +
-                        "\"line\":%i," +
-                        "\"column\":%i,%s" +
-                        "\"level\":\"%s\"," +
-                        "\"message\":\"%s\"," +
-                        "\"ruleId\":\"%s\"}",
-                        file_data.name,
-                        mistake.begin.line,
-                        mistake.begin.column,
-                        mistakes_end,
-                        mistake.check.state.to_string (),
-                        mistake.mistake,
-                        mistake.check.title
-                    );
+                    builder.set_member_name ("level");
+                    builder.add_string_value (mistake.check.state.to_string ());
+                    builder.set_member_name ("message");
+                    builder.add_string_value (mistake.mistake);
+                    builder.set_member_name ("ruleId");
+                    builder.add_string_value (mistake.check.title);
+                    builder.end_object ();
                 }
             }
         }
-        application_command_line.print ("]}\n");
+        builder.end_array ();
+        builder.end_object ();
+
+        Json.Generator generator = new Json.Generator ();
+        Json.Node root = builder.get_root ();
+        generator.set_root (root);
+        application_command_line.print (generator.to_data (null));
+        application_command_line.print ("\n");
 
         if (num_errors + num_warnings == 0) {
             return false;
