@@ -383,7 +383,7 @@ public class ValaLint.Application : GLib.Application {
                     if (first_mistake) {
                         first_mistake = false;
                     } else {
-                        application_command_line.print(",");
+                        application_command_line.print (",");
                     }
                     switch (mistake.check.state) {
                         case ERROR:
@@ -404,7 +404,12 @@ public class ValaLint.Application : GLib.Application {
                     }
 
                     application_command_line.print (
-                        "{\"filename\":\"%s\",\"line\":%i,\"column\":%i,%s\"level\":\"%s\",\"message\":\"%s\",\"ruleId\":\"%s\"}",
+                        "{\"filename\":\"%s\"," +
+                        "\"line\":%i," +
+                        "\"column\":%i,%s" +
+                        "\"level\":\"%s\"," +
+                        "\"message\":\"%s\"," +
+                        "\"ruleId\":\"%s\"}",
                         file_data.name,
                         mistake.begin.line,
                         mistake.begin.column,
