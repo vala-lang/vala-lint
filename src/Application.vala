@@ -105,6 +105,10 @@ public class ValaLint.Application : GLib.Application {
         /* Get ignore patterns. Ignore patterns are glob patterns relative to the scanned directory */
         string[] ignore_patterns = {};
         string ignore_root = lint_directory != null ? lint_directory : args[1];
+        if (ignore_root == null) {
+            ignore_root = tmp[1] = ".";
+            tmp.length += 1;
+        }
         if (ignore_root.has_suffix (Path.DIR_SEPARATOR_S)) {
             ignore_root = ignore_root[0 : -1];
         }
