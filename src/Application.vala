@@ -424,8 +424,7 @@ public class ValaLint.Application : GLib.Application {
         Json.Generator generator = new Json.Generator ();
         Json.Node root = builder.get_root ();
         generator.set_root (root);
-        application_command_line.print (generator.to_data (null));
-        application_command_line.print ("\n");
+        application_command_line.print ("%s\n", generator.to_data (null));
 
         if (num_errors + num_warnings == 0) {
             return false;
