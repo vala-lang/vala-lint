@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: Daniel Foré <daniel@elementary.io>
 Build-Depends: debhelper (>= 10),
                libgee-0.8-dev,
+               libjson-glib-dev,
                libvala-dev,
                meson,
                valac
