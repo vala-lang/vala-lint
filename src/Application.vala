@@ -28,6 +28,7 @@ public class ValaLint.Application : GLib.Application {
     private static bool exit_with_zero = false;
     private static bool generate_config_file = false;
     private static bool auto_fix = false;
+    private static bool json_output = false;
     private static string? config_file = null;
     private static string ignore_pattern_list = "";
     private static int fnmatch_flags = Posix.FNM_EXTMATCH | Posix.FNM_PERIOD | Posix.FNM_PATHNAME;
@@ -50,6 +51,8 @@ public class ValaLint.Application : GLib.Application {
             "Generate a sample configuration file with default values." },
         { "fix", 'f', 0, OptionArg.NONE, ref auto_fix,
             "Fix any auto-fixable mistakes." },
+        { "json-output", 'j', 0, OptionArg.NONE, ref json_output,
+            "Output in JSON format." },
         { null }
     };
 
@@ -199,7 +202,12 @@ public class ValaLint.Application : GLib.Application {
         }
 
         /* 4. Print mistakes */
-        bool has_errors = print_mistakes (file_data_list);
+        bool has_errors = false;
+        if (json_output) {
+            has_errors = print_mistakes_json (file_data_list);
+        } else {
+            has_errors = print_mistakes (file_data_list);
+        }
 
         if (exit_with_zero || !has_errors) {
             return 0;
@@ -358,6 +366,68 @@ public class ValaLint.Application : GLib.Application {
             application_command_line.print (apply_color_for_state (summary, Config.State.ERROR));
         } else {
             application_command_line.print (apply_color_for_state (summary, Config.State.WARN));
+        }
+
+        return num_errors > 0;
+    }
+
+    bool print_mistakes_json (Vala.ArrayList<FileData?> file_data_list) {
+        int num_errors = 0;
+        int num_warnings = 0;
+        Json.Builder builder = new Json.Builder ();
+        builder.begin_object ();
+        builder.set_member_name ("mistakes");
+        builder.begin_array ();
+
+        foreach (FileData file_data in file_data_list) {
+            if (!file_data.mistakes.is_empty) {
+                foreach (FormatMistake mistake in file_data.mistakes) {
+                    switch (mistake.check.state) {
+                        case ERROR:
+                            num_errors++;
+                            break;
+
+                        case WARN:
+                            num_warnings++;
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    builder.begin_object ();
+                    builder.set_member_name ("filename");
+                    builder.add_string_value (file_data.name);
+                    builder.set_member_name ("line");
+                    builder.add_int_value (mistake.begin.line);
+                    builder.set_member_name ("column");
+                    builder.add_int_value (mistake.begin.column);
+                    if (print_mistakes_end) {
+                        builder.set_member_name ("endLine");
+                        builder.add_int_value (mistake.end.line);
+                        builder.set_member_name ("endColumn");
+                        builder.add_int_value (mistake.end.column);
+                    }
+                    builder.set_member_name ("level");
+                    builder.add_string_value (mistake.check.state.to_string ());
+                    builder.set_member_name ("message");
+                    builder.add_string_value (mistake.mistake);
+                    builder.set_member_name ("ruleId");
+                    builder.add_string_value (mistake.check.title);
+                    builder.end_object ();
+                }
+            }
+        }
+        builder.end_array ();
+        builder.end_object ();
+
+        Json.Generator generator = new Json.Generator ();
+        Json.Node root = builder.get_root ();
+        generator.set_root (root);
+        application_command_line.print ("%s\n", generator.to_data (null));
+
+        if (num_errors + num_warnings == 0) {
+            return false;
         }
 
         return num_errors > 0;
