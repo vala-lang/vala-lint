@@ -9,7 +9,7 @@ RUN mkdir -p /opt/vala-lint-portable
 COPY . /opt/vala-lint
 
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends gcc libjson-glib-dev libvala-dev valac meson\
+  && apt-get install -y gcc libjson-glib-dev libvala-dev valac meson\
   && cd /opt/vala-lint \
   && meson build --prefix=/usr \
   && cd build \
