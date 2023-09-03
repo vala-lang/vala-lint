@@ -31,4 +31,4 @@ RUN apt-get update \
 VOLUME /app
 WORKDIR /app
 
-CMD ["/usr/bin/io.elementary.vala-lint"]
+CMD ["/usr/bin/vala-lint"]
