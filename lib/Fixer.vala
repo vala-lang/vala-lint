@@ -21,9 +21,9 @@
 
 public class ValaLint.Fixer : Object {
     public void apply_fixes_for_file (File file, ref Vala.ArrayList<FormatMistake?> mistakes) throws Error, IOError {
-        var filename = file.get_path ();
-        string contents;
-        FileUtils.get_contents (filename, out contents);
+        uint8[] contents_data;
+        file.load_contents (null, out contents_data, null);
+        string contents = (string) (owned) contents_data;
 
         var remaining_mistakes = new Vala.ArrayList<FormatMistake?> ((a, b) => a.equal_to (b));
 
@@ -46,6 +46,6 @@ public class ValaLint.Fixer : Object {
             return a.begin.line - b.begin.line;
         });
 
-        FileUtils.set_contents (filename, contents);
+        file.replace_contents (contents.data, null, false, FileCreateFlags.NONE, null);
     }
 }
