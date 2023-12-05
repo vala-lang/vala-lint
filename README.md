@@ -155,3 +155,13 @@ You may also ignore specific kinds of `.vala` files like
 Vala-Lint is primarily intended to be used in Continuous Integration (CI). It's available in a convenient, always up-to-date Docker container `valalang/lint:latest` hosted on Docker Hub.
 
     docker run -v "$PWD":/app valalang/lint:latest
+
+### pre-commit Integration
+You can use Vala-Lint via [pre-commit](https://pre-commit.com/) by adding the following entry to your `.pre-commit-config.yaml`:
+
+```yaml
+- repo: https://github.com/vala-lang/vala-lint
+  rev: master
+  hooks:
+  - id: vala-lint
+```
