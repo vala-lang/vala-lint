@@ -48,6 +48,7 @@ public class ValaLint.Config {
         default_config.set_string ("Checks", "double-semicolon", State.ERROR.to_string ());
         default_config.set_string ("Checks", "double-spaces", State.ERROR.to_string ());
         default_config.set_string ("Checks", "ellipsis", State.ERROR.to_string ());
+        default_config.set_string ("Checks", "initialize-objects-with-properties", State.WARN.to_string ());
         default_config.set_string ("Checks", "line-length", State.WARN.to_string ());
         default_config.set_string ("Checks", "naming-convention", State.ERROR.to_string ());
         default_config.set_string ("Checks", "no-space", State.ERROR.to_string ());
