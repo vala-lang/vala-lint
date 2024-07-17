@@ -10,7 +10,7 @@
   <img src="https://github.com/vala-lang/vala-lint/workflows/Publish/badge.svg" alt="Publish">
 
   <a href="https://hub.docker.com/r/valalang/lint">
-   <img src="https://img.shields.io/docker/stars/valalang/lint" alt="Dockerhub">  
+   <img src="https://img.shields.io/docker/stars/valalang/lint" alt="Dockerhub">
   </a>
 
   <a href="https://www.bountysource.com/trackers/45980444-elementary-Vala-lint">
@@ -123,8 +123,46 @@ If you want to skip an entire file, you can use
 
 at the beginning of the file.
 
+### Ignoring Files
+You can disable linting of files matching certain patterns by creating a `.valalintignore` text file.
+If the file is created in your home directory it will be applied globally.
+The patterns must be like those used for globbing filenames. Type `man glob` into a terminal
+for further information.
+
+If the file is created in the root directory of your project it will apply only to that project and
+will override any global setting.
+If no `.valalintignore` file is found then the patterns in any `.gitignore` file found in the
+project root are ignored.
+
+The format of the file is one pattern per line. Usually you would want to ignore certain folders like
+
+```vala
+build
+po
+data
+```
+
+Note that if you do provide a `.valalintignore` file, you must repeat any patterns in a `.gitignore`
+file that you do not want to lint.
+
+Although `vala-lint` ignores non-Vala files, ignoring large directories significantly speeds up linting.
+
+You may also ignore specific kinds of `.vala` files like
+```vala
+~*.vala
+```
 
 ### Docker and Continuous Integration
 Vala-Lint is primarily intended to be used in Continuous Integration (CI). It's available in a convenient, always up-to-date Docker container `valalang/lint:latest` hosted on Docker Hub.
 
     docker run -v "$PWD":/app valalang/lint:latest
+
+### pre-commit Integration
+You can use Vala-Lint via [pre-commit](https://pre-commit.com/) by adding the following entry to your `.pre-commit-config.yaml`:
+
+```yaml
+- repo: https://github.com/vala-lang/vala-lint
+  rev: master
+  hooks:
+  - id: vala-lint
+```
