@@ -6,8 +6,8 @@
 # dh-make output file, you may use that output file without restriction.
 # This special exception was added by Craig Small in version 0.37 of dh-make.
 
-# Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
+# Temporarily disable tests https://github.com/vala-lang/vala-lint/issues/181
+export DEB_BUILD_OPTIONS=nocheck
 
 %:
 	dh $@
