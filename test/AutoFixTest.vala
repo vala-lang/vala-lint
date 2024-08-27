@@ -29,10 +29,14 @@ class AutoFixTest : GLib.Object {
         Vala.ArrayList<ValaLint.FormatMistake?> mistakes;
     }
 
-    public bool copy_recursive (GLib.File src, GLib.File dest, GLib.FileCopyFlags flags = GLib.FileCopyFlags.NONE,
-        GLib.Cancellable? cancellable = null) throws GLib.Error {
-        GLib.FileType src_type = src.query_file_type (GLib.FileQueryInfoFlags.NONE, cancellable);
-        if (src_type == GLib.FileType.DIRECTORY) {
+    public bool copy_recursive (
+        GLib.File src,
+        GLib.File dest,
+        GLib.FileCopyFlags flags = NONE,
+        GLib.Cancellable? cancellable = null
+    ) throws GLib.Error {
+        var src_type = src.query_file_type (NONE, cancellable);
+        if (src_type == DIRECTORY) {
             if (!dest.query_exists ()) {
                 dest.make_directory (cancellable);
             }
@@ -41,22 +45,27 @@ class AutoFixTest : GLib.Object {
 
             string src_path = src.get_path ();
             string dest_path = dest.get_path ();
-            GLib.FileEnumerator enumerator = src.enumerate_children (GLib.FileAttribute.STANDARD_NAME,
-                GLib.FileQueryInfoFlags.NONE, cancellable);
+            var enumerator = src.enumerate_children (
+                GLib.FileAttribute.STANDARD_NAME, NONE, cancellable
+            );
 
-            for ( GLib.FileInfo? info = enumerator.next_file (cancellable);
-                info != null ; info = enumerator.next_file (cancellable) ) {
-              copy_recursive (
-                GLib.File.new_for_path (GLib.Path.build_filename (src_path, info.get_name ())),
-                GLib.File.new_for_path (GLib.Path.build_filename (dest_path, info.get_name ())),
-                flags,
-                cancellable);
+            for (
+                GLib.FileInfo? info = enumerator.next_file (cancellable);
+                info != null;
+                info = enumerator.next_file (cancellable)
+            ) {
+                copy_recursive (
+                    GLib.File.new_for_path (GLib.Path.build_filename (src_path, info.get_name ())),
+                    GLib.File.new_for_path (GLib.Path.build_filename (dest_path, info.get_name ())),
+                    flags,
+                    cancellable
+                );
             }
-          } else if ( src_type == GLib.FileType.REGULAR) {
+        } else if (src_type == REGULAR) {
             src.copy (dest, flags, cancellable);
-      }
+        }
 
-      return true;
+        return true;
     }
 
     public Vala.ArrayList<File> get_test_files_from_dir (File dir) throws Error, IOError {
@@ -99,7 +108,7 @@ class AutoFixTest : GLib.Object {
         assert (inital_auto_fix_files_dir.query_exists ());
 
         try {
-            copy_recursive (inital_auto_fix_files_dir, output_dir, FileCopyFlags.OVERWRITE);
+            copy_recursive (inital_auto_fix_files_dir, output_dir, OVERWRITE);
         } catch (Error e) {
             error ("Error!: %s", e.message);
         }
