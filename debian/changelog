@@ -1,5 +1,5 @@
-io.elementary.vala-lint (0.1) bionic; urgency=medium
+io.elementary.vala-lint (0.1) noble; urgency=medium
 
   * Initial release.
 
- -- Daniel Foré <daniel@yoga>  Thu, 25 Jan 2018 12:36:36 -0700
+ -- Danielle Foré <danielle@elementary.io>  Thu, 25 Jan 2018 12:36:36 -0700
