@@ -39,9 +39,9 @@ class AutoFixTest : GLib.Object {
         if (src_type == DIRECTORY) {
             if (!dest.query_exists ()) {
                 dest.make_directory (cancellable);
+                src.copy_attributes (dest, flags, cancellable);
             }
 
-            src.copy_attributes (dest, flags, cancellable);
 
             string src_path = src.get_path ();
             string dest_path = dest.get_path ();
