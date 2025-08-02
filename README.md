@@ -30,6 +30,7 @@ You'll need the following dependencies:
     meson
     gio-2.0
     valac
+    json-glib-1.0
 
 Run meson build to configure the build environment. Change to the build directory and run ninja test to build and run automated tests
 
