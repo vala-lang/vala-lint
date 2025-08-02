@@ -15,6 +15,11 @@ libvala_required_version = '>= 0.40.4'
 libvala_dep = dependency('libvala-@0@'.format(libvala_version), version: libvala_required_version)
 json_dep = dependency('json-glib-1.0')
 
+add_project_arguments(
+    '-w',
+    language: 'C'
+)
+
 subdir('lib')
 subdir('src')
 subdir('test')
