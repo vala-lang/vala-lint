@@ -36,6 +36,7 @@ public class ValaLint.Linter : Object {
         global_checks = new Vala.ArrayList<Check> ();
         global_checks.add (new Checks.BlockOpeningBraceSpaceBeforeCheck ());
         global_checks.add (new Checks.DoubleSpacesCheck ());
+        global_checks.add (new Checks.InitializeObjectsWithPropertiesCheck ());
         global_checks.add (new Checks.LineLengthCheck ());
         global_checks.add (new Checks.NoteCheck ());
         global_checks.add (new Checks.SpaceBeforeParenCheck ());
