@@ -2,3 +2,4 @@
 *.log
 .vscode
 build/
+test/auto-fix/output

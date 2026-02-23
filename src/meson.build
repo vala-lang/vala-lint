@@ -8,7 +8,8 @@ vala_lint = executable(
     app_files,
     dependencies: [
         vala_linter_dep,
-        posix_dep
+        posix_dep,
+        json_dep
     ],
     install : true
 )

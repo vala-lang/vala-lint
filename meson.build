@@ -1,18 +1,24 @@
 project(
     'io.elementary.vala-lint', 'vala', 'c',
     version: '0.1.0',
-    meson_version : '>= 0.43'
+    meson_version : '>= 0.56'
 )
 
 add_project_arguments('-DGETTEXT_PACKAGE="@0@"'.format(meson.project_name()), language:'c')
 
 valac = meson.get_compiler('vala')
-libvala_version = run_command(valac.cmd_array()[0], '--api-version').stdout().strip()
+libvala_version = run_command(valac.cmd_array()[0], '--api-version', check: true).stdout().strip()
 
 gio_dep = dependency('gio-2.0', version: '>=2.56.4')
 posix_dep = valac.find_library('posix')
 libvala_required_version = '>= 0.40.4'
 libvala_dep = dependency('libvala-@0@'.format(libvala_version), version: libvala_required_version)
+json_dep = dependency('json-glib-1.0')
+
+add_project_arguments(
+    '-w',
+    language: 'C'
+)
 
 g_ir_compiler = find_program('g-ir-compiler', required: false)
 
