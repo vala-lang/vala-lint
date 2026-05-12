@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2019 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2026 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -30,8 +30,8 @@ public class ValaLint.Application : GLib.Application {
     private static bool auto_fix = false;
     private static bool json_output = false;
     private static string? config_file = null;
-    private static string ignore_pattern_list = "";
-    private static int fnmatch_flags = Posix.FNM_EXTMATCH | Posix.FNM_PERIOD | Posix.FNM_PATHNAME;
+    private static IgnoreMatcher ignore_matcher;
+    private static int fnmatch_flags = Posix.FNM_PERIOD | Posix.FNM_PATHNAME;
     private static File root_dir;
 
     private ApplicationCommandLine application_command_line;
@@ -105,6 +105,8 @@ public class ValaLint.Application : GLib.Application {
         }
 
         this.application_command_line = command_line;
+        ignore_matcher = new IgnoreMatcher (fnmatch_flags);
+
         /* Get ignore patterns. Ignore patterns are glob patterns relative to the scanned directory */
         string[] ignore_patterns = {};
         string ignore_root = lint_directory != null ? lint_directory : args[1];
@@ -234,12 +236,7 @@ public class ValaLint.Application : GLib.Application {
         ApplicationCommandLine command_line, string[] patterns, string[] ignore_patterns ) throws Error, IOError {
 
         foreach (string pattern in ignore_patterns) {
-            ignore_pattern_list += ("|" + pattern);
-        }
-
-        debug ("Ignore pattern list: %s", ignore_pattern_list);
-        if (ignore_pattern_list.length > 0) {
-            ignore_pattern_list = "+(" + ignore_pattern_list[1 : ignore_pattern_list.length] + ")";
+            ignore_matcher.add_pattern (pattern);
         }
 
         var result = new Vala.ArrayList<FileData?> ();
@@ -289,8 +286,7 @@ public class ValaLint.Application : GLib.Application {
             string child_name = info.get_name ();
             var child_file = dir.resolve_relative_path (child_name);
             var rel_path = root_dir.get_relative_path (child_file);
-            if (!info.get_is_hidden () &&
-                Posix.fnmatch (ignore_pattern_list, rel_path, fnmatch_flags) != 0) {
+            if (!info.get_is_hidden () && !ignore_matcher.matches (rel_path)) {
 
                 if (info.get_file_type () == FileType.DIRECTORY) {
                     var sub_files = get_files_from_directory (child_file);

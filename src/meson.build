@@ -1,6 +1,7 @@
 app_files = files (
     'Application.vala',
-    'FileData.vala'
+    'FileData.vala',
+    'IgnoreMatcher.vala'
 )
 
 vala_lint = executable(
