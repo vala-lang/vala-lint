@@ -58,7 +58,7 @@ namespace ValaLint {
 
             for (int i = 0; i < glob.length; i++) {
                 char c = glob[i];
-                char next = (i + 1 < glob.length) ? glob[i+1] : '\0';
+                char next = (i + 1 < glob.length) ? glob [i + 1] : '\0';
 
                 if (in_brackets) {
                     if (c == ']') {
