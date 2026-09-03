@@ -57,7 +57,8 @@ class ContentTest : GLib.Object {
         check_contents_for_mistake (CheckTest.get_test_file ("general-pass.vala"), empty_list);
 
         var general_warnings = CheckTest.FileTestMistakeList ();
-        general_warnings.add ("naming-convention", 4);
+        general_warnings.add ("using-directive", 3);
+        general_warnings.add ("naming-convention", 3);
         general_warnings.add ("space-before-paren", 2, 26, 27);
         general_warnings.add ("note", 1, 21, 25, "TODO");
         general_warnings.add ("note", 1, 21, 38, "TODO: Lorem ipsum");

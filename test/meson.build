@@ -62,6 +62,13 @@ auto_fix_test = executable(
     dependencies: test_deps
 )
 
+ignore_matcher_test = executable(
+    'ignore-matcher-test',
+    'IgnoreMatcherTest.vala',
+    vala_args: vala_args,
+    dependencies: test_deps + [ignore_matcher_dep]
+)
+
 test_envars = [
     'G_DEBUG=fatal-warnings',
 ]
@@ -69,5 +76,6 @@ test_envars = [
 test('file', file_test, env: test_envars)
 test('content', content_test, env: test_envars)
 test('auto-fix', auto_fix_test, env: test_envars)
+test('ignore-matcher', ignore_matcher_test, env: test_envars)
 
 test('self', vala_lint, workdir: meson.current_source_dir(), env: test_envars)

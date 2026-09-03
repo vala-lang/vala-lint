@@ -25,6 +25,7 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     public Checks.NamingConventionCheck naming_convention_check;
     public Checks.UnnecessaryStringTemplateCheck unnecessary_string_template_check;
     public Checks.NoSpaceCheck no_space_check;
+    public Checks.UsingDirectiveCheck using_directive_check;
 
     public void set_mistake_list (Vala.ArrayList<FormatMistake?> mistake_list) {
         this.mistake_list = mistake_list;
@@ -32,6 +33,13 @@ class ValaLint.Visitor : Vala.CodeVisitor {
 
     public override void visit_source_file (Vala.SourceFile sf) {
         sf.accept_children (this);
+
+        /* using directives are not accepted by default */
+        foreach (var using_directives in sf.current_using_directives) {
+            if (using_directives.source_reference != null) {
+                using_directives.accept (this);
+            }
+        }
     }
 
     public override void visit_namespace (Vala.Namespace ns) {
@@ -139,6 +147,8 @@ class ValaLint.Visitor : Vala.CodeVisitor {
     }
 
     public override void visit_using_directive (Vala.UsingDirective ns) {
+        using_directive_check.check_using_directive (ns, ref mistake_list);
+
         ns.accept_children (this);
     }
 
