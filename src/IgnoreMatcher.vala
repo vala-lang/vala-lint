@@ -19,7 +19,12 @@
 
 namespace ValaLint {
     public class IgnoreMatcher : Object {
-        private Vala.ArrayList<GLib.Regex> regexes = new Vala.ArrayList<GLib.Regex> ();
+        private class Expansion {
+            public Vala.ArrayList<string> positives = new Vala.ArrayList<string> ();
+            public Vala.ArrayList<string> negations = new Vala.ArrayList<string> ();
+        }
+
+        private Vala.ArrayList<string> patterns = new Vala.ArrayList<string> ();
         private int flags;
 
         public IgnoreMatcher (int flags) {
@@ -31,120 +36,141 @@ namespace ValaLint {
                 return;
             }
 
-            try {
-                var regex_pattern = glob_to_regex (pattern);
-                regexes.add (new GLib.Regex (regex_pattern, RegexCompileFlags.OPTIMIZE));
-            } catch (Error e) {
-                warning ("Invalid ignore pattern '%s': %s", pattern, e.message);
-            }
+            patterns.add (pattern);
         }
 
         public bool matches (string path) {
-            foreach (var regex in regexes) {
-                if (regex.match (path)) {
+            foreach (var pattern in patterns) {
+                if (pattern_matches (pattern, path)) {
                     return true;
                 }
             }
+
             return false;
         }
 
-        private string glob_to_regex (string glob) {
-            bool pathname = (flags & Posix.FNM_PATHNAME) != 0;
-            bool period = (flags & Posix.FNM_PERIOD) != 0;
+        private bool pattern_matches (string pattern, string path) {
+            var expansion = expand_extglob (pattern);
 
-            var res = new StringBuilder ("^");
-            var stack = new Vala.ArrayList<string> ();
-            bool in_brackets = false;
-
-            for (int i = 0; i < glob.length; i++) {
-                char c = glob[i];
-                char next = (i + 1 < glob.length) ? glob [i + 1] : '\0';
-
-                if (in_brackets) {
-                    if (c == ']') {
-                        in_brackets = false;
-                        res.append ("]");
-                    } else if (c == '\\') {
-                        res.append ("\\\\");
-                    } else if (c == '!' && res.str.has_suffix ("[")) {
-                        res.append ("^");
-                    } else {
-                        res.append_c (c);
-                    }
-                    continue;
-                }
-
-                switch (c) {
-                    case '*':
-                        if (next == '(') {
-                            res.append ("(?:");
-                            stack.add (")*");
-                            i++;
-                        } else {
-                            if (pathname) {
-                                if (period) res.append ("(?![./])");
-                                res.append ("[^/]*");
-                            } else {
-                                if (period) res.append ("(?!\\.)");
-                                res.append (".*");
-                            }
-                        }
-                        break;
-                    case '?':
-                        if (next == '(') {
-                            res.append ("(?:");
-                            stack.add (")?");
-                            i++;
-                        } else {
-                            if (pathname) res.append ("[^/]");
-                            else res.append (".");
-                        }
-                        break;
-                    case '+':
-                        if (next == '(') {
-                            res.append ("(?:");
-                            stack.add (")+");
-                            i++;
-                        } else {
-                            res.append ("\\+");
-                        }
-                        break;
-                    case '@':
-                        if (next == '(') {
-                            res.append ("(?:");
-                            stack.add (")");
-                            i++;
-                        } else {
-                            res.append ("@");
-                        }
-                        break;
-                    case '!':
-                        if (next == '(') {
-                            res.append ("(?!");
-                            stack.add (").*");
-                            i++;
-                        } else {
-                            res.append ("!");
-                        }
-                        break;
-                    case '(': res.append ("\\("); break;
-                    case ')':
-                        if (!stack.is_empty) res.append (stack.remove_at (stack.size - 1));
-                        else res.append ("\\)");
-                        break;
-                    case '|': res.append ("|"); break;
-                    case '[': in_brackets = true; res.append ("["); break;
-                    case '.': case '\\': case '$': case '^': case '{': case '}':
-                        res.append ("\\"); res.append_c (c); break;
-                    case '/':
-                        res.append_c (c);
-                        break;
-                    default: res.append_c (c); break;
+            bool matched = false;
+            foreach (var candidate in expansion.positives) {
+                if (Posix.fnmatch (candidate, path, flags) == 0) {
+                    matched = true;
+                    break;
                 }
             }
 
-            res.append ("$");
-            return res.str;
+            if (!matched) {
+                return false;
+            }
+
+            foreach (var excluded in expansion.negations) {
+                if (Posix.fnmatch (excluded, path, flags) == 0) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /*
+         * Posix.fnmatch() has no concept of extglob operators (+(), *(), ?(), @(), !()),
+         * so any pattern that uses them is expanded here into one or more plain glob
+         * patterns before being handed to Posix.fnmatch(). +() and @() are approximated
+         * as "exactly one of the alternatives" rather than true repetition, since
+         * fnmatch() can't express unbounded repetition as a finite set of patterns - this
+         * matches every practical use of these patterns in ignore lists.
+         */
+        private Expansion expand_extglob (string pattern) {
+            int start;
+            int end;
+            char op;
+            Vala.ArrayList<string> alternatives;
+
+            var expansion = new Expansion ();
+
+            if (!find_group (pattern, out start, out end, out op, out alternatives)) {
+                expansion.positives.add (pattern);
+                return expansion;
+            }
+
+            string prefix = pattern[0:start];
+            string suffix = pattern[end + 1:pattern.length];
+
+            if (op == '!') {
+                var positive = expand_extglob (prefix + "*" + suffix);
+                expansion.positives.add_all (positive.positives);
+                expansion.negations.add_all (positive.negations);
+
+                foreach (var alt in alternatives) {
+                    var excluded = expand_extglob (prefix + alt + suffix);
+                    expansion.negations.add_all (excluded.positives);
+                }
+
+                return expansion;
+            }
+
+            if (op == '?' || op == '*') {
+                alternatives.insert (0, "");
+            }
+
+            foreach (var alt in alternatives) {
+                var sub_expansion = expand_extglob (prefix + alt + suffix);
+                expansion.positives.add_all (sub_expansion.positives);
+                expansion.negations.add_all (sub_expansion.negations);
+            }
+
+            return expansion;
+        }
+
+        /* Finds the first top-level extglob group (e.g. "+(foo|bar)") in pattern. */
+        private bool find_group (
+            string pattern, out int start, out int end, out char op, out Vala.ArrayList<string> alternatives
+        ) {
+            start = -1;
+            end = -1;
+            op = '\0';
+            alternatives = new Vala.ArrayList<string> ();
+
+            for (int i = 0; i < pattern.length - 1; i++) {
+                char c = pattern[i];
+                if ((c == '+' || c == '*' || c == '?' || c == '@' || c == '!') && pattern[i + 1] == '(') {
+                    start = i;
+                    op = c;
+                    break;
+                }
+            }
+
+            if (start == -1) {
+                return false;
+            }
+
+            int depth = 0;
+            int alt_start = start + 2;
+
+            for (int i = start + 1; i < pattern.length; i++) {
+                char c = pattern[i];
+                if (c == '(') {
+                    depth++;
+                } else if (c == ')') {
+                    depth--;
+                    if (depth == 0) {
+                        end = i;
+                        alternatives.add (pattern[alt_start:i]);
+                        break;
+                    }
+                } else if (c == '|' && depth == 1) {
+                    alternatives.add (pattern[alt_start:i]);
+                    alt_start = i + 1;
+                }
+            }
+
+            if (end == -1) {
+                start = -1;
+                return false;
+            }
+
+            return true;
         }
     }
 }

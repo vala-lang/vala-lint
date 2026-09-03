@@ -86,6 +86,14 @@ class IgnoreMatcherTest : GLib.Object {
         assert (!matcher.matches ("foobar.vala"));
     }
 
+    void test_extglob_negation_group () {
+        var matcher = new_matcher ({ "!(foo).vala" });
+
+        assert (!matcher.matches ("foo.vala"));
+        assert (matcher.matches ("bar.vala"));
+        assert (matcher.matches ("foobar.vala"));
+    }
+
     void test_bracket_expression () {
         var matcher = new_matcher ({ "[abc].vala" });
 
@@ -129,6 +137,7 @@ class IgnoreMatcherTest : GLib.Object {
         test.test_extglob_one_or_more_group ();
         test.test_extglob_optional_group ();
         test.test_extglob_exactly_one_group ();
+        test.test_extglob_negation_group ();
         test.test_bracket_expression ();
         test.test_negated_bracket_expression ();
         test.test_blank_and_comment_patterns_are_ignored ();
