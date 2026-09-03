@@ -59,7 +59,7 @@ class ContentTest : GLib.Object {
         var general_warnings = CheckTest.FileTestMistakeList ();
         general_warnings.add ("using-directive", 3);
         general_warnings.add ("naming-convention", 3);
-        general_warnings.add ("space-before-paren", 2, 26, 27);
+        general_warnings.add ("space-before-paren", 2, 25, 26);
         general_warnings.add ("note", 1, 21, 25, "TODO");
         general_warnings.add ("note", 1, 21, 38, "TODO: Lorem ipsum");
         general_warnings.add ("double-spaces", 2, 25, 27);
@@ -105,9 +105,9 @@ class ContentTest : GLib.Object {
         check_contents_for_mistake (CheckTest.get_test_file ("note-check.vala"), note_warnings);
 
         var space_before_paren_warnings = CheckTest.FileTestMistakeList ();
-        space_before_paren_warnings.add ("space-before-paren", 4, 9, 10);
-        space_before_paren_warnings.add ("no-space", 5, 14, 15);
-        space_before_paren_warnings.add ("space-before-paren", 0, 14, 15);
+        space_before_paren_warnings.add ("space-before-paren", 4, 8, 9);
+        space_before_paren_warnings.add ("space-before-paren", 5, 13, 14);
+        space_before_paren_warnings.add ("no-space", 0, 14, 15);
         space_before_paren_warnings.add ("no-space", 0, 17, 18);
         space_before_paren_warnings.add ("no-space", 0, 18, 19);
         check_contents_for_mistake (CheckTest.get_test_file ("space-before-paren-check.vala"),
