@@ -66,6 +66,8 @@ namespace ValaLint {
                         res.append ("]");
                     } else if (c == '\\') {
                         res.append ("\\\\");
+                    } else if (c == '!' && res.str.has_suffix ("[")) {
+                        res.append ("^");
                     } else {
                         res.append_c (c);
                     }
