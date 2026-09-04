@@ -7,6 +7,7 @@ configure_file (
 confht = configuration_data()
 confht.set_quoted ('TEST_SRC_DIR', meson.current_source_dir())
 confht.set_quoted ('TEST_BUILD_DIR', meson.current_build_dir())
+confht.set_quoted ('VALA_LINT_BIN', vala_lint.full_path())
 configure_file(output : 'config.h',
     configuration : confht)
 
@@ -69,6 +70,20 @@ ignore_matcher_test = executable(
     dependencies: test_deps + [ignore_matcher_dep]
 )
 
+utils_test = executable(
+    'utils-test',
+    'UtilsTest.vala',
+    vala_args: vala_args,
+    dependencies: test_deps
+)
+
+stdin_test = executable(
+    'stdin-test',
+    'StdinTest.vala',
+    vala_args: vala_args,
+    dependencies: test_deps + [json_dep]
+)
+
 test_envars = [
     'G_DEBUG=fatal-warnings',
 ]
@@ -77,5 +92,7 @@ test('file', file_test, env: test_envars)
 test('content', content_test, env: test_envars)
 test('auto-fix', auto_fix_test, env: test_envars)
 test('ignore-matcher', ignore_matcher_test, env: test_envars)
+test('utils', utils_test, env: test_envars)
+test('stdin', stdin_test, env: test_envars)
 
 test('self', vala_lint, workdir: meson.current_source_dir(), env: test_envars)

@@ -25,12 +25,29 @@ public class ValaLint.Fixer : Object {
         file.load_contents (null, out contents_data, null);
         string contents = (string) (owned) contents_data;
 
+        contents = apply_fixes (contents, ref mistakes);
+
+        file.replace_contents (contents.data, null, false, FileCreateFlags.NONE, null);
+    }
+
+    /**
+     * Applies the given mistakes' fixes to the given contents, in memory.
+     *
+     * @param contents The contents to fix.
+     * @param mistakes The mistakes to fix. Updated in place to only contain the mistakes
+     *                 that could not be fixed.
+     *
+     * @return The fixed contents.
+     */
+    public string apply_fixes (string contents, ref Vala.ArrayList<FormatMistake?> mistakes) {
+        string fixed_contents = contents;
+
         var remaining_mistakes = new Vala.ArrayList<FormatMistake?> ((a, b) => a.equal_to (b));
 
         // Fix mistakes in reverse, so that the begin/end locations of subsequent mistakes are not affected
         for (int index = mistakes.size - 1; index >= 0; index--) {
             var mistake = mistakes.@get (index);
-            var applied = mistake.check.apply_fix (mistake.begin, mistake.end, ref contents);
+            var applied = mistake.check.apply_fix (mistake.begin, mistake.end, ref fixed_contents);
 
             if (!applied) {
                 remaining_mistakes.add (mistake);
@@ -46,6 +63,6 @@ public class ValaLint.Fixer : Object {
             return a.begin.line - b.begin.line;
         });
 
-        file.replace_contents (contents.data, null, false, FileCreateFlags.NONE, null);
+        return fixed_contents;
     }
 }

@@ -62,6 +62,12 @@ You can automatically fix a certain class of issues by
 
     io.elementary.vala-lint --fix ../my-project/test/*-test.vala
 
+For editor/IDE integrations that lint an in-memory buffer, code can be linted from standard input instead of from a file on disk by
+
+    cat ../my-project/test/unit-test.vala | io.elementary.vala-lint --stdin --stdin-filename unit-test.vala -j
+
+`--stdin-filename` is optional and only used for reporting (e.g. the `filename` field in JSON output); it defaults to `stdin`. Combining `--stdin` with `--fix` prints the fixed source to standard output instead of a mistake report.
+
 To list all options, type `io.elementary.vala-lint -h`. Additional command line flags are: `--print-end` for printing not only the start but also the end of a mistake, and `--exit-zero` to always return a 0 (non-error) status code, even if lint mistakes are found.
 
 ### Configuration

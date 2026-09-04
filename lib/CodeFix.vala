@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 elementary LLC. (https://github.com/elementary/vala-lint)
+ * Copyright (c) 2026 Colin Kiama
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -17,12 +17,14 @@
  * Boston, MA 02110-1301 USA.
  */
 
-public struct ValaLint.FileData {
-    File file;
-    string name;
-    Vala.ArrayList<FormatMistake?> mistakes;
-
-    /* Contents already held in memory (e.g. read from stdin). When null, the
-     * file is (re-)read from disk instead, e.g. to compute JSON fix data. */
-    string? contents;
+/**
+ * Describes how to fix a single mistake: the text to insert and the range
+ * of the original file contents it replaces.
+ */
+public struct ValaLint.CodeFix {
+    public string replacement;
+    public int begin_line;
+    public int begin_column;
+    public int end_line;
+    public int end_column;
 }

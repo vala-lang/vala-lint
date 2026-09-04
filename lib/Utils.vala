@@ -115,7 +115,7 @@ public class ValaLint.Utils : Object {
 
     /**
      * Method to return a new Vala.SourceLocation from a reference shifted by a given offset.
-     * 
+     *
      * @return The new Vala.SourceLocation
      */
     public static Vala.SourceLocation shift_location (Vala.SourceLocation reference, int offset) {
@@ -123,5 +123,76 @@ public class ValaLint.Utils : Object {
         result.pos += offset;
         result.column += offset;
         return result;
+    }
+
+    /**
+     * Computes the fix for a mistake, if the check provides one, by running the check's
+     * fix logic against a copy of the file contents and diffing the result against the
+     * original contents.
+     *
+     * @param check The check the mistake was reported by.
+     * @param begin The source location where the mistake begins.
+     * @param end The source location where the mistake ends.
+     * @param original_contents The unmodified contents of the file containing the mistake.
+     *
+     * @return The computed fix, or null if the check does not provide one for this mistake.
+     */
+    public static CodeFix? compute_fix (Check check, Vala.SourceLocation begin, Vala.SourceLocation end,
+                                        string original_contents) {
+
+        string fixed_contents = original_contents;
+        bool applied = check.apply_fix (begin, end, ref fixed_contents);
+        if (!applied || fixed_contents == original_contents) {
+            return null;
+        }
+
+        int max_common = int.min (original_contents.length, fixed_contents.length);
+
+        int prefix_len = 0;
+        while (prefix_len < max_common && original_contents[prefix_len] == fixed_contents[prefix_len]) {
+            prefix_len++;
+        }
+
+        int max_suffix = max_common - prefix_len;
+        int suffix_len = 0;
+        while (
+            suffix_len < max_suffix &&
+            original_contents[original_contents.length - 1 - suffix_len] ==
+            fixed_contents[fixed_contents.length - 1 - suffix_len]
+        ) {
+            suffix_len++;
+        }
+
+        string replacement = fixed_contents[prefix_len : fixed_contents.length - suffix_len];
+
+        int fix_begin_line, fix_begin_column, fix_end_line, fix_end_column;
+        get_line_column_at_offset (original_contents, prefix_len, out fix_begin_line, out fix_begin_column);
+        get_line_column_at_offset (
+            original_contents, original_contents.length - suffix_len, out fix_end_line, out fix_end_column
+        );
+
+        return CodeFix () {
+            replacement = replacement,
+            begin_line = fix_begin_line,
+            begin_column = fix_begin_column,
+            end_line = fix_end_line,
+            end_column = fix_end_column
+        };
+    }
+
+    /**
+     * Method to convert an absolute byte offset within a string to a 1-indexed line and column.
+     */
+    static void get_line_column_at_offset (string text, int offset, out int line, out int column) {
+        line = 1;
+        int line_start = 0;
+        for (int i = 0; i < offset; i++) {
+            if (text[i] == '\n') {
+                line++;
+                line_start = i + 1;
+            }
+        }
+
+        column = offset - line_start + 1;
     }
 }
