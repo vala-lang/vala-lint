@@ -41,7 +41,7 @@ public class ValaLint.Checks.SpaceBeforeParenCheck : Check {
         var lines = contents.split ("\n");
 
         var line = lines[begin.line - 1];
-        line = line[0:begin.column] + " " + line[begin.column:line.length];
+        line = line[0:begin.column + 1] + " " + line[begin.column + 1:line.length];
         lines[begin.line - 1] = line;
 
         contents = string.joinv ("\n", lines);
