@@ -2,6 +2,7 @@ vapidir = join_paths (get_option('datadir'),'vala','vapi')
 
 vala_linter_files = files(
     'Check.vala',
+    'CodeFix.vala',
     'Config.vala',
     'Disabler.vala',
     'Fixer.vala',

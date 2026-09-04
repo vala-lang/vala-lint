@@ -29,6 +29,8 @@ public class ValaLint.Application : GLib.Application {
     private static bool generate_config_file = false;
     private static bool auto_fix = false;
     private static bool json_output = false;
+    private static bool use_stdin = false;
+    private static string? stdin_filename = null;
     private static string? config_file = null;
     private static IgnoreMatcher ignore_matcher;
     private static int fnmatch_flags = Posix.FNM_PERIOD | Posix.FNM_PATHNAME;
@@ -53,6 +55,10 @@ public class ValaLint.Application : GLib.Application {
             "Fix any auto-fixable mistakes." },
         { "json-output", 'j', 0, OptionArg.NONE, ref json_output,
             "Output in JSON format." },
+        { "stdin", 0, 0, OptionArg.NONE, ref use_stdin,
+            "Lint code read from standard input instead of from files." },
+        { "stdin-filename", 0, 0, OptionArg.STRING, ref stdin_filename,
+            "Filename to report in the output when linting from standard input." },
         { null }
     };
 
@@ -105,6 +111,11 @@ public class ValaLint.Application : GLib.Application {
         }
 
         this.application_command_line = command_line;
+
+        if (use_stdin) {
+            return handle_stdin (command_line);
+        }
+
         ignore_matcher = new IgnoreMatcher (fnmatch_flags);
 
         /* Get ignore patterns. Ignore patterns are glob patterns relative to the scanned directory */
@@ -232,6 +243,76 @@ public class ValaLint.Application : GLib.Application {
         return 0;
     }
 
+    int handle_stdin (ApplicationCommandLine command_line) {
+        ValaLint.Config.load_file (config_file);
+
+        InputStream? stdin_stream = command_line.get_stdin ();
+        if (stdin_stream == null) {
+            command_line.print (_("Error: Could not read from standard input.") + "\n");
+            return 1;
+        }
+
+        string content;
+        try {
+            content = read_stream_to_string (stdin_stream);
+        } catch (Error e) {
+            command_line.print (_("Error: %s") + "\n", e.message);
+            return 1;
+        }
+
+        string display_name = stdin_filename != null ? stdin_filename : "stdin";
+        File virtual_file = File.new_for_commandline_arg_and_cwd (display_name, command_line.get_cwd ());
+
+        var linter = new Linter ();
+        var mistakes = new Vala.ArrayList<FormatMistake?> ();
+        try {
+            mistakes = linter.run_checks_for_content (content, virtual_file.get_uri ());
+        } catch (Error e) {
+            critical (_("Error: %s while linting file %s") + "\n", e.message, display_name);
+        }
+
+        if (auto_fix) {
+            var fixer = new Fixer ();
+            content = fixer.apply_fixes (content, ref mistakes);
+            command_line.print ("%s", content);
+
+            if (exit_with_zero) {
+                return 0;
+            }
+
+            foreach (FormatMistake? mistake in mistakes) {
+                if (mistake.check.state == Config.State.ERROR) {
+                    return 1;
+                }
+            }
+
+            return 0;
+        }
+
+        var file_data_list = new Vala.ArrayList<FileData?> ();
+        file_data_list.add ({ virtual_file, display_name, mistakes, content });
+
+        bool has_errors = json_output ? print_mistakes_json (file_data_list) : print_mistakes (file_data_list);
+
+        if (exit_with_zero || !has_errors) {
+            return 0;
+        }
+
+        return 1;
+    }
+
+    string read_stream_to_string (InputStream stream) throws Error, IOError {
+        var builder = new StringBuilder ();
+        uint8[] buffer = new uint8[4096];
+        ssize_t bytes_read;
+
+        while ((bytes_read = stream.read (buffer)) > 0) {
+            builder.append_len ((string) buffer, (long) bytes_read);
+        }
+
+        return builder.str;
+    }
+
     Vala.ArrayList<FileData?> get_files (
         ApplicationCommandLine command_line, string[] patterns, string[] ignore_patterns ) throws Error, IOError {
 
@@ -254,14 +335,14 @@ public class ValaLint.Application : GLib.Application {
 
                 switch (file_type) {
                     case FileType.REGULAR:
-                        result.add ({ file, path, new Vala.ArrayList<FormatMistake?> () });
+                        result.add ({ file, path, new Vala.ArrayList<FormatMistake?> (), null });
                         break;
 
                     case FileType.DIRECTORY:
                         root_dir = file;
                         foreach (File f in get_files_from_directory (file)) {
                             string name = path + file.get_relative_path (f);
-                            result.add ({ f, name, new Vala.ArrayList<FormatMistake?> () });
+                            result.add ({ f, name, new Vala.ArrayList<FormatMistake?> (), null });
                         }
                         break;
 
@@ -381,6 +462,15 @@ public class ValaLint.Application : GLib.Application {
 
         foreach (FileData file_data in file_data_list) {
             if (!file_data.mistakes.is_empty) {
+                string? contents = file_data.contents;
+                if (contents == null) {
+                    try {
+                        FileUtils.get_contents (file_data.file.get_path (), out contents);
+                    } catch (Error e) {
+                        debug ("Error loading file contents for fix data: %s", e.message);
+                    }
+                }
+
                 foreach (FormatMistake mistake in file_data.mistakes) {
                     switch (mistake.check.state) {
                         case ERROR:
@@ -414,6 +504,34 @@ public class ValaLint.Application : GLib.Application {
                     builder.add_string_value (mistake.mistake);
                     builder.set_member_name ("ruleId");
                     builder.add_string_value (mistake.check.title);
+
+                    CodeFix? fix = contents == null ?
+                        null : Utils.compute_fix (mistake.check, mistake.begin, mistake.end, contents);
+
+                    builder.set_member_name ("fix");
+                    if (fix == null) {
+                        builder.add_null_value ();
+                    } else {
+                        builder.begin_object ();
+                        builder.set_member_name ("replacement");
+                        builder.add_string_value (fix.replacement);
+                        builder.set_member_name ("start");
+                        builder.begin_object ();
+                        builder.set_member_name ("line");
+                        builder.add_int_value (fix.begin_line);
+                        builder.set_member_name ("column");
+                        builder.add_int_value (fix.begin_column);
+                        builder.end_object ();
+                        builder.set_member_name ("end");
+                        builder.begin_object ();
+                        builder.set_member_name ("line");
+                        builder.add_int_value (fix.end_line);
+                        builder.set_member_name ("column");
+                        builder.add_int_value (fix.end_column);
+                        builder.end_object ();
+                        builder.end_object ();
+                    }
+
                     builder.end_object ();
                 }
             }
